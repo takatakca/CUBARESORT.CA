@@ -114,3 +114,11 @@ order. axe covers neither.
 2. Decide how multi-centre combo packages should be modelled, if they belong on the site at all.
 3. GitHub Pages is still not enabled — Settings > Pages > Source: GitHub Actions, then rerun. Still blocking.
 4. Per-property detail pages require the supplier feed first; do not hand-write them.
+
+## 2026-10-14 Next.js migration parity candidate (separate review branch)
+
+The open Next.js conversion PR #3 on `feat/nextjs-conversion` replaces the static homepage with a hotel directory and FAQ, dropping working editorial destination cards, nine stay ideas, destination/style/text filters, local favourites, the request draft, legal dialogs and the mobile navigation. Its green CI did not test those features.
+
+A separate branch `fix/nextjs-feature-parity-20261014` is proposed **against the conversion branch**, not main. It restores these features using `src/components/travel-experiences.tsx` and `src/components/travel-ui.tsx`, preserving the existing `cubaresort.preferences.v1` local-storage key, FR/EN/ES copy, no-booking rule, and URL filter parameters. It also adds `tests/parity.test.mjs` as a regression gate. The user must still approve the Next.js architecture/brand and database arrangement; no migrations, deployments, bookings, or data collection were activated.
+
+After review, check the feature-parity PR's CI and real browser behavior before merging it into `feat/nextjs-conversion`. Do not merge PR #3 into main until the parity changes are integrated and the production/brand decision is resolved. GitHub Pages remains disabled on main; its green deploy job is a **skipped publication**, not proof of a live site.

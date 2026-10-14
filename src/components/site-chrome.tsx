@@ -1,6 +1,8 @@
 "use client";
 
 import { useLanguage } from "@/components/language-provider";
+import { useTravelUi } from "@/components/travel-ui";
+import { useState } from "react";
 import { langNames } from "@/lib/i18n";
 import type { Lang } from "@/lib/hotels/types";
 
@@ -8,6 +10,8 @@ const LANGS: Lang[] = ["fr", "en", "es"];
 
 export function SiteHeader() {
   const { lang, setLang, t } = useLanguage();
+  const { openInquiry } = useTravelUi();
+  const [menuOpen, setMenuOpen] = useState(false);
   return (
     <>
       <a className="skip-link" href="#main">
@@ -28,6 +32,8 @@ export function SiteHeader() {
             </span>
           </a>
           <nav className="desktop-nav" aria-label={t("navDestinations")}>
+            <a href="#destinations">{t("navDestinations")}</a>
+            <a href="#experiences">{t("navExperiences")}</a>
             <a href="#hotels">{t("navHotels")}</a>
             <a href="#questions">{t("navFaq")}</a>
           </nav>
@@ -45,8 +51,17 @@ export function SiteHeader() {
                 </button>
               ))}
             </div>
+            <button type="button" className="button button-coral header-cta" onClick={() => openInquiry()}>{t("ctaPlan")}</button>
+            <button type="button" className="menu-toggle" aria-expanded={menuOpen} aria-controls="mobile-menu" aria-label={lang === "fr" ? "Ouvrir le menu" : lang === "es" ? "Abrir menú" : "Open menu"} onClick={() => setMenuOpen((value) => !value)}><span /><span /><span /></button>
           </div>
         </div>
+        <nav id="mobile-menu" className="mobile-menu" hidden={!menuOpen} aria-label={t("navDestinations")}>
+          <a href="#destinations" onClick={() => setMenuOpen(false)}>{t("navDestinations")}</a>
+          <a href="#experiences" onClick={() => setMenuOpen(false)}>{t("navExperiences")}</a>
+          <a href="#hotels" onClick={() => setMenuOpen(false)}>{t("navHotels")}</a>
+          <a href="#questions" onClick={() => setMenuOpen(false)}>{t("navFaq")}</a>
+          <button className="button button-coral" type="button" onClick={() => {setMenuOpen(false);openInquiry();}}>{t("ctaPlan")}</button>
+        </nav>
       </header>
     </>
   );
@@ -64,9 +79,8 @@ export function SiteHero() {
           <h1 dangerouslySetInnerHTML={{ __html: t("heroTitle") }} />
           <p className="hero-lead">{t("heroDescription")}</p>
           <div className="hero-cta-row">
-            <a className="button button-cream" href="#hotels">
-              {t("navHotels")}
-            </a>
+            <a className="button button-cream" href="#experiences">{t("ctaExplore")}</a>
+            <a className="hero-link" href="#hotels">{t("navHotels")}</a>
           </div>
         </div>
       </div>
@@ -100,23 +114,31 @@ export function SiteFaq() {
 
 export function SiteFooter() {
   const { t } = useLanguage();
+  const { openInquiry, openLegal } = useTravelUi();
   return (
     <footer className="site-footer">
       <div className="container">
         <div className="footer-main">
           <div>
-            <a className="brand brand-footer" href="#top">
-              <span className="brand-word">
-                CUBA<span>RESORT</span>
-                <small>.CA</small>
-              </span>
-            </a>
+            <a className="brand brand-footer" href="#top"><span className="brand-word">CUBA<span>RESORT</span><small>.CA</small></span></a>
             <p>{t("footerBlurb")}</p>
           </div>
           <div>
             <h3>{t("footerDiscover")}</h3>
+            <a href="#destinations">{t("navDestinations")}</a>
+            <a href="#experiences">{t("navExperiences")}</a>
             <a href="#hotels">{t("navHotels")}</a>
+          </div>
+          <div>
+            <h3>{t("footerHelp")}</h3>
             <a href="#questions">{t("navFaq")}</a>
+            <button type="button" onClick={() => openLegal("privacy")}>{t("privacyLink")}</button>
+            <button type="button" onClick={() => openLegal("terms")}>{t("termsLink")}</button>
+          </div>
+          <div>
+            <h3>{t("footerContactTitle")}</h3>
+            <p>{t("footerContactText")}</p>
+            <button type="button" className="footer-contact" onClick={() => openInquiry()}>{t("ctaPlan")}</button>
           </div>
         </div>
         <div className="footer-bottom">

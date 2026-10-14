@@ -47,3 +47,11 @@ Updated: 2026-10-14. Current scope: **static inspiration portal, not a live book
 **MochaHost/cPanel:** Build dist in CI, upload only dist to the domain's confirmed document root. Verify SSH host key and an explicitly authorized deployment key before adding a deployment action. Do not inherit paths and credentials from another TAKATAK service.
 
 **Release rule:** A live informational website must not be described as live bookable inventory or a complete commercial booking integration.
+
+## Pending Next.js migration release gate (2026-10-14)
+
+- [ ] Feature parity review: confirm all nine editorial inspirations, six destination data entries, search/filter/sort, local favourites, request draft, legal dialogs and mobile menu work in Next.js.
+- [ ] Merge the feature-parity review branch into the Next.js conversion branch after passing CI; **do not directly push main** while the owner release lock applies.
+- [ ] Verify actual custom-domain target and brand before choosing Coolify vs GitHub Pages; current Pages job skips publication.
+- [ ] Approve the shared Supabase schema and supply environment credentials before any database migration.
+- [ ] Perform browser and accessibility acceptance testing on the complete Next.js candidate before production rollout.

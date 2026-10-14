@@ -3,6 +3,8 @@
 Newest first, one line per piece of work. Rule: `AGENTS.md` › Work log rule.
 Format: `YYYY-MM-DD | agent | branch → PR | status | what | next step`
 
+- 2026-10-14 | ChatGPT GPT-6 | fix/nextjs-feature-parity-20261014 → PR pending | review pending | Restore the static site's editorial destinations, nine stay ideas, URL filters, favourites, request draft, legal dialogs and mobile navigation to the Next.js conversion without enabling bookings or personal-data transmission | run CI and merge this parity PR into feat/nextjs-conversion before considering PR #3 for main
+
 - 2026-10-14 | Claude (Opus 5) | feat/nextjs-conversion → PR pending | active | Convert the static site to Next.js 16 on takatak-v1 conventions; add the 169-property directory, Prisma `cubaresort` schema and Supabase/TAKATAK Auth wiring | owner reviews the PR; then decide the brand question below and whether to run the first migration against the V1 Supabase project
 - 2026-10-14 | Claude (Opus 5) | main | done | Static site: recovered the hotel directory (169 properties, 13 regions), made it deep-linkable, fixed 426 WCAG AA contrast failures, unblocked CI | superseded by the Next.js conversion above
 
