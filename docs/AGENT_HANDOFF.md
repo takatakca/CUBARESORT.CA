@@ -87,6 +87,27 @@ shape is exactly `{id, name, region, airport, confirmed}` and fails the build if
 field is added. Populate those only from an authorized supplier feed, never from memory or a
 public website.
 
+## 2026-10-14 accessibility pass (handoff priority 3)
+
+Audited with axe-core in Chromium at 1440x900, 820x1180 and 390x844, plus the mobile
+menu, the request dialog and the legal dialog opened.
+
+**Before:** 426 nodes failing `color-contrast` (WCAG 2 AA), serious impact, at every width.
+**After:** 0 violations in all six states. Horizontal overflow was already 0 and still is.
+
+27 palette values were darkened to reach 4.5:1 for body text and 3:1 for large text,
+each solved against the darkest background it actually renders on, with hue preserved.
+The CTA band background moved from `#cf725e` to `#985445` because no text colour could
+reach 4.5:1 over the original coral. The primary coral button moved from `#ee755e` to
+`#b75a48` for the same reason. The result reads as a deeper terracotta and the design
+intent survives.
+
+A test (`no low-contrast colour from the pre-audit palette comes back`) lists all 27
+retired values and fails the build if one reappears, so this does not silently regress.
+
+Not yet audited: keyboard-only traversal of the full page and screen-reader announcement
+order. axe covers neither.
+
 ### Next tasks, prioritized
 
 1. Re-confirm the 34 `confirmed:false` properties against the current supplier list; correct or drop.

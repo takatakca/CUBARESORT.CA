@@ -76,6 +76,16 @@ test("every editorial destination is also a directory region, so cards never dea
  // and the directory reaches regions the editorial catalogue does not cover yet
  assert.ok(hotelRegions.length>destinations.length);
 });
+test("no low-contrast colour from the pre-audit palette comes back",async()=>{
+ const css=await readFile(resolve(root,"assets/styles.css"),"utf8");
+ // Each of these failed WCAG 2 AA at the size and background it was used on.
+ // Verified with axe-core in Chromium on 2026-10-14; see docs/AGENT_HANDOFF.md.
+ const retired=["#b35f50","#7d8a87","#8a6a2f","#6a7c79","#79908a","#cc765f","#748380",
+  "#88908b","#d46f59","#d17b64","#899693","#71807e","#66807c","#7f8a83","#788784",
+  "#8f9994","#76827e","#cf725e","#e7e0c9","#71817b","#ee755e","#677b76","#a9624f",
+  "#6a7875","#b05c4a","#6a736d","#697774"];
+ for(const colour of retired)assert.ok(!css.toLowerCase().includes(colour),"retired low-contrast colour "+colour+" is back in styles.css");
+});
 test("sitemap and robots point at a single canonical production URL",async()=>{
  const sitemap=await readFile(resolve(root,"sitemap.xml"),"utf8");
  const robots=await readFile(resolve(root,"robots.txt"),"utf8");
