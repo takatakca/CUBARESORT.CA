@@ -33,6 +33,11 @@ jobs:
           name: cubaresort-static
           path: dist/
           if-no-files-found: error
+  # Publishing is best-effort and must never mask a real test or build failure.
+  # It stays red-free so that a red X on this workflow always means broken code.
+  # GitHub Pages must be switched on once by a repository administrator:
+  #   Settings > Pages > Build and deployment > Source: GitHub Actions
+  # Until then configure-pages returns 404 and this job reports "not enabled".
   deploy:
     name: Deploy GitHub Pages
     needs: verify
@@ -44,8 +49,28 @@ jobs:
         with:
           name: cubaresort-static
           path: dist/
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+      - id: configure
+        uses: actions/configure-pages@v5
+        continue-on-error: true
+      - if: steps.configure.outcome == 'success'
+        uses: actions/upload-pages-artifact@v3
         with:
           path: dist/
-      - uses: actions/deploy-pages@v4
+      - id: deployment
+        if: steps.configure.outcome == 'success'
+        uses: actions/deploy-pages@v4
+      - name: Report publication status
+        run: |
+          if [ "${{ steps.configure.outcome }}" = "success" ]; then
+            echo "### Published to GitHub Pages" >> "$GITHUB_STEP_SUMMARY"
+            echo "${{ steps.deployment.outputs.page_url }}" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "### GitHub Pages is not enabled for this repository" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "The static build succeeded and is attached to this run as the" >> "$GITHUB_STEP_SUMMARY"
+            echo "\`cubaresort-static\` artifact, ready to upload to any static host." >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "To publish automatically, a repository administrator must set" >> "$GITHUB_STEP_SUMMARY"
+            echo "**Settings > Pages > Build and deployment > Source: GitHub Actions**," >> "$GITHUB_STEP_SUMMARY"
+            echo "then re-run this workflow. The built-in GITHUB_TOKEN cannot enable it." >> "$GITHUB_STEP_SUMMARY"
+          fi
