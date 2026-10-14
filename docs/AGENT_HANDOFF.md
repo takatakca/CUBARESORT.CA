@@ -50,3 +50,46 @@ With no product specification and no existing implementation, deliver a usable C
 - GitHub Pages source must be configured once by a repository administrator: Settings > Pages > Build and deployment > Source: GitHub Actions; then rerun workflow. The built-in GITHUB_TOKEN cannot enable Pages automatically without an additional authorized token.
 - A Vercel project named cubaresort-ca was created (project id prj_YH0obrJP1zKgZTk3AAV98GdYLOUi) but deployment and project inspection returned 403 for scope takatakcas-projects. No Vercel deployment was confirmed. Do not claim it is live or retry without appropriate access.
 - custom domain https://cubaresort.ca/ and DNS/SSL remain unverified; avoid modifying production DNS absent a verified target.
+
+## 2026-10-14 property directory release
+
+### What shipped
+
+`assets/hotels.js` — a directory of **169 Cuban properties across 13 regions**, surfaced in a new
+`#hotels` section with region chips, a region select, accent-insensitive name search and reset.
+Trilingual (FR/EN/ES). Four new tests cover directory integrity, the no-commercial-claim rule and search.
+
+### Where the data came from, and what it is worth
+
+Two sources were merged, de-duplicated by a normalised name key plus an explicit alias table:
+
+1. **Operator supplier list (135 properties).** Names read directly from screenshots of the
+   operator's own booking system supplied by the user. These carry `confirmed:true`.
+2. **Project archive (34 further properties).** Recovered from
+   `cubaresort-ALL-148-HOTELS-COMPLETE.tar.gz`, which held a 148-record `hotel-data.ts`.
+   These carry `confirmed:false` and need re-confirmation against the supplier list.
+
+Multi-centre combo packages (`2CT …`, `… AND …`) were excluded: they are products, not properties.
+
+### Correcting the record on the earlier "148 hotels complete" claim
+
+The recovered 148-record file was a **skeleton, not a populated database**: 117 of its records
+were literally marked `DATA EXTRACTION NEEDED`, and **no record had a non-zero room count**.
+Only 3 properties anywhere in the archives had restaurants, bars and room categories filled in.
+So the names and regions were real and worth recovering; the detail was never there. Any future
+handoff claiming a populated 148-hotel database should be checked against this paragraph first.
+
+### Deliberately NOT in `assets/hotels.js`
+
+No rate, availability, star rating, review, room count, chain ranking or hotel-specific photo.
+A test (`property directory carries no rate, availability or ranking claim`) asserts the record
+shape is exactly `{id, name, region, airport, confirmed}` and fails the build if a commercial
+field is added. Populate those only from an authorized supplier feed, never from memory or a
+public website.
+
+### Next tasks, prioritized
+
+1. Re-confirm the 34 `confirmed:false` properties against the current supplier list; correct or drop.
+2. Decide how multi-centre combo packages should be modelled, if they belong on the site at all.
+3. GitHub Pages is still not enabled — Settings > Pages > Source: GitHub Actions, then rerun. Still blocking.
+4. Per-property detail pages require the supplier feed first; do not hand-write them.

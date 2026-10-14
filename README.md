@@ -8,6 +8,7 @@ Trilingual (FR / EN / ES), responsive **Cuba travel-inspiration portal**, built 
 
 - Premium responsive homepage with hero, destination cards, editorial section, FAQ and footer.
 - Nine curated travel ideas across Varadero, Cayo Coco, Havana, Cayo Santa María, Holguín and Trinidad.
+- **Property directory: 169 Cuban properties across 13 regions**, with region filter chips, region select and accent-insensitive name search. Names and regions only — no rates, availability, star ratings, room counts or hotel-specific photos.
 - Destination and trip-style filters, accent-insensitive text search, sorting, reset and bookmarkable URL filters.
 - Browser-local favourites (no accounts or personal tracking).
 - French, English and Spanish translations with local language persistence.
@@ -32,6 +33,7 @@ For shared hosting, upload only the contents of dist into the verified document 
 
 - **index.html**: semantic homepage and dialogs.
 - **assets/catalog.js**: destinations and multilingual editorial ideas.
+- **assets/hotels.js**: the property directory (names, region, arrival airport, confirmation flag). Never add rates, availability or ratings to this file from memory or a public website — only from an authorized supplier feed.
 - **assets/i18n.js**: all translations, FAQ and baseline legal copy.
 - **assets/styles.css**: responsive layout, colors and components.
 - **assets/app.js**: client-side discovery features.

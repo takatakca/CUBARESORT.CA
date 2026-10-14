@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 import { destinations, experiences, styles, catalogIsValid, imageUrl } from "../assets/catalog.js";
+import { hotelRegions, hotels, hotelsInRegion, searchHotels, regionLabel, hotelDirectoryIsValid } from "../assets/hotels.js";
 import { copy, hasAllKeys, translation } from "../assets/i18n.js";
 import { SITE_CONFIG } from "../assets/config.js";
 const root=resolve(dirname(fileURLToPath(import.meta.url)),"..");
@@ -35,6 +36,33 @@ test("root HTML has landmarks, accessible dialogs and no external application fr
  for(const tag of ['<main id="main">','<nav class="desktop-nav"','<dialog id="inquiry-dialog"','<html lang="fr">','id="destination-filter"','id="experience-grid"'])assert.ok(html.includes(tag),tag);
  assert.ok(!html.includes("stripe.com"));
  assert.ok(!html.includes("book now"));
+});
+test("property directory is internally consistent and every region is translated",()=>{
+ assert.equal(hotelDirectoryIsValid(),true);
+ assert.equal(new Set(hotels.map(h=>h.id)).size,hotels.length);
+ assert.equal(new Set(hotelRegions.map(r=>r.id)).size,hotelRegions.length);
+ assert.ok(hotels.length>=148,"directory must carry at least the 148 properties recovered from the project archive");
+ for(const r of hotelRegions){
+  assert.equal(r.count,hotelsInRegion(r.id).length);
+  for(const lang of ["fr","en","es"])assert.match(regionLabel(r.id,lang),/\S/);
+ }
+});
+test("property directory carries no rate, availability or ranking claim",()=>{
+ const banned=["price","rate","cad","usd","star","rating","review","available","rooms","promo","deal","discount"];
+ for(const h of hotels){
+  const fields=Object.keys(h);
+  assert.deepEqual(fields.sort(),["airport","confirmed","id","name","region"],"unexpected field on "+h.id);
+  for(const key of fields)assert.ok(!banned.includes(key.toLowerCase()),"banned field "+key);
+ }
+});
+test("directory search filters by region and matches accent-insensitively",()=>{
+ const varadero=hotelsInRegion("varadero");
+ assert.ok(varadero.length>0);
+ assert.ok(varadero.every(h=>h.region==="varadero"));
+ assert.equal(hotelsInRegion("all").length,hotels.length);
+ const sample=hotels.find(h=>/[áéíóúñ]/i.test(h.name))||hotels[0];
+ assert.ok(searchHotels(sample.name,"all").some(h=>h.id===sample.id));
+ assert.equal(searchHotels("zzzzz-no-such-hotel","all").length,0);
 });
 test("sitemap and robots point at a single canonical production URL",async()=>{
  const sitemap=await readFile(resolve(root,"sitemap.xml"),"utf8");

@@ -1,4 +1,5 @@
 import { destinations, experiences, styles, imageUrl } from "./catalog.js";
+import { hotelRegions, hotels, searchHotels, regionLabel } from "./hotels.js";
 import { copy, translation } from "./i18n.js";
 import { SITE_CONFIG } from "./config.js";
 
@@ -26,6 +27,8 @@ const state = {
   style: STYLE_IDS.has(params.get("style")) ? params.get("style") : "all",
   q: (params.get("q") || "").slice(0,100),
   sort:"featured",
+  hotelRegion:"all",
+  hotelQuery:"",
   favorites:new Set(Array.isArray(stored.favorites) ? stored.favorites.filter(id => EXPERIENCE_IDS.has(id)) : [])
 };
 function tr(key){return translation(state.lang,key);}
@@ -112,6 +115,54 @@ function renderExperiences(){
    grid.append(article);
  }
 }
+function updateHotelSelect(){
+ const select=$("#hotel-region");
+ select.replaceChildren(new Option(tr("hotelsAllRegions")+" ("+hotels.length+")","all"));
+ for(const r of hotelRegions)select.add(new Option(r.label[state.lang]+" ("+r.count+")",r.id));
+ select.value=state.hotelRegion;
+ $("#hotel-search").value=state.hotelQuery;
+}
+
+function renderRegionChips(){
+ const wrap=$("#region-chips");
+ wrap.replaceChildren();
+ const makeChip=(id,label,count)=>{
+  const b=document.createElement("button");
+  b.type="button";
+  b.className="region-chip";
+  b.dataset.region=id;
+  b.setAttribute("aria-pressed",String(state.hotelRegion===id));
+  b.textContent=label+" ("+count+")";
+  return b;
+ };
+ wrap.append(makeChip("all",tr("hotelsAllRegions"),hotels.length));
+ for(const r of hotelRegions)wrap.append(makeChip(r.id,r.label[state.lang],r.count));
+}
+
+function renderHotels(){
+ const grid=$("#hotel-grid");
+ grid.replaceChildren();
+ const list=searchHotels(state.hotelQuery,state.hotelRegion);
+ $("#hotel-count").textContent=list.length+" "+tr(list.length===1?"hotelsCountOne":"hotelsCount");
+ $("#hotel-empty").hidden=list.length>0;
+ for(const h of list){
+  const li=document.createElement("li");
+  li.className="hotel-card"+(h.confirmed?"":" hotel-card-pending");
+  const badge=h.confirmed?tr("hotelsConfirmed"):tr("hotelsPending");
+  li.innerHTML='<div class="hotel-main"><h3>'+escapedAttr(h.name)+'</h3>'
+   +'<p class="hotel-meta"><span class="hotel-region">'+escapedAttr(regionLabel(h.region,state.lang))+'</span>'
+   +'<span class="hotel-airport">'+escapedAttr(tr("hotelsAirport"))+' '+escapedAttr(h.airport)+'</span></p></div>'
+   +'<div class="hotel-foot"><span class="hotel-badge'+(h.confirmed?"":" hotel-badge-pending")+'">'+escapedAttr(badge)+'</span>'
+   +'<button type="button" data-hotel-inquire="'+escapedAttr(h.region)+'">'+escapedAttr(tr("hotelsAsk"))+'</button></div>';
+  grid.append(li);
+ }
+}
+
+function resetHotels(){
+ state.hotelRegion="all";state.hotelQuery="";
+ updateHotelSelect();renderRegionChips();renderHotels();
+}
+
 function renderFaq(){
  const list=$("#faq-list");
  list.replaceChildren();
@@ -124,7 +175,8 @@ function renderFaq(){
  });
 }
 function render(){
- setStaticTranslations();updateSelects();renderDestinations();renderExperiences();renderFaq();
+ setStaticTranslations();updateSelects();renderDestinations();renderExperiences();
+ updateHotelSelect();renderRegionChips();renderHotels();renderFaq();
 }
 function syncUrl(){
  const url=new URL(window.location.href);
@@ -214,6 +266,26 @@ $("#experience-grid").addEventListener("click",e=>{
  }
  const inquire=e.target.closest("[data-inquire]");
  if(inquire)openInquiry(inquire.dataset.inquire);
+});
+$("#hotel-region").addEventListener("change",e=>{
+ state.hotelRegion=e.target.value;renderRegionChips();renderHotels();
+});
+$("#hotel-search").addEventListener("input",e=>{
+ state.hotelQuery=e.target.value.slice(0,100);renderHotels();
+});
+$("#hotel-reset").addEventListener("click",resetHotels);
+$("#hotel-empty-reset").addEventListener("click",resetHotels);
+$("#region-chips").addEventListener("click",e=>{
+ const chip=e.target.closest("[data-region]");
+ if(!chip)return;
+ state.hotelRegion=chip.dataset.region;
+ updateHotelSelect();renderRegionChips();renderHotels();
+});
+$("#hotel-grid").addEventListener("click",e=>{
+ const ask=e.target.closest("[data-hotel-inquire]");
+ if(!ask)return;
+ const region=ask.dataset.hotelInquire;
+ openInquiry(DEST_IDS.has(region)?region:"all");
 });
 for(const id of ["header-inquiry","mobile-inquiry","band-inquiry","footer-inquiry"]){
  $("#"+id).addEventListener("click",()=>{closeMobile();openInquiry(state.destination);});
