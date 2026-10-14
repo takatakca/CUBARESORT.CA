@@ -70,6 +70,12 @@ test("directory state is deep-linkable through the URL",async()=>{
  // every region id must survive a round trip through a URL query string
  for(const r of hotelRegions)assert.equal(new URLSearchParams("region="+encodeURIComponent(r.id)).get("region"),r.id);
 });
+test("every editorial destination is also a directory region, so cards never dead-end",()=>{
+ const regions=new Set(hotelRegions.map(r=>r.id));
+ for(const d of destinations)assert.ok(regions.has(d.id),"no properties listed for destination "+d.id);
+ // and the directory reaches regions the editorial catalogue does not cover yet
+ assert.ok(hotelRegions.length>destinations.length);
+});
 test("sitemap and robots point at a single canonical production URL",async()=>{
  const sitemap=await readFile(resolve(root,"sitemap.xml"),"utf8");
  const robots=await readFile(resolve(root,"robots.txt"),"utf8");

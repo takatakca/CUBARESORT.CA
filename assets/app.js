@@ -36,7 +36,7 @@ function tr(key){return translation(state.lang,key);}
 function persist(){
  try {localStorage.setItem(storageKey,JSON.stringify({lang:state.lang,favorites:[...state.favorites]}));} catch {/* private mode or full storage */}
 }
-function destName(id){return destinations.find(d=>d.id===id)?.name || "";}
+function destName(id){return destinations.find(d=>d.id===id)?.name || (REGION_IDS.has(id)?regionLabel(id,state.lang):"");}
 function normalize(str){return String(str).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLocaleLowerCase();}
 function escapedAttr(str){return String(str).replaceAll("&","&amp;").replaceAll('"',"&quot;").replaceAll("<","&lt;").replaceAll(">","&gt;");}
 const richKeys = new Set(["heroTitle","destTitle","staysTitle","editorialTitle","approachTitle","ctaBandTitle","faqTitle"]);
@@ -61,11 +61,12 @@ function updateSelects(){
  const filter=$("#destination-filter");
  const inquiry=$("#inquiry-destination");
  filter.replaceChildren(new Option(tr("allDestinations"),"all"));
+ // The experience filter covers the editorial catalogue only.
+ for(const d of destinations)filter.add(new Option(d.name,d.id));
+ // The request draft covers every region we actually have properties in,
+ // so a visitor can ask about Viñales or Santiago even with no editorial card yet.
  inquiry.replaceChildren(new Option(tr("allInquiryDestinations"),"all"));
- for(const d of destinations) {
-   filter.add(new Option(d.name,d.id));
-   inquiry.add(new Option(d.name,d.id));
- }
+ for(const r of hotelRegions)inquiry.add(new Option(r.label[state.lang],r.id));
  filter.value=state.destination;
  const style=$("#style-filter");
  style.replaceChildren(new Option(tr("allStyles"),"all"));
@@ -196,7 +197,7 @@ function reset(){
 }
 function openInquiry(dest="all"){
  const dialog=$("#inquiry-dialog");
- $("#inquiry-destination").value=DEST_IDS.has(dest) ? dest : "all";
+ $("#inquiry-destination").value=REGION_IDS.has(dest) ? dest : "all";
  $("#inquiry-status").textContent="";
  const now=new Date(),month=now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0");
  $("#inquiry-date").min=month;
@@ -205,7 +206,7 @@ function openInquiry(dest="all"){
 function formatRequest(){
  const destination=$("#inquiry-destination").value;
  const travelers=Number($("#inquiry-travelers").value);
- if(!["all",...DEST_IDS].includes(destination)||!Number.isInteger(travelers)||travelers<1||travelers>30)return null;
+ if(!(destination==="all"||DEST_IDS.has(destination)||REGION_IDS.has(destination))||!Number.isInteger(travelers)||travelers<1||travelers>30)return null;
  const duration=$("#inquiry-duration").value;
  const month=$("#inquiry-date").value || "-";
  const notes=$("#inquiry-notes").value.trim().slice(0,1000) || "-";
@@ -256,7 +257,9 @@ $("#destination-grid").addEventListener("click",e=>{
  if(!card)return;
  e.preventDefault();
  state.destination=card.dataset.destination;state.style="all";state.q="";
- updateSelects();renderExperiences();syncUrl();
+ // A destination card narrows the property directory to the same region.
+ if(REGION_IDS.has(state.destination)){state.hotelRegion=state.destination;state.hotelQuery="";}
+ updateSelects();renderExperiences();updateHotelSelect();renderRegionChips();renderHotels();syncUrl();
  $("#experiences").scrollIntoView({behavior:"smooth",block:"start"});
 });
 $("#experience-grid").addEventListener("click",e=>{
@@ -287,8 +290,7 @@ $("#region-chips").addEventListener("click",e=>{
 $("#hotel-grid").addEventListener("click",e=>{
  const ask=e.target.closest("[data-hotel-inquire]");
  if(!ask)return;
- const region=ask.dataset.hotelInquire;
- openInquiry(DEST_IDS.has(region)?region:"all");
+ openInquiry(ask.dataset.hotelInquire);
 });
 for(const id of ["header-inquiry","mobile-inquiry","band-inquiry","footer-inquiry"]){
  $("#"+id).addEventListener("click",()=>{closeMobile();openInquiry(state.destination);});
