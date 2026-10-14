@@ -1,0 +1,103 @@
+// CUBARESORT.CA — Phase 1 schema.
+//
+// Lives in the `cubaresort` schema of the TAKATAK V1 Supabase project, the same
+// arrangement ISEXY uses with its `isexy` schema: one project, one bill, one
+// dashboard, isolated tables. Identity stays with TAKATAK Auth — this schema
+// stores no password, no OTP and no session.
+//
+// Single production client strategy, matching takatak-v1: the JavaScript client
+// engine plus @prisma/adapter-pg. Do not add a second generator. Generate during
+// the Linux build, never on a live server.
+//
+// HONESTY RULES (enforced in app code and tests):
+// - Property carries NO rate, availability, star rating, review or room count.
+//   Those arrive only from an authorized supplier feed, in their own tables,
+//   with the supplier and fetch time recorded.
+// - `confirmed` means "on the operator's current supplier list", nothing more.
+
+generator client {
+  provider   = "prisma-client-js"
+  engineType = "client"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+  schemas   = ["cubaresort"]
+}
+
+/// A Cuban region CUBARESORT lists properties in.
+model Region {
+  id        String     @id
+  labelFr   String     @map("label_fr")
+  labelEn   String     @map("label_en")
+  labelEs   String     @map("label_es")
+  sortOrder Int        @default(0) @map("sort_order")
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  properties Property[]
+
+  @@map("regions")
+  @@schema("cubaresort")
+}
+
+/// One property. Name and location only, by design.
+model Property {
+  id       String  @id
+  name     String
+  regionId String  @map("region_id")
+  /// IATA code of the arrival airport.
+  airport  String
+  /// true = on the operator's current supplier list.
+  /// false = carried over from the project archive, awaiting re-confirmation.
+  confirmed Boolean @default(false)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  region Region  @relation(fields: [regionId], references: [id], onDelete: Restrict)
+  leads  Lead[]
+
+  @@index([regionId])
+  @@index([confirmed])
+  @@map("properties")
+  @@schema("cubaresort")
+}
+
+enum LeadStatus {
+  new
+  contacted
+  quoted
+  closed
+
+  @@schema("cubaresort")
+}
+
+/// A visitor's request for a quote. Not a booking and not a contract.
+///
+/// `takatakUserId` is the TAKATAK Auth user id when the visitor was signed in;
+/// null for anonymous requests. No password or OTP is ever stored here.
+model Lead {
+  id            String     @id @default(uuid())
+  takatakUserId String?    @map("takatak_user_id")
+  email         String?
+  phone         String?
+  regionId      String?    @map("region_id")
+  propertyId    String?    @map("property_id")
+  travellers    Int?
+  departMonth   String?    @map("depart_month")
+  nights        Int?
+  notes         String?
+  locale        String     @default("fr")
+  status        LeadStatus @default(new)
+  createdAt     DateTime   @default(now()) @map("created_at")
+  updatedAt     DateTime   @updatedAt @map("updated_at")
+
+  property Property? @relation(fields: [propertyId], references: [id], onDelete: SetNull)
+
+  @@index([status, createdAt])
+  @@index([takatakUserId])
+  @@map("leads")
+  @@schema("cubaresort")
+}
