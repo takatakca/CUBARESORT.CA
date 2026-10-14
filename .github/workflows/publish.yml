@@ -1,76 +1,33 @@
-name: Validate and publish CUBARESORT.CA
+name: Validate CUBARESORT.CA
 
 on:
   push:
     branches: [main]
+  pull_request:
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: github-pages
-  cancel-in-progress: false
 
 jobs:
   verify:
-    name: Static checks and build
+    name: Typecheck, lint, test and build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Validate source and run tests
-        run: npm run validate
-      - name: Prepare static release
-        run: npm run build
-      - name: Upload release artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: cubaresort-static
-          path: dist/
-          if-no-files-found: error
-  # Publishing is best-effort and must never mask a real test or build failure.
-  # It stays red-free so that a red X on this workflow always means broken code.
-  # GitHub Pages must be switched on once by a repository administrator:
-  #   Settings > Pages > Build and deployment > Source: GitHub Actions
-  # Until then configure-pages returns 404 and this job reports "not enabled".
-  deploy:
-    name: Deploy GitHub Pages
-    needs: verify
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: cubaresort-static
-          path: dist/
-      - id: configure
-        uses: actions/configure-pages@v5
-        continue-on-error: true
-      - if: steps.configure.outcome == 'success'
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist/
-      - id: deployment
-        if: steps.configure.outcome == 'success'
-        uses: actions/deploy-pages@v4
-      - name: Report publication status
-        run: |
-          if [ "${{ steps.configure.outcome }}" = "success" ]; then
-            echo "### Published to GitHub Pages" >> "$GITHUB_STEP_SUMMARY"
-            echo "${{ steps.deployment.outputs.page_url }}" >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "### GitHub Pages is not enabled for this repository" >> "$GITHUB_STEP_SUMMARY"
-            echo "" >> "$GITHUB_STEP_SUMMARY"
-            echo "The static build succeeded and is attached to this run as the" >> "$GITHUB_STEP_SUMMARY"
-            echo "\`cubaresort-static\` artifact, ready to upload to any static host." >> "$GITHUB_STEP_SUMMARY"
-            echo "" >> "$GITHUB_STEP_SUMMARY"
-            echo "To publish automatically, a repository administrator must set" >> "$GITHUB_STEP_SUMMARY"
-            echo "**Settings > Pages > Build and deployment > Source: GitHub Actions**," >> "$GITHUB_STEP_SUMMARY"
-            echo "then re-run this workflow. The built-in GITHUB_TOKEN cannot enable it." >> "$GITHUB_STEP_SUMMARY"
-          fi
+          cache: npm
+      # ignore-scripts=false so Prisma's postinstall generates the client.
+      - run: npm ci --ignore-scripts=false
+      - run: npm run db:generate
+        env:
+          DATABASE_URL: postgresql://ci:ci@localhost:6543/postgres?schema=cubaresort
+          DIRECT_URL: postgresql://ci:ci@localhost:5432/postgres?schema=cubaresort
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+      - name: Build the Coolify image
+        run: docker build -t cubaresort-ca:ci .
