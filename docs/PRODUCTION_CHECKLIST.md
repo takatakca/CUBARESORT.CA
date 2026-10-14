@@ -17,11 +17,12 @@ Updated: 2026-10-14. Current scope: **static inspiration portal, not a live book
 ## Verification still required
 
 - [x] GitHub Actions validation and build passed on commit 637a25c (run 38617962103)
-- [ ] GitHub Pages is configured with GitHub Actions as publication source
+- [ ] GitHub Pages enabled (main run #38623054650 configure-pages returned 404; upload/deploy skipped despite green job)
 - [ ] Published Pages URL serves working site
 - [ ] cubaresort.ca DNS checked with domain owner and chosen host
 - [ ] HTTPS on cubaresort.ca validated with matching certificate
-- [ ] Production domain points to verified static deployment
+- [ ] Production domain points to a verified approved deployment (preserve the existing domain site and have rollback ready)
+- [ ] Release parity review of PR #3 against main and the existing public site (see docs/RELEASE_PARITY_GATE.md)
 - [ ] Chrome, Firefox, Safari, Android/iOS smoke tests
 - [ ] Keyboard, screen reader, mobile menus and all locales tested
 - [ ] Verify stock-photo availability, rights, link targets and performance

@@ -114,3 +114,13 @@ order. axe covers neither.
 2. Decide how multi-centre combo packages should be modelled, if they belong on the site at all.
 3. GitHub Pages is still not enabled — Settings > Pages > Source: GitHub Actions, then rerun. Still blocking.
 4. Per-property detail pages require the supplier feed first; do not hand-write them.
+
+## 2026-10-14 release audit — current deployment and PR #3
+
+- `main` HEAD at audit: `46d7dec9de6c9e5a44d299010253aa511848a394`.
+- Latest `main` run #38623054650: **validation/build passed**; `actions/configure-pages@v5` emitted **404 Not Found**, and both `upload-pages-artifact` and `deploy-pages` were **skipped**. The job concluded green only because the Pages failure was explicitly marked `continue-on-error`. Therefore **nothing was published by that run**.
+- Repository API `has_pages:false`; Pages activation is not confirmed.
+- Open PR #3 (`feat/nextjs-conversion`, commit `7e97461d527e7635aa1d94079bdfd93299de1edb`) passes its own typecheck/lint/test/build. Its Vercel bot reports a ready preview, but custom-domain operation was not independently verified.
+- PR #3 currently removes the original editorial stay cards, style/destination filters, favourites and trip-request draft UI, retaining the property directory and FAQ. Do not treat a green Next.js build as UX parity. See `docs/RELEASE_PARITY_GATE.md`.
+- Publicly indexed content for `www.cubaresort.ca` historically describes a 5% price-match travel proposition, distinct from the repo's informational portal. This is **not proof of current live health**; the live host and source of truth need owner confirmation. Do not change DNS or overwrite the existing site without parity and rollback.
+- No production booking API, legal identity, licence documentation, verified contact or Supabase migration approval is recorded here. Keep commercial features and migrations disabled.
