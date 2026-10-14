@@ -64,6 +64,12 @@ test("directory search filters by region and matches accent-insensitively",()=>{
  assert.ok(searchHotels(sample.name,"all").some(h=>h.id===sample.id));
  assert.equal(searchHotels("zzzzz-no-such-hotel","all").length,0);
 });
+test("directory state is deep-linkable through the URL",async()=>{
+ const app=await readFile(resolve(root,"assets/app.js"),"utf8");
+ for(const token of ['params.get("region")','params.get("hq")','url.searchParams.set("region"','url.searchParams.set("hq"'])assert.ok(app.includes(token),token);
+ // every region id must survive a round trip through a URL query string
+ for(const r of hotelRegions)assert.equal(new URLSearchParams("region="+encodeURIComponent(r.id)).get("region"),r.id);
+});
 test("sitemap and robots point at a single canonical production URL",async()=>{
  const sitemap=await readFile(resolve(root,"sitemap.xml"),"utf8");
  const robots=await readFile(resolve(root,"robots.txt"),"utf8");

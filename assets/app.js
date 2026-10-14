@@ -9,6 +9,7 @@ const $$ = (selector) => Array.from(document.querySelectorAll(selector));
 const DEST_IDS = new Set(destinations.map((d) => d.id));
 const STYLE_IDS = new Set(styles);
 const EXPERIENCE_IDS = new Set(experiences.map((e) => e.id));
+const REGION_IDS = new Set(hotelRegions.map((r) => r.id));
 const localeTag = {fr:"fr-CA",en:"en-CA",es:"es-ES"};
 const storageKey = "cubaresort.preferences.v1";
 const params = new URLSearchParams(window.location.search);
@@ -27,8 +28,8 @@ const state = {
   style: STYLE_IDS.has(params.get("style")) ? params.get("style") : "all",
   q: (params.get("q") || "").slice(0,100),
   sort:"featured",
-  hotelRegion:"all",
-  hotelQuery:"",
+  hotelRegion: REGION_IDS.has(params.get("region")) ? params.get("region") : "all",
+  hotelQuery: (params.get("hq") || "").slice(0,100),
   favorites:new Set(Array.isArray(stored.favorites) ? stored.favorites.filter(id => EXPERIENCE_IDS.has(id)) : [])
 };
 function tr(key){return translation(state.lang,key);}
@@ -160,7 +161,7 @@ function renderHotels(){
 
 function resetHotels(){
  state.hotelRegion="all";state.hotelQuery="";
- updateHotelSelect();renderRegionChips();renderHotels();
+ updateHotelSelect();renderRegionChips();renderHotels();syncUrl();
 }
 
 function renderFaq(){
@@ -180,10 +181,12 @@ function render(){
 }
 function syncUrl(){
  const url=new URL(window.location.href);
- for(const key of ["destination","style","q","lang"])url.searchParams.delete(key);
+ for(const key of ["destination","style","q","lang","region","hq"])url.searchParams.delete(key);
  if(state.destination!=="all")url.searchParams.set("destination",state.destination);
  if(state.style!=="all")url.searchParams.set("style",state.style);
  if(state.q.trim())url.searchParams.set("q",state.q.trim());
+ if(state.hotelRegion!=="all")url.searchParams.set("region",state.hotelRegion);
+ if(state.hotelQuery.trim())url.searchParams.set("hq",state.hotelQuery.trim());
  if(state.lang!=="fr")url.searchParams.set("lang",state.lang);
  window.history.replaceState(null,"",url.pathname+url.search+url.hash);
 }
@@ -268,10 +271,10 @@ $("#experience-grid").addEventListener("click",e=>{
  if(inquire)openInquiry(inquire.dataset.inquire);
 });
 $("#hotel-region").addEventListener("change",e=>{
- state.hotelRegion=e.target.value;renderRegionChips();renderHotels();
+ state.hotelRegion=e.target.value;renderRegionChips();renderHotels();syncUrl();
 });
 $("#hotel-search").addEventListener("input",e=>{
- state.hotelQuery=e.target.value.slice(0,100);renderHotels();
+ state.hotelQuery=e.target.value.slice(0,100);renderHotels();syncUrl();
 });
 $("#hotel-reset").addEventListener("click",resetHotels);
 $("#hotel-empty-reset").addEventListener("click",resetHotels);
@@ -279,7 +282,7 @@ $("#region-chips").addEventListener("click",e=>{
  const chip=e.target.closest("[data-region]");
  if(!chip)return;
  state.hotelRegion=chip.dataset.region;
- updateHotelSelect();renderRegionChips();renderHotels();
+ updateHotelSelect();renderRegionChips();renderHotels();syncUrl();
 });
 $("#hotel-grid").addEventListener("click",e=>{
  const ask=e.target.closest("[data-hotel-inquire]");
