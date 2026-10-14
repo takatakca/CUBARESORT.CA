@@ -75,12 +75,12 @@ function renderDestinations(){
  const grid=$("#destination-grid");
  grid.replaceChildren();
  destinations.slice(0,3).forEach(d=>{
-  const button=document.createElement("button");
-  button.type="button";
+  const button=document.createElement("a");
+  button.href="#experiences";
   button.className="destination-card";
   button.dataset.destination=d.id;
   button.setAttribute("aria-label",d.name+" — "+tr("ctaExplore"));
-  button.innerHTML = '<img class="destination-photo" alt="'+escapedAttr(tr("destinationPhotoAlt"))+'" src="'+escapedAttr(imageUrl(d.image,1000))+'" loading="lazy" decoding="async"><span class="destination-content"><span><p>'+escapedAttr(d.text[state.lang])+'</p><h3>'+escapedAttr(d.name)+'</h3></span><span class="destination-arrow" aria-hidden="true">↗</span></span>';
+  button.innerHTML = '<img class="destination-photo" alt="'+escapedAttr(tr("destinationPhotoAlt"))+'" src="'+escapedAttr(imageUrl(d.image,1000))+'" loading="lazy" decoding="async"><div class="destination-content"><div><p>'+escapedAttr(d.text[state.lang])+'</p><h3>'+escapedAttr(d.name)+'</h3></div><span class="destination-arrow" aria-hidden="true">↗</span></div>';
   // button has a full-width decorative card and forwards to the catalogue
   grid.append(button);
  });
@@ -199,6 +199,7 @@ $("#empty-reset").addEventListener("click",reset);
 $("#destination-grid").addEventListener("click",e=>{
  const card=e.target.closest("[data-destination]");
  if(!card)return;
+ e.preventDefault();
  state.destination=card.dataset.destination;state.style="all";state.q="";
  updateSelects();renderExperiences();syncUrl();
  $("#experiences").scrollIntoView({behavior:"smooth",block:"start"});

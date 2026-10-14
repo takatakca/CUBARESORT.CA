@@ -42,3 +42,11 @@ With no product specification and no existing implementation, deliver a usable C
 - Preserve all three locales and keyboard accessibility.
 - GROUPE TAKATAK retains the master identity/customer-data authority; all vertical business data must be tenant scoped.
 - An information-site deployment is not a live commercial booking launch.
+
+## 2026-10-14 release verification
+
+- Feature release commit: 637a25cbb27494e7d6e3b97c396c02fe5bed3b19 pushed to main.
+- GitHub Actions run #38617962103: static validation and build **passed**. Publish job **failed** at actions/configure-pages because the repository GitHub Pages site is not enabled (404 Not Found).
+- GitHub Pages source must be configured once by a repository administrator: Settings > Pages > Build and deployment > Source: GitHub Actions; then rerun workflow. The built-in GITHUB_TOKEN cannot enable Pages automatically without an additional authorized token.
+- A Vercel project named cubaresort-ca was created (project id prj_YH0obrJP1zKgZTk3AAV98GdYLOUi) but deployment and project inspection returned 403 for scope takatakcas-projects. No Vercel deployment was confirmed. Do not claim it is live or retry without appropriate access.
+- custom domain https://cubaresort.ca/ and DNS/SSL remain unverified; avoid modifying production DNS absent a verified target.
