@@ -47,3 +47,10 @@ Updated: 2026-10-14. Current scope: **static inspiration portal, not a live book
 **MochaHost/cPanel:** Build dist in CI, upload only dist to the domain's confirmed document root. Verify SSH host key and an explicitly authorized deployment key before adding a deployment action. Do not inherit paths and credentials from another TAKATAK service.
 
 **Release rule:** A live informational website must not be described as live bookable inventory or a complete commercial booking integration.
+
+## Security and request-draft improvements (2026-10-14)
+
+- [x] Preview HTTP server restricts routes to production static assets and rejects hidden/repository files; integration test covers `.env` and internal paths.
+- [x] Property-specific request draft includes the selected hotel name with an explicit *not booked* label, while generic requests clear that selection.
+- [ ] Verify the latest commit's GitHub Actions checks after these changes.
+- [ ] GitHub Pages publication remains unverified: green validation workflow may have skipped Pages upload/deploy.

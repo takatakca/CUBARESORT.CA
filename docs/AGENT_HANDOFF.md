@@ -114,3 +114,12 @@ order. axe covers neither.
 2. Decide how multi-centre combo packages should be modelled, if they belong on the site at all.
 3. GitHub Pages is still not enabled — Settings > Pages > Source: GitHub Actions, then rerun. Still blocking.
 4. Per-property detail pages require the supplier feed first; do not hand-write them.
+
+## 2026-10-14 — Preview exposure and property-inquiry fixes
+
+- Baseline `main`: `46d7dec9de6c9e5a44d299010253aa511848a394`; latest Actions run `38623054650` passed checks/build but Pages upload/deploy steps were **skipped** because Pages configuration remains unavailable. A green workflow is **not** proof of publication.
+- Preview-server risk: prior `scripts/dev-server.mjs` blocked a few named folders but allowed arbitrary dotfiles such as `/.env`. Replaced with a strict production-file allowlist and real-path check to refuse symlink aliases; added live HTTP allow/deny integration test.
+- Directory inquiry risk: clicking Ask on a named hotel passed only its region, losing the chosen hotel. The selected property ID is now retained only in memory for the open draft and rendered as an explicitly **unbooked** property of interest; switching to a generic request clears the selection. Added pure request formatter and FR/EN/ES tests.
+- Open issue #1: GitHub Pages still requires repository-admin activation, and `cubaresort.ca` DNS/HTTPS remains unverified. Do not change DNS or claim a public release.
+- PR #3 (`feat/nextjs-conversion`) is open; the `fix/nextjs-feature-parity-20261014` branch has passing CI but is not merged. Reapply/port these safety and inquiry fixes to Next.js only after comparing current branch state; do not replace `main` with an incomplete conversion.
+- Next: inspect this new commit's Actions results, fix any failures, and continue keyboard/screen-reader verification. Supplier/legal/hosting approvals remain blockers to real bookings.

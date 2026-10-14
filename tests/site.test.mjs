@@ -7,6 +7,8 @@ import { destinations, experiences, styles, catalogIsValid, imageUrl } from "../
 import { hotelRegions, hotels, hotelsInRegion, searchHotels, regionLabel, hotelDirectoryIsValid } from "../assets/hotels.js";
 import { copy, hasAllKeys, translation } from "../assets/i18n.js";
 import { SITE_CONFIG } from "../assets/config.js";
+import { formatTravelRequest } from "../assets/request.js";
+import { createPreviewServer } from "../scripts/dev-server.mjs";
 const root=resolve(dirname(fileURLToPath(import.meta.url)),"..");
 test("destination IDs, translated data and experience relations are sound",()=>{
  assert.equal(catalogIsValid(),true);
@@ -91,4 +93,42 @@ test("sitemap and robots point at a single canonical production URL",async()=>{
  const robots=await readFile(resolve(root,"robots.txt"),"utf8");
  assert.ok(sitemap.includes("https://cubaresort.ca/"));
  assert.ok(robots.includes("https://cubaresort.ca/sitemap.xml"));
+});
+
+test("a property-specific inquiry draft preserves the exact selected property, not just its region",()=>{
+ const h=hotels[0];
+ const draft=formatTravelRequest({lang:"fr",destination:h.region,hotelId:h.id,travelers:2,duration:"7"});
+ assert.ok(draft.includes(h.name), "the selected property name must survive in the draft");
+ assert.ok(draft.includes(translation("fr","formHotel")));
+ assert.ok(draft.includes(translation("fr","dialogIntro")));
+ const generic=formatTravelRequest({lang:"fr",destination:h.region});
+ assert.ok(!generic.includes(translation("fr","formHotel")), "generic inquiries must not retain a previous property");
+ assert.equal(formatTravelRequest({lang:"fr",destination:"all",hotelId:h.id}),null);
+ assert.equal(formatTravelRequest({lang:"fr",destination:h.region,hotelId:"not-a-real-hotel"}),null);
+ for(const lang of ["en","es"])assert.ok(formatTravelRequest({lang,destination:h.region,hotelId:h.id}).includes(h.name));
+ assert.equal(formatTravelRequest({destination:h.region,travelers:0}),null);
+ assert.equal(formatTravelRequest({destination:h.region,month:"2026-99"}),null);
+});
+
+test("preview HTTP server exposes only the production static allowlist",async(t)=>{
+ const server=createPreviewServer();
+ await new Promise((resolve,reject)=>{
+  server.once("error",reject);
+  server.listen(0,"127.0.0.1",resolve);
+ });
+ t.after(()=>new Promise(resolve=>server.close(resolve)));
+ const base="http://127.0.0.1:"+server.address().port;
+ for(const path of ["/","/index.html","/assets/app.js","/assets/request.js","/assets/styles.css","/robots.txt"]){
+  const response=await fetch(base+path);
+  assert.equal(response.status,200,path);
+ }
+ for(const path of ["/.env","/.git/config","/README.md","/package.json","/docs/AGENT_HANDOFF.md","/scripts/dev-server.mjs","/assets/.env","/assets/../README.md","/tests/site.test.mjs"]){
+  const response=await fetch(base+path);
+  assert.equal(response.status,403,path);
+ }
+ const head=await fetch(base+"/assets/app.js",{method:"HEAD"});
+ assert.equal(head.status,200);
+ assert.equal(await head.text(),"");
+ const post=await fetch(base+"/assets/app.js",{method:"POST"});
+ assert.equal(post.status,405);
 });

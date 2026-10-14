@@ -2,6 +2,7 @@ import { destinations, experiences, styles, imageUrl } from "./catalog.js";
 import { hotelRegions, hotels, searchHotels, regionLabel } from "./hotels.js";
 import { copy, translation } from "./i18n.js";
 import { SITE_CONFIG } from "./config.js";
+import { formatTravelRequest } from "./request.js";
 
 // Static discovery application. No reservations, payments, API calls or collection of PII.
 const $ = (selector) => document.querySelector(selector);
@@ -30,6 +31,7 @@ const state = {
   sort:"featured",
   hotelRegion: REGION_IDS.has(params.get("region")) ? params.get("region") : "all",
   hotelQuery: (params.get("hq") || "").slice(0,100),
+  selectedHotelId:null,
   favorites:new Set(Array.isArray(stored.favorites) ? stored.favorites.filter(id => EXPERIENCE_IDS.has(id)) : [])
 };
 function tr(key){return translation(state.lang,key);}
@@ -60,6 +62,7 @@ function setStaticTranslations(){
 function updateSelects(){
  const filter=$("#destination-filter");
  const inquiry=$("#inquiry-destination");
+ const previousInquiryDestination=inquiry.value;
  filter.replaceChildren(new Option(tr("allDestinations"),"all"));
  // The experience filter covers the editorial catalogue only.
  for(const d of destinations)filter.add(new Option(d.name,d.id));
@@ -67,6 +70,8 @@ function updateSelects(){
  // so a visitor can ask about Viñales or Santiago even with no editorial card yet.
  inquiry.replaceChildren(new Option(tr("allInquiryDestinations"),"all"));
  for(const r of hotelRegions)inquiry.add(new Option(r.label[state.lang],r.id));
+ // Language changes must not erase a hotel-specific draft already open.
+ inquiry.value=REGION_IDS.has(previousInquiryDestination) ? previousInquiryDestination : "all";
  filter.value=state.destination;
  const style=$("#style-filter");
  style.replaceChildren(new Option(tr("allStyles"),"all"));
@@ -155,7 +160,7 @@ function renderHotels(){
    +'<p class="hotel-meta"><span class="hotel-region">'+escapedAttr(regionLabel(h.region,state.lang))+'</span>'
    +'<span class="hotel-airport">'+escapedAttr(tr("hotelsAirport"))+' '+escapedAttr(h.airport)+'</span></p></div>'
    +'<div class="hotel-foot"><span class="hotel-badge'+(h.confirmed?"":" hotel-badge-pending")+'">'+escapedAttr(badge)+'</span>'
-   +'<button type="button" data-hotel-inquire="'+escapedAttr(h.region)+'">'+escapedAttr(tr("hotelsAsk"))+'</button></div>';
+   +'<button type="button" data-hotel-inquire="'+escapedAttr(h.id)+'">'+escapedAttr(tr("hotelsAsk"))+'</button></div>';
   grid.append(li);
  }
 }
@@ -195,32 +200,26 @@ function reset(){
  state.destination="all";state.style="all";state.q="";state.sort="featured";
  updateSelects();renderExperiences();syncUrl();
 }
-function openInquiry(dest="all"){
+function openInquiry(dest="all",hotelId=null){
  const dialog=$("#inquiry-dialog");
  $("#inquiry-destination").value=REGION_IDS.has(dest) ? dest : "all";
+ // Hotel interest is ephemeral, never persisted or transmitted automatically.
+ state.selectedHotelId=hotels.some(h=>h.id===hotelId && h.region===dest) ? hotelId : null;
  $("#inquiry-status").textContent="";
  const now=new Date(),month=now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0");
  $("#inquiry-date").min=month;
  if(!dialog.open)dialog.showModal();
 }
 function formatRequest(){
- const destination=$("#inquiry-destination").value;
- const travelers=Number($("#inquiry-travelers").value);
- if(!(destination==="all"||DEST_IDS.has(destination)||REGION_IDS.has(destination))||!Number.isInteger(travelers)||travelers<1||travelers>30)return null;
- const duration=$("#inquiry-duration").value;
- const month=$("#inquiry-date").value || "-";
- const notes=$("#inquiry-notes").value.trim().slice(0,1000) || "-";
- // Text is kept in the browser until the visitor explicitly copies or opens their own email client.
- return [
-  "CUBARESORT.CA — "+tr("dialogTitle"),
-  tr("formDestination")+": "+(destination==="all"?tr("allInquiryDestinations"):destName(destination)),
-  tr("formMonth")+": "+month,
-  tr("formTravelers")+": "+travelers,
-  tr("formDuration")+": "+(duration==="flexible"?tr("durationFlexible"):duration+" "+(state.lang==="en"?"nights":state.lang==="es"?"noches":"nuits")),
-  tr("formNotes")+": "+notes,
-  "",
-  tr("dialogIntro")
- ].join("\n");
+ return formatTravelRequest({
+  lang:state.lang,
+  destination:$("#inquiry-destination").value,
+  hotelId:state.selectedHotelId,
+  month:$("#inquiry-date").value,
+  travelers:$("#inquiry-travelers").value,
+  duration:$("#inquiry-duration").value,
+  notes:$("#inquiry-notes").value
+ });
 }
 function showStatus(message){$("#inquiry-status").textContent=message;}
 function openLegal(kind){
@@ -290,7 +289,8 @@ $("#region-chips").addEventListener("click",e=>{
 $("#hotel-grid").addEventListener("click",e=>{
  const ask=e.target.closest("[data-hotel-inquire]");
  if(!ask)return;
- openInquiry(ask.dataset.hotelInquire);
+ const hotel=hotels.find(h=>h.id===ask.dataset.hotelInquire);
+ if(hotel)openInquiry(hotel.region,hotel.id);
 });
 for(const id of ["header-inquiry","mobile-inquiry","band-inquiry","footer-inquiry"]){
  $("#"+id).addEventListener("click",()=>{closeMobile();openInquiry(state.destination);});
@@ -301,6 +301,7 @@ $("#menu-toggle").addEventListener("click",()=>{
 });
 $$("#mobile-menu a").forEach(a=>a.addEventListener("click",closeMobile));
 $("#inquiry-close").addEventListener("click",()=>$("#inquiry-dialog").close());
+$("#inquiry-destination").addEventListener("change",()=>{state.selectedHotelId=null;});
 $("#inquiry-form").addEventListener("submit",e=>e.preventDefault());
 $("#copy-inquiry").addEventListener("click",async()=>{
  const request=formatRequest();

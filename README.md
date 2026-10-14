@@ -71,3 +71,9 @@ A revised privacy policy with accountable business identity and legal review is 
 This version deliberately avoids fabricated ratings, prices, reviews, promotions and booking confirmations.
 
 See **docs/PRODUCTION_CHECKLIST.md** for launch readiness and **docs/AGENT_HANDOFF.md** for agent continuation.
+
+## Preview safety and hotel-specific drafts
+
+The local preview HTTP server only serves the files intended for static publication (`index.html`, `robots.txt`, `sitemap.xml`, and allowlisted assets). It refuses repository internals, hidden files, local environment secrets and symlink aliases. An HTTP integration test checks both permitted and forbidden paths.
+
+Choosing **Ask** on a named property now adds that exact property name to the visitor's draft, labeled as an *interest only, not a reservation*. Choosing a generic inquiry does not reuse the previous property. No message is sent automatically.
