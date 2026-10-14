@@ -132,3 +132,10 @@ test("preview HTTP server exposes only the production static allowlist",async(t)
  const post=await fetch(base+"/assets/app.js",{method:"POST"});
  assert.equal(post.status,405);
 });
+
+test("mobile menu can be dismissed by Escape and closes at desktop width",async()=>{
+ const app=await readFile(resolve(root,"assets/app.js"),"utf8");
+ assert.ok(app.includes('e.key==="Escape" && !$("#mobile-menu").hidden'));
+ assert.ok(app.includes('$("#menu-toggle").focus()'));
+ assert.ok(app.includes('matchMedia("(min-width: 801px)")'));
+});
