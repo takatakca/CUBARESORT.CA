@@ -2,7 +2,7 @@ name: Validate CUBARESORT.CA
 
 on:
   push:
-    branches: [main]
+    branches: [main, fix/nextjs-feature-parity-20261014]
   pull_request:
   workflow_dispatch:
 
