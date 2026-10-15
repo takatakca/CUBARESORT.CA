@@ -46,9 +46,11 @@ Photos currently use third-party Unsplash illustrative imagery. Verify licensing
 
 ## Deployment
 
-The **.github/workflows/publish.yml** action validates, builds and attempts GitHub Pages publication whenever main receives a commit; it supports manual runs.
+The **.github/workflows/publish.yml** action validates and builds every pull request. Main pushes publish only after those checks succeed, then verify the exact HTTPS release and its assets. It also supports manual runs. Failed publication fails the workflow.
 
 Initial publication requires GitHub repository Settings → Pages configured for **GitHub Actions** as the source. A green GitHub Actions run alone does not establish that the custom domain resolves.
+
+Pages source was activated on 2026-10-15. Check the latest completed main workflow and `release.json` before claiming publication. Use `npm run verify:live -- --url HTTPS_SITE_URL --sha FULL_40_CHARACTER_COMMIT` for a read-only release check; project Pages URLs with a repository path are supported.
 
 The intended production domain is **https://cubaresort.ca/**. To connect it to GitHub Pages, verify current DNS/hosting first; then follow GitHub's official custom domain/DNS and HTTPS procedures. Never overwrite another production deployment or DNS without confirmation.
 
