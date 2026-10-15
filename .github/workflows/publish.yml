@@ -35,14 +35,14 @@ jobs:
       # Static export for GitHub Pages. The Node/Coolify target is built from
       # the same source with BUILD_TARGET=node once that host is provisioned.
       - name: Build the static release
-        run: npm run build:static
+        run: npm run build
         env:
           NEXT_PUBLIC_BASE_PATH: ${{ github.event_name == 'push' && '/CUBARESORT.CA' || '' }}
           RELEASE_SHA: ${{ github.sha }}
       - uses: actions/upload-artifact@v4
         with:
           name: cubaresort-static
-          path: out/
+          path: dist/
           if-no-files-found: error
 
   deploy:
@@ -66,11 +66,11 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: cubaresort-static
-          path: out/
+          path: dist/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: out/
+          path: dist/
       - id: deployment
         uses: actions/deploy-pages@v4
       # Prove the public site really is this commit before calling it deployed.

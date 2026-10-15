@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build --webpack",
+    "build": "BUILD_TARGET=static next build --webpack && node scripts/write-release.mjs",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
@@ -18,7 +18,7 @@
     "db:deploy": "prisma migrate deploy",
     "qa": "npm run typecheck && npm run lint && npm test && npm run build",
     "verify:live": "node scripts/verify-live.mjs",
-    "build:static": "BUILD_TARGET=static next build --webpack && node scripts/write-release.mjs"
+    "build:node": "BUILD_TARGET=node next build --webpack"
   },
   "dependencies": {
     "@prisma/adapter-pg": "6.19.3",

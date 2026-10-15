@@ -1,9 +1,8 @@
-node_modules
-.next
-dist
 .git
 .env
-.env.local
-tests
-docs
+.env.*
+!.env.example
+node_modules
+dist
+coverage
 *.log

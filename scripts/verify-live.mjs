@@ -1,5 +1,7 @@
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { createHash } from "node:crypto";
+import { releaseFilesFrom } from "./release-assets.mjs";
 
 export async function verifyLive({url,sha,fetchImpl=fetch}){
  const base=new URL(url);
@@ -16,14 +18,25 @@ export async function verifyLive({url,sha,fetchImpl=fetch}){
  }
  const release=await (await read("release.json")).json();
  if(release.app!=="cubaresort" || release.sha!==sha)throw new Error("Public release does not match the expected commit");
- const html=await (await read("./")).text();
- if(!html.includes("CUBARESORT.CA"))throw new Error("The public homepage is not the CUBARESORT application");
- // Next.js export markers: the framework bundle and the prerendered directory.
- if(!html.includes("/_next/static/"))throw new Error("The homepage is missing its Next.js bundle");
- if(!html.includes("region-chip") || !html.includes("hotel-grid"))throw new Error("The public homepage is missing the property directory");
- // A property name that must survive any build, proving real data shipped.
- if(!html.includes("Varadero"))throw new Error("The property directory rendered no regions");
- return {url:base.href,sha,checks:["exact commit","homepage","Next.js bundle","property directory","real data"]};
+ // A matching SHA in release.json alone does not prove the application files
+ // belong to the same release. Check an allowlisted, complete manifest.
+ const files=releaseFilesFrom(release.assets);
+ for(const path of files){
+  const response=await read(path==="index.html"?"./":path);
+  const bytes=Buffer.from(await response.arrayBuffer());
+  if(createHash("sha256").update(bytes).digest("hex")!==release.assets[path])
+   throw new Error(`${path}: deployed content does not match release SHA-256`);
+  if(path==="index.html"){
+   const html=bytes.toString("utf8");
+   if(!html.includes("CUBARESORT.CA"))
+    throw new Error("The public homepage is not the CUBARESORT application");
+   if(!html.includes("/_next/static/"))
+    throw new Error("The homepage is missing its Next.js bundle");
+   if(!html.includes("region-chip") || !html.includes("hotel-grid") || !html.includes("Varadero"))
+    throw new Error("The public homepage is missing the rendered property directory");
+  }
+ }
+ return {url:base.href,sha,checks:["exact commit","homepage","Next.js bundle","rendered property directory",`SHA-256 integrity for ${files.length} release files`]};
 }
 
 if(process.argv[1] && resolve(process.argv[1])===fileURLToPath(import.meta.url)){

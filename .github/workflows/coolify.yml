@@ -1,0 +1,77 @@
+name: CUBARESORT Coolify container and live release
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cubaresort-contabo-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  container:
+    name: Test production container
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Build the test-gated production image
+        run: docker build --build-arg SOURCE_COMMIT="$GITHUB_SHA" -f Dockerfile.coolify -t cubaresort:test .
+      - name: Verify actual container health, release integrity and private-path isolation
+        env:
+          SOURCE_COMMIT: ${{ github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run -d --name cubaresort-test -p 127.0.0.1:18089:8080 cubaresort:test
+          trap 'docker logs cubaresort-test; docker rm -f cubaresort-test' EXIT
+          for attempt in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:18089/healthz; then break; fi
+            sleep 1
+          done
+          docker exec cubaresort-test /usr/local/bin/cubaresort-check-runtime
+          node scripts/verify-container.mjs
+          test "$(docker inspect --format '{{.Config.User}}' cubaresort-test)" != root
+          test "$(docker inspect --format '{{.Config.User}}' cubaresort-test)" != 0
+
+  live:
+    name: Verify automatic Contabo release
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: container
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Require current main and verify the exact public Coolify release
+        env:
+          LIVE_URL: ${{ vars.CUBARESORT_COOLIFY_HTTPS_URL || 'https://ci7ltew4v50e4fwq63tfvtg6.31.220.96.134.sslip.io/' }}
+          PRODUCTION_READY: ${{ vars.CUBARESORT_COOLIFY_PRODUCTION_READY }}
+          EXPECTED_SHA: ${{ github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in {1..60}; do
+            test "$(git ls-remote origin refs/heads/main | cut -f1)" = "$EXPECTED_SHA" || { echo 'Main moved; refusing stale release verification'; exit 1; }
+            if npm run verify:live -- --url "$LIVE_URL" --sha "$EXPECTED_SHA"; then
+              if [ "$PRODUCTION_READY" = true ]; then
+                npm run verify:live -- --url https://cubaresort.ca/ --sha "$EXPECTED_SHA"
+              fi
+              echo "Verified automatic Contabo release: $LIVE_URL at $EXPECTED_SHA" >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo '::error::Coolify did not publish the tested exact-main release over HTTPS'
+          exit 1
