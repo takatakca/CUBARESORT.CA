@@ -102,7 +102,11 @@ export function TravelExperiences() {
         <div className="container">
           <form className="search-panel" onSubmit={(event) => {
             event.preventDefault();
-            document.getElementById("experiences")?.scrollIntoView({ behavior: "smooth" });
+            document.getElementById("experiences")?.scrollIntoView({
+              // Honour the OS reduced-motion setting, as the static build did.
+              behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+              block: "start",
+            });
           }}>
             <div className="search-intro">
               <span className="search-symbol" aria-hidden="true">☀</span>

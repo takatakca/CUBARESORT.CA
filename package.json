@@ -1,6 +1,6 @@
 {
   "name": "cubaresort-ca",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "description": "CUBARESORT.CA — Cuba travel portal for GROUPE TAKATAK. Next.js app aligned with takatak-v1 conventions.",
   "engines": {
@@ -16,7 +16,9 @@
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
-    "qa": "npm run typecheck && npm run lint && npm test && npm run build"
+    "qa": "npm run typecheck && npm run lint && npm test && npm run build",
+    "verify:live": "node scripts/verify-live.mjs",
+    "build:static": "BUILD_TARGET=static next build --webpack && node scripts/write-release.mjs"
   },
   "dependencies": {
     "@prisma/adapter-pg": "6.19.3",

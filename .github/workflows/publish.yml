@@ -1,13 +1,17 @@
-name: Validate CUBARESORT.CA
+name: Validate and publish CUBARESORT.CA
 
 on:
   push:
-    branches: [main, fix/nextjs-feature-parity-20261014]
+    branches: [main]
   pull_request:
   workflow_dispatch:
 
 permissions:
   contents: read
+
+concurrency:
+  group: cubaresort-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
 
 jobs:
   verify:
@@ -28,6 +32,62 @@ jobs:
       - run: npm run typecheck
       - run: npm run lint
       - run: npm test
-      - run: npm run build
-      - name: Build the Coolify image
-        run: docker build -t cubaresort-ca:ci .
+      # Static export for GitHub Pages. The Node/Coolify target is built from
+      # the same source with BUILD_TARGET=node once that host is provisioned.
+      - name: Build the static release
+        run: npm run build:static
+        env:
+          NEXT_PUBLIC_BASE_PATH: ${{ github.event_name == 'push' && '/CUBARESORT.CA' || '' }}
+          RELEASE_SHA: ${{ github.sha }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cubaresort-static
+          path: out/
+          if-no-files-found: error
+
+  deploy:
+    name: Deploy GitHub Pages
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/download-artifact@v4
+        with:
+          name: cubaresort-static
+          path: out/
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out/
+      - id: deployment
+        uses: actions/deploy-pages@v4
+      # Prove the public site really is this commit before calling it deployed.
+      - name: Verify the exact public HTTPS release
+        env:
+          LIVE_URL: ${{ steps.deployment.outputs.page_url }}
+          EXPECTED_SHA: ${{ github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in {1..12}; do
+            if npm run verify:live -- --url "$LIVE_URL" --sha "$EXPECTED_SHA"; then
+              echo "### Published and verified CUBARESORT.CA" >> "$GITHUB_STEP_SUMMARY"
+              echo "$LIVE_URL — commit $EXPECTED_SHA" >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "::error::Public release did not match the tested commit or its assets failed."
+          exit 1

@@ -1,5 +1,8 @@
 import type { MetadataRoute } from "next";
 
+// Required by `output: "export"`: emitted as a file at build time.
+export const dynamic = "force-static";
+
 const base = process.env.NEXT_PUBLIC_APP_URL ?? "https://cubaresort.ca";
 
 // One canonical URL. Per-region pages are not listed because they do not exist

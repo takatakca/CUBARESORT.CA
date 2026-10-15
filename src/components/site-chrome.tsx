@@ -2,7 +2,7 @@
 
 import { useLanguage } from "@/components/language-provider";
 import { useTravelUi } from "@/components/travel-ui";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { langNames } from "@/lib/i18n";
 import type { Lang } from "@/lib/hotels/types";
 
@@ -12,6 +12,31 @@ export function SiteHeader() {
   const { lang, setLang, t } = useLanguage();
   const { openInquiry } = useTravelUi();
   const [menuOpen, setMenuOpen] = useState(false);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+
+  // Three behaviours carried over from the static build (PR #4, 5c7ecf1):
+  // Escape closes the mobile menu and returns focus to the toggle that opened
+  // it, and widening past the desktop breakpoint closes it so focus is never
+  // trapped in a menu that is no longer visible.
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      setMenuOpen(false);
+      toggleRef.current?.focus();
+    };
+    const desktop = window.matchMedia("(min-width: 801px)");
+    const onBreakpoint = (event: MediaQueryListEvent) => {
+      if (event.matches) setMenuOpen(false);
+    };
+    document.addEventListener("keydown", onKeyDown);
+    desktop.addEventListener("change", onBreakpoint);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      desktop.removeEventListener("change", onBreakpoint);
+    };
+  }, [menuOpen]);
+
   return (
     <>
       <a className="skip-link" href="#main">
@@ -52,7 +77,7 @@ export function SiteHeader() {
               ))}
             </div>
             <button type="button" className="button button-coral header-cta" onClick={() => openInquiry()}>{t("ctaPlan")}</button>
-            <button type="button" className="menu-toggle" aria-expanded={menuOpen} aria-controls="mobile-menu" aria-label={lang === "fr" ? "Ouvrir le menu" : lang === "es" ? "Abrir menú" : "Open menu"} onClick={() => setMenuOpen((value) => !value)}><span /><span /><span /></button>
+            <button type="button" ref={toggleRef} className="menu-toggle" aria-expanded={menuOpen} aria-controls="mobile-menu" aria-label={lang === "fr" ? "Ouvrir le menu" : lang === "es" ? "Abrir menú" : "Open menu"} onClick={() => setMenuOpen((value) => !value)}><span /><span /><span /></button>
           </div>
         </div>
         <nav id="mobile-menu" className="mobile-menu" hidden={!menuOpen} aria-label={t("navDestinations")}>
