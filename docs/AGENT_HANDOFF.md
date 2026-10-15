@@ -1,5 +1,9 @@
 # Agent handoff — CUBARESORT.CA
 
+## 2026-10-15 — Authorized Coolify / Contabo migration in progress
+
+The owner requested the same automatic GitHub-to-Contabo behavior as the other independent applications. Created the separate CUBARESORT production project and GitHub App resource `ci7ltew4v50e4fwq63tfvtg6` on `31.220.96.134`. Added a test-gated unprivileged Nginx Dockerfile, runtime health check, real container CI and exact-main HTTPS verification. Preserved the newer nine-file SHA-256 manifest and all current product behavior from baseline `8e1459335f23cb085b04431e1ec15f8c3d256d74`. See `docs/DEPLOYMENT.md` for exact settings. Deployment, certificate, webhook evidence and the custom-domain cutover still require verification; this entry does not claim them complete. Existing DNS access and apex MX constraints remain until new verified access exists.
+
 ## 2026-10-15 — Completed verified release-integrity implementation
 
 - Code and continuity commit: [`3e9e10376f22532f0d24242a5598055e29bdf324`](https://github.com/takatakca/CUBARESORT.CA/commit/3e9e10376f22532f0d24242a5598055e29bdf324), pushed as a non-forced main fast-forward.

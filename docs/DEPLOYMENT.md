@@ -2,7 +2,23 @@
 
 Updated 2026-10-15.
 
-## Selected production path for the informational site
+## Authorized Contabo migration — 2026-10-15
+
+The owner explicitly selected Coolify on Contabo with automatic GitHub deployment. This supersedes the earlier Pages-only hosting decision; the existing application and SHA-256 release verification remain intact.
+
+- Separate project `CUBARESORT`, production environment; resource UUID `ci7ltew4v50e4fwq63tfvtg6`.
+- Coolify resource: https://coolify.takatak.ca/project/ayhntlw7pcxy46nqiubhrnp5/environment/bkqnnzcbjc8q2lcxndyenjpl/application/ci7ltew4v50e4fwq63tfvtg6
+- Contabo host: `31.220.96.134`; internal port `8080`; no public port mappings.
+- Existing authorized GitHub App, repository `takatakca/CUBARESORT.CA`, branch `main`, auto deploy on push. No extra repository token or new GitHub permission grant is needed.
+- Build strategy Dockerfile, path `/Dockerfile.coolify`, base `/`, source commit available during build, explicit Dockerfile build arguments.
+- `Dockerfile.coolify` runs all application tests and the static build using the exact `SOURCE_COMMIT`, then exercises the final unprivileged Nginx image before it can replace a live container. Runtime health checks validate release identity, homepage, assets and `/healthz`.
+- `.github/workflows/coolify.yml` builds and starts the actual production container, verifies all first-party file digests, private-path isolation, cache behavior and runtime health. Main pushes also wait for the matching HTTPS Coolify release and verify its exact SHA and byte digests.
+- Initial HTTPS target: `https://ci7ltew4v50e4fwq63tfvtg6.31.220.96.134.sslip.io/`. This becomes a verified live URL only after the deployment and certificate checks succeed. The workflow can override it using `CUBARESORT_COOLIFY_HTTPS_URL`.
+- Set `CUBARESORT_COOLIFY_PRODUCTION_READY=true` only after the mail-preserving DNS cutover and domain acceptance; this adds the apex HTTPS check to every release. No production-domain completion is claimed by this setup document.
+- No database or uploads exist in this static portal. Content lives in Git, so no persistent volume is required. Browser-local favourites remain browser-local. Do not infer that an inaccessible legacy MochaHost website has been backed up.
+- Retain GitHub Pages as a verified fallback during domain migration. Do not disable it before Contabo acceptance.
+
+## Existing GitHub Pages fallback
 GitHub Pages from `main` is the current verified publishing service, **not** an unverified cPanel document root. `main` push triggers `.github/workflows/publish.yml`: source check/tests → build `dist/` → upload artifact → Pages deploy → remote HTTPS verification. Pull requests run the validation job only.
 
 - Public project-path URL: https://takatakca.github.io/CUBARESORT.CA/
@@ -21,7 +37,7 @@ GitHub Pages from `main` is the current verified publishing service, **not** an 
 1. Gain access to the **existing** authoritative zone or have the host attach the existing zone to the authorized site account. Do not create an empty replacement zone.
 2. Export all existing DNS records, nameservers, TTLs and mail-related A/MX/TXT/SPF/DKIM/DMARC records; record previous values for rollback. Do not paste passwords, session URLs or private DNS credentials into Git.
 3. Because MX resolves to the apex, preserve inbound mail on the existing MochaHost IP using a verified dedicated mail host **before** changing apex web A records. Confirm with the responsible mail administrator.
-4. Only after approval, configure the Pages custom domain and the required web A/AAAA/CNAME records; do not blindly switch nameservers. Keep existing mail routes intact.
+4. After verifying the Contabo application and preserving mail, configure its custom domain and the required web A/AAAA/CNAME records; do not blindly switch nameservers. Keep existing mail routes intact.
 5. Verify HTTPS hostname/certificate, apex and www response, assets, and the exact `main` SHA / file integrity through the custom domain; check mail flow separately.
 6. Close issue #1 only after both website and email acceptance, with rollback details documented.
 
