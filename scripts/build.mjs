@@ -1,5 +1,7 @@
 import { cp, copyFile, mkdir, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
+import { VERIFIED_RELEASE_FILES } from "./release-assets.mjs";
 import { join, resolve } from "node:path";
 
 const root=resolve(import.meta.dirname,"..");
@@ -16,7 +18,12 @@ await rm(output,{recursive:true,force:true});
 await mkdir(output,{recursive:true});
 for(const name of entryFiles)await copyFile(join(root,name),join(output,name));
 await cp(join(root,"assets"),join(output,"assets"),{recursive:true});
-await writeFile(join(output,"release.json"),JSON.stringify({app:"cubaresort",sha,builtAt:new Date().toISOString()})+"\n");
+// Record a SHA-256 checksum for every first-party document and runtime asset.
+// This detects a stale/mixed Pages release even when release.json has the right Git SHA.
+const assets = Object.fromEntries(await Promise.all(VERIFIED_RELEASE_FILES.map(async path => [
+ path, createHash("sha256").update(await readFile(join(output,path))).digest("hex")
+])));
+await writeFile(join(output,"release.json"),JSON.stringify({app:"cubaresort",sha,builtAt:new Date().toISOString(),assets})+"\n");
 const assetStat=await stat(join(output,"assets/app.js"));
 if(assetStat.size===0)throw new Error("Empty application bundle");
 console.log("CUBARESORT.CA static website prepared in dist/");

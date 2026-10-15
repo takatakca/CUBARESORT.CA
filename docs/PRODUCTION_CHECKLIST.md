@@ -14,6 +14,13 @@ Updated: 2026-10-15. Current scope: **static inspiration portal, not a live book
 - [x] GitHub Pages build and publication workflow
 - [x] Zero-dependency Node development server and automated code tests
 
+## Release-integrity enhancement (2026-10-15)
+
+- [x] Build stamps a SHA-256 manifest for the homepage and the required first-party assets.
+- [x] Live verifier checks fetched bytes against manifest to reject stale/mixed deployments with HTTP 200.
+- [x] Regression tests cover wrong SHA, corrupt/missing manifest, stale 200 OK JavaScript and missing CSS.
+- [ ] Confirm the new main workflow and exact byte-verified Pages SHA; record the run in handoff.
+
 ## Verification still required
 
 - [x] GitHub Actions validation and build passed on commit 637a25c (run 38617962103)

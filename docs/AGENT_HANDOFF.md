@@ -1,5 +1,26 @@
 # Agent handoff — CUBARESORT.CA
 
+## 2026-10-15 — Agent continuity and byte-verified publication
+
+### Baseline evidence
+- The verified main baseline for this task was `fb5f9d60e9ee251d59121d94f27c4231ac8c9d2a`.
+- Its GitHub Actions run [38745782187](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38745782187) reported successful validation, actual GitHub Pages deployment and HTTPS exact-SHA/asset presence verification.
+- The Pages URL is https://takatakca.github.io/CUBARESORT.CA/ . Independent public Pages retrieval was unavailable from this session's web clients; do not present that as a fresh independent verification.
+- The custom domain `cubaresort.ca` still returned Apache HTTP 500 on an attempted public request. Its existing MochaHost zone is not exposed in the previously inspected cPanel/WHM accounts. Issue #1 remains open; MX pointing to the apex must be preserved during any future authorized cutover.
+- Issue #2 still lacks supplier/operating/legal authorizations. Next.js PR #3 remains unrelated and unmerged.
+
+### Work in this changeset
+- Added `AGENTS.md`, `docs/PROJECT_STATUS.md`, `docs/TASK_QUEUE.md`, `docs/DEPLOYMENT.md`, and `docs/DECISIONS.md` for durable agent restart.
+- `scripts/release-assets.mjs` enumerates published first-party files; `scripts/build.mjs` adds their SHA-256 digests to generated `release.json`.
+- `scripts/verify-live.mjs` now hashes actual HTTPS bytes to detect mixed/stale files returning HTTP 200; `tests/deployment.test.mjs` adds negative regression cases.
+- `tests/site.test.mjs` enforces presence of the required continuity files; README and production checklist explain the new acceptance gate.
+- Files changed are limited to release verification, tests and documentation; no mail/DNS settings, credentials, personal-data intake, reservations or payments were touched.
+- Last confirmed release before these edits: `fb5f9d60e9ee251d59121d94f27c4231ac8c9d2a`. For the latest pushed SHA, read the current `main` HEAD directly; a commit cannot include its own SHA.
+- Validation commands: `npm run validate`, `npm run build`, `npm run verify:live -- --url https://takatakca.github.io/CUBARESORT.CA/ --sha FULL_MAIN_SHA`.
+- Current task: obtain passing tests, actual Pages deployment, and the newly required checksum-verified public release at the new `main` commit.
+- Known blockers: custom-domain Apache 500 / unavailable existing DNS zone account; mail-preserving cutover; supplier/operator/legal approvals; real-device acceptance outstanding.
+- Next exact action: inspect the latest `main` workflow jobs, then verify public `release.json` SHA and byte digests. Fix deployment failures. Keep issue #1 open until authorized custom-domain HTTPS matches current `main` and mail is verified.
+
 ## 2026-10-15 — Authorized deployment repair
 
 The owner requested immediate resolution of issue #1 and draft PR #4. Reused PR #4; PR #3's incomplete Next.js conversion remains separate.

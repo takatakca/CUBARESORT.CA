@@ -139,3 +139,11 @@ test("mobile menu can be dismissed by Escape and closes at desktop width",async(
  assert.ok(app.includes('$("#menu-toggle").focus()'));
  assert.ok(app.includes('matchMedia("(min-width: 801px)")'));
 });
+
+test("required English agent continuity files exist",async()=>{
+ const paths=["AGENTS.md","docs/PROJECT_STATUS.md","docs/TASK_QUEUE.md","docs/AGENT_HANDOFF.md","docs/DEPLOYMENT.md","docs/DECISIONS.md"];
+ for(const path of paths){
+  const content=await readFile(resolve(root,path),"utf8");
+  assert.ok(content.length>250,"continuity document is empty: "+path);
+ }
+});
