@@ -14,6 +14,11 @@ Updated: 2026-10-15. Current scope: **static inspiration portal, not a live book
 - [x] GitHub Pages build and publication workflow
 - [x] Zero-dependency Node development server and automated code tests
 
+## Accessibility follow-up (2026-10-15)
+
+- [x] Region-chip and favourite-card keyboard focus restoration implemented on `main`; `b607f3bf` verified by Contabo workflow 38790752444 and Pages workflow 38790752455.
+- [ ] Real keyboard traversal, mobile assistive technology and screen-reader acceptance in FR/EN/ES.
+
 ## Contabo deployment — 2026-10-15
 
 - [x] Separate CUBARESORT Coolify resource on Contabo 31.220.96.134, internal port 8080.

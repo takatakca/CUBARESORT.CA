@@ -1,5 +1,17 @@
 # Agent handoff — CUBARESORT.CA
 
+## 2026-10-15 — Verified keyboard-focus release on Contabo and Pages
+
+- Functional commit: `b607f3bfaa0c81585237547f8c3c690e87fce11e` (non-forced fast-forward of `main`).
+- GitHub Actions container/live run [38790752444](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38790752444): **success**. Production container tests passed, and the live verifier returned `PASS` for the exact SHA plus all nine first-party SHA-256 file digests at https://ci7ltew4v50e4fwq63tfvtg6.31.220.96.134.sslip.io/ .
+- Pages fallback run [38790752455](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38790752455): **success** including deployment and public exact-SHA file checks.
+- Files changed in the functional commit: `assets/app.js`, `tests/site.test.mjs`, `docs/AGENT_HANDOFF.md`, `docs/TASK_QUEUE.md`, `docs/PROJECT_STATUS.md`. Restoring focus prevents keyboard navigation from falling back to the page body after replacing region chips/favourite cards.
+- CI commands executed: `npm run validate`, `npm run build`, actual `docker build` / container smoke testing, `npm run verify:live` at the HTTPS Contabo URL; Pages fallback checks passed as well.
+- This documentation evidence creates a *new* commit. For the latest release after this entry, check the current `main` SHA and both new Actions deployments; do not assume this historical SHA is the latest.
+- No new existing-zone access appeared. Issue #1 remains blocked by MochaHost's inaccessible authoritative DNS zone, its apex MX and the broken Apache custom-domain site. No web DNS, mail or nameservers were changed. Issue #2 and PR #3/#5 are separate.
+- Current task: confirm the fresh documentation-only `main` release using container/live checks and nine file digests, then proceed to independently executable keyboard/screen-reader and multi-language acceptance work.
+- Next exact action: inspect the next `main` Coolify GitHub Actions run (both jobs), verify the `release.json` full SHA and all asset SHA-256 hashes, and keep `cubaresort.ca` issue #1 open pending a mail-preserving authorized cutover.
+
 ## 2026-10-15 — Keyboard focus preservation on dynamic controls (release pending)
 
 - Verified main baseline: `382585a29cf1d15f81a63961bebbbd13a031271b` with existing Coolify HTTPS production and Pages fallback. Recent PR #5 workflows are on a different SHA and do not supersede main.
