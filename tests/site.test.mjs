@@ -154,3 +154,17 @@ test("keyboard focus is restored after replacing region chips and favourite card
  assert.ok(app.includes('chip.dataset.region===focusedRegion)?.focus({preventScroll:true})'));
  assert.ok(app.includes('button.dataset.favorite===id)?.focus({preventScroll:true})'));
 });
+
+test("modal dialogs have accessible names and keep keyboard focus inside",async()=>{
+ const [html,app]=await Promise.all([
+  readFile(resolve(root,"index.html"),"utf8"),
+  readFile(resolve(root,"assets/app.js"),"utf8")
+ ]);
+ assert.ok(html.includes('id="inquiry-dialog" class="modal" aria-labelledby="inquiry-dialog-title"'));
+ assert.ok(html.includes('id="inquiry-dialog-title" data-i18n="dialogTitle"'));
+ assert.ok(html.includes('id="legal-dialog" class="modal legal-modal" aria-labelledby="legal-heading"'));
+ assert.ok(app.includes('function keepFocusInsideDialog(dialog,event)'));
+ assert.ok(app.includes('active===first'));
+ assert.ok(app.includes('active===last'));
+ assert.ok(app.includes('dialog.addEventListener("keydown",event=>keepFocusInsideDialog(dialog,event))'));
+});

@@ -1,3 +1,14 @@
+## 2026-10-15 — Inquiry-dialog keyboard containment (release pending)
+
+- Fresh live keyboard testing found that the native inquiry dialog restored the opener after Escape, but forward Tab moved from its last action to the page body before cycling back. The dialog also lacked an explicit accessible-name relationship.
+- Added an explicit focus loop for every modal dialog, including reverse Shift+Tab handling, and linked the inquiry/legal dialogs to their visible headings with `aria-labelledby`.
+- Added static regression coverage in `tests/site.test.mjs`. No DNS, mail, booking, personal-data or Next.js work changed.
+- Files changed: `index.html`, `assets/app.js`, `tests/site.test.mjs`, and continuity documents.
+- Verification required before release claim: `npm run validate`, `npm run build`, production Docker/container checks, successful Pages and Contabo workflows, then external HTTPS `release.json` exact SHA and all nine live file digests.
+- Current task: publish this focused accessibility fix as a normal non-forced main update and verify the actual release.
+- Known blockers remain unchanged: issue #1 requires existing-zone access, full DNS export and separated mail before any cutover; issue #2 requires supplier/operator/legal authorization; PR #3/#5 remain separate.
+- Next exact action: inspect both main-push workflows and independently verify the Contabo SHA, nine digests and `/healthz`; fix any demonstrated failure before recording the release.
+
 ## 2026-10-15 — Verified Passenger/DNS safety release
 
 - Release commit: `2538d9d41ca43ab8df723051e8aeb4aee86fa937` (normal non-forced main update).

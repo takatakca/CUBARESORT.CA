@@ -234,6 +234,25 @@ function openLegal(kind){
  $("#legal-copy").innerHTML=tr(kind+"Html"); // content controlled in i18n.js only
  if(!dialog.open)dialog.showModal();
 }
+const dialogFocusSelector='button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+function keepFocusInsideDialog(dialog,event){
+ if(event.key!=="Tab" || !dialog.open)return;
+ const focusable=Array.from(dialog.querySelectorAll(dialogFocusSelector))
+  .filter(element=>element.getClientRects().length && element.getAttribute("aria-hidden")!=="true");
+ if(!focusable.length){
+  event.preventDefault();
+  dialog.focus({preventScroll:true});
+  return;
+ }
+ const first=focusable[0],last=focusable.at(-1),active=document.activeElement;
+ if(event.shiftKey && active===first){
+  event.preventDefault();
+  last.focus({preventScroll:true});
+ }else if(!event.shiftKey && active===last){
+  event.preventDefault();
+  first.focus({preventScroll:true});
+ }
+}
 function closeMobile(){
  $("#mobile-menu").hidden=true;
  $("#menu-toggle").setAttribute("aria-expanded","false");
@@ -319,6 +338,7 @@ window.matchMedia("(min-width: 801px)").addEventListener("change",e=>{
  if(e.matches)closeMobile();
 });
 $$("#mobile-menu a").forEach(a=>a.addEventListener("click",closeMobile));
+$$("dialog.modal").forEach(dialog=>dialog.addEventListener("keydown",event=>keepFocusInsideDialog(dialog,event)));
 $("#inquiry-close").addEventListener("click",()=>$("#inquiry-dialog").close());
 $("#inquiry-destination").addEventListener("change",()=>{state.selectedHotelId=null;});
 $("#inquiry-form").addEventListener("submit",e=>e.preventDefault());

@@ -15,6 +15,11 @@ Updated 2026-10-15. Repository `takatakca/CUBARESORT.CA`; publication branch `ma
 - Functional commit `b607f3bfaa0c81585237547f8c3c690e87fce11e`: [Contabo container and live workflow 38790752444](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38790752444) passed exact SHA + nine file digests; [Pages workflow 38790752455](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38790752455) passed.
 - A subsequent documentation-only commit requires its own fresh release verification; check current main. Custom-domain cutover remains blocked.
 
+## Dialog keyboard acceptance follow-up — 2026-10-15
+
+- Live keyboard traversal found that forward Tab could leave the open inquiry dialog after its final action and briefly focus the page body. Both modal dialogs also lacked explicit `aria-labelledby` relationships.
+- The focused fix adds forward/reverse focus containment, explicit visible heading names and regression coverage. Treat it as pending until the newest main container and both public deployments pass exact-release verification.
+
 ## Accessibility improvement — 2026-10-15
 
 - Fixed keyboard focus loss after interactive region-chip and favourite-card re-render; added static regression guards. Requires latest main live release verification before marking deployed.
