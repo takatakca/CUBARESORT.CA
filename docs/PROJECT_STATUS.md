@@ -10,6 +10,10 @@ Updated 2026-10-15. Repository `takatakca/CUBARESORT.CA`; publication branch `ma
 - Baseline privacy/terms notices; no user account, payment or backend collection.
 - Node 22 source checks and tests; static build; `release.json` for verifiable deployment.
 
+## Accessibility improvement — 2026-10-15
+
+- Fixed keyboard focus loss after interactive region-chip and favourite-card re-render; added static regression guards. Requires latest main live release verification before marking deployed.
+
 ## Current Contabo status — 2026-10-15
 
 - The owner selected Contabo/Coolify with automatic deployment. Separate resource `ci7ltew4v50e4fwq63tfvtg6` is running healthy on `31.220.96.134` using `Dockerfile.coolify`, port 8080 and the existing GitHub App's main-push webhook.

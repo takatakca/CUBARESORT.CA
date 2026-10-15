@@ -1,5 +1,16 @@
 # Agent handoff — CUBARESORT.CA
 
+## 2026-10-15 — Keyboard focus preservation on dynamic controls (release pending)
+
+- Verified main baseline: `382585a29cf1d15f81a63961bebbbd13a031271b` with existing Coolify HTTPS production and Pages fallback. Recent PR #5 workflows are on a different SHA and do not supersede main.
+- Found a reproducible-by-code keyboard accessibility defect: rebuilding the selected region chip group or toggled favourite card removes the focused DOM button, discarding keyboard focus.
+- `assets/app.js` now restores focus to the corresponding new region chip or favourite button after the re-render, without scrolling; `tests/site.test.mjs` guards both behaviors.
+- Updated this handoff and `docs/TASK_QUEUE.md` / `docs/PROJECT_STATUS.md`; no secrets, DNS, e-mail, commercial inventory or Next.js migration changed.
+- Commands to verify: `npm run validate`, `npm run build`, the actual Docker container smoke tests, and `npm run verify:live -- --url https://ci7ltew4v50e4fwq63tfvtg6.31.220.96.134.sslip.io/ --sha CURRENT_MAIN_SHA`.
+- Last completed task: implementation and regression-guard changes, subject to a successful CI release. Current task: inspect main Actions for completed build, container and live HTTPS integrity, then record the SHA from actual main.
+- Known blockers remain: existing MochaHost DNS zone unavailable, apex MX to apex and HTTP 500 on `cubaresort.ca`; do not cut over without backing up every record and preserving mail (issue #1). Suppliers, legal identity and bookings (issue #2) blocked; PR #3/#5 separate.
+- Next exact action: inspect the newest main-push Coolify run and its live proof; if a job fails, fix the demonstrated failure without changing DNS.
+
 ## 2026-10-15 — Verified automatic Contabo release
 
 - Release `5f47930af670fa387f6f5990b42394d8c62a7d11` was pushed normally to main. [Coolify container and live run 38776838876](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38776838876) passed both actual container testing and exact-current-main HTTPS/file-checksum verification. Pages fallback run 38776838801 also passed.

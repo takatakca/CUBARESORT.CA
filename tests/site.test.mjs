@@ -147,3 +147,10 @@ test("required English agent continuity files exist",async()=>{
   assert.ok(content.length>250,"continuity document is empty: "+path);
  }
 });
+
+test("keyboard focus is restored after replacing region chips and favourite cards",async()=>{
+ const app=await readFile(resolve(root,"assets/app.js"),"utf8");
+ assert.ok(app.includes('wrap.contains(document.activeElement) ? document.activeElement.dataset.region : null'));
+ assert.ok(app.includes('chip.dataset.region===focusedRegion)?.focus({preventScroll:true})'));
+ assert.ok(app.includes('button.dataset.favorite===id)?.focus({preventScroll:true})'));
+});

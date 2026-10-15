@@ -132,6 +132,8 @@ function updateHotelSelect(){
 
 function renderRegionChips(){
  const wrap=$("#region-chips");
+ // A re-render must not strand keyboard focus on the page body.
+ const focusedRegion=wrap.contains(document.activeElement) ? document.activeElement.dataset.region : null;
  wrap.replaceChildren();
  const makeChip=(id,label,count)=>{
   const b=document.createElement("button");
@@ -144,6 +146,10 @@ function renderRegionChips(){
  };
  wrap.append(makeChip("all",tr("hotelsAllRegions"),hotels.length));
  for(const r of hotelRegions)wrap.append(makeChip(r.id,r.label[state.lang],r.count));
+ if(focusedRegion){
+  Array.from(wrap.querySelectorAll("[data-region]"))
+   .find(chip=>chip.dataset.region===focusedRegion)?.focus({preventScroll:true});
+ }
 }
 
 function renderHotels(){
@@ -267,7 +273,11 @@ $("#experience-grid").addEventListener("click",e=>{
   const id=favourite.dataset.favorite;
   if(!EXPERIENCE_IDS.has(id))return;
   if(state.favorites.has(id))state.favorites.delete(id);else state.favorites.add(id);
-  persist();renderExperiences();return;
+  persist();renderExperiences();
+  // The card is recreated, so refocus the corresponding new heart button.
+  Array.from($("#experience-grid").querySelectorAll("[data-favorite]"))
+   .find(button=>button.dataset.favorite===id)?.focus({preventScroll:true});
+  return;
  }
  const inquire=e.target.closest("[data-inquire]");
  if(inquire)openInquiry(inquire.dataset.inquire);
