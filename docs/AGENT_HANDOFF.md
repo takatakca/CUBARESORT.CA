@@ -1,17 +1,15 @@
-# Agent handoff — CUBARESORT.CA
+## 2026-10-15 — Verified Passenger/DNS safety release
 
-## 2026-10-15 — Passenger 500 evidence and mail-safe custom-domain gate (CI pending)
-
-- User-supplied mobile screenshot of `cubaresort.ca` shows a generic **Phusion Passenger** application error. A public HTTPS request also returned HTTP 500. This is a response from the legacy MochaHost host, not evidence that the independent Contabo static app is unhealthy. Without the old site's application logs/account the precise Passenger exception is unknown.
-- Baseline `main`: `06b97bf4bbf9d5a23b92768a63d24ae3fe8b015b`, with verified previous container/live run [38790995961](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38790995961) and Pages fallback [38790995953](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38790995953). PR #3 and PR #5 remain separate, unmerged.
-- Added `scripts/check-domain-dns.mjs` and `tests/domain-dns.test.mjs`, a read-only domain DNS guard with eight test scenarios. It rejects an MX still pointing at apex, an MX mail host that would follow the Contabo web server, missing mail records, wrong web A records on apex/www and unexpected IPv6.
-- Updated `.github/workflows/coolify.yml` to run this guard only if `CUBARESORT_COOLIFY_PRODUCTION_READY=true`, before the existing HTTPS exact-SHA verification of the custom domain. Updated `package.json` with `npm run check:domain-dns` and syntax checking. The current disabled flag and independent Coolify/Pages production releases remain unchanged.
-- This DNS guard is **not** a complete existing-zone export, proof of mail deliverability, or authorization to alter nameservers, DNS, or email. Those require the existing authoritative MochaHost zone account and manual acceptance.
-- Files changed: `scripts/check-domain-dns.mjs`, `tests/domain-dns.test.mjs`, `.github/workflows/coolify.yml`, `package.json`, `docs/AGENT_HANDOFF.md`, `docs/TASK_QUEUE.md`, `docs/DEPLOYMENT.md`, `docs/PROJECT_STATUS.md`, and `docs/DECISIONS.md`.
-- Commands and checks required: `npm run validate`, `npm run build`, actual `docker build`/runtime container tests, and the Coolify `npm run verify:live` check against the full **new** `main` SHA and all nine public first-party digests; Pages fallback checks run independently.
-- Last confirmed release before change: `06b97bf4bbf9d5a23b92768a63d24ae3fe8b015b`. New commit SHA must be read from GitHub after push; do not invent a self-reference.
-- Current task: check the new main-push CI and verified Coolify release, then maintain an updated handoff if meaningful. Known open blocker #1 remains the inaccessible original authoritative zone with apex A `209.42.24.125`, MX to `cubaresort.ca`, and legacy HTTP 500; do not change records blindly. Commercial supplier/booking issue #2 remains independent.
-- Next exact action: after commit, inspect latest `main` GitHub Actions test/container/live jobs and read external SHA-256 verification logs. If they fail, correct the actual error. Preserve issue #1 until custom-domain HTTPS + exact current SHA + real mail flow passes.
+- Release commit: `2538d9d41ca43ab8df723051e8aeb4aee86fa937` (normal non-forced main update).
+- Pages fallback run [38792654944](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38792654944) passed. Coolify run [38792655057](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38792655057) passed production-container testing, but its first live-verification attempt expired seven seconds before the queued Coolify deployment exposed the new SHA. The failed job was retried without rebuilding and attempt 2 passed after the deployment was live.
+- Independent HTTPS verification confirmed `release.json` SHA `2538d9d41ca43ab8df723051e8aeb4aee86fa937`, all nine first-party SHA-256 file digests and `/healthz` at https://ci7ltew4v50e4fwq63tfvtg6.31.220.96.134.sslip.io/ .
+- Added the read-only `scripts/check-domain-dns.mjs` custom-domain preflight and eight DNS safety tests. It rejects apex-following MX, mail following the Contabo web target, missing mail records, wrong apex/www web records and unexpected IPv6. The guard remains disabled until `CUBARESORT_COOLIFY_PRODUCTION_READY=true` is deliberately set after authorized zone export and mail separation.
+- The supplied Android screenshot and independent HTTP check confirm the legacy MochaHost endpoint still fails through Phusion Passenger/Apache HTTP 500. This does not affect the independent healthy Contabo container.
+- No DNS, nameserver or mail record was changed. Issue #1 remains open because the existing authoritative zone/site account is still unavailable and MX still points to the apex. PR #3 and PR #5 remain separate and unmerged; bookings, payments and personal-data collection remain disabled.
+- Files in the release: `scripts/check-domain-dns.mjs`, `tests/domain-dns.test.mjs`, `.github/workflows/coolify.yml`, `package.json`, and continuity documents.
+- Verification: `npm run validate`, `npm run build`, production Docker/container checks, Pages deployment, Contabo exact-SHA live verification and nine asset digests.
+- Current task: continue independently executable browser/keyboard/screen-reader and multilingual acceptance work without touching the blocked domain zone.
+- Next exact action: inspect the newest main release generated by this handoff update, then verify its container, HTTPS `release.json` SHA and all nine digests before claiming it current.
 
 ## 2026-10-15 — Verified keyboard-focus release on Contabo and Pages
 
