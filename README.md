@@ -50,7 +50,7 @@ The **.github/workflows/publish.yml** action validates and builds every pull req
 
 Initial publication requires GitHub repository Settings → Pages configured for **GitHub Actions** as the source. A green GitHub Actions run alone does not establish that the custom domain resolves.
 
-Pages source was activated on 2026-10-15. Check the latest completed main workflow and `release.json` before claiming publication. Use `npm run verify:live -- --url HTTPS_SITE_URL --sha FULL_40_CHARACTER_COMMIT` for a read-only release check; project Pages URLs with a repository path are supported.
+Pages source was activated on 2026-10-15. The first successful automatic main release is `daa6f4a8d7daf62f87a3d5dcdb24e7c2e6fd84cd` in [run 38743595259](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38743595259), with actual deployment and public HTTPS verification. The site is live at **https://takatakca.github.io/CUBARESORT.CA/**. Check the latest completed main workflow and `release.json` before claiming the current release. Use `npm run verify:live -- --url HTTPS_SITE_URL --sha FULL_40_CHARACTER_COMMIT` for a read-only release check; project Pages URLs with a repository path are supported.
 
 The intended production domain is **https://cubaresort.ca/**. To connect it to GitHub Pages, verify current DNS/hosting first; then follow GitHub's official custom domain/DNS and HTTPS procedures. Never overwrite another production deployment or DNS without confirmation.
 

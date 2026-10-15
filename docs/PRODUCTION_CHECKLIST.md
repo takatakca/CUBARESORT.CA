@@ -1,6 +1,6 @@
 # CUBARESORT.CA — Production checklist
 
-Updated: 2026-10-14. Current scope: **static inspiration portal, not a live booking service**.
+Updated: 2026-10-15. Current scope: **static inspiration portal, not a live booking service**.
 
 ## Implemented in code
 
@@ -18,8 +18,9 @@ Updated: 2026-10-14. Current scope: **static inspiration portal, not a live book
 
 - [x] GitHub Actions validation and build passed on commit 637a25c (run 38617962103)
 - [x] GitHub Pages is configured with GitHub Actions as publication source (saved 2026-10-15)
-- [ ] Published Pages URL serves working site
-- [ ] cubaresort.ca DNS checked with domain owner and chosen host
+- [x] Published Pages URL serves working site: https://takatakca.github.io/CUBARESORT.CA/; run 38743595259 deployed and independently verified full commit daa6f4a8d7daf62f87a3d5dcdb24e7c2e6fd84cd
+- [x] cubaresort.ca DNS and ownership inspected: MochaHost domain present, apex 209.42.24.125, MX points to apex; neither accessible hosting account exposes its DNS zone
+- [ ] Obtain the existing cubaresort.ca zone/site account and export records before a mail-preserving cutover
 - [ ] HTTPS on cubaresort.ca validated with matching certificate
 - [ ] Production domain points to verified static deployment
 - [ ] Chrome, Firefox, Safari, Android/iOS smoke tests
@@ -52,5 +53,5 @@ Updated: 2026-10-14. Current scope: **static inspiration portal, not a live book
 
 - [x] Preview HTTP server restricts routes to production static assets and rejects hidden/repository files; integration test covers `.env` and internal paths.
 - [x] Property-specific request draft includes the selected hotel name with an explicit *not booked* label, while generic requests clear that selection.
-- [ ] Verify the latest commit's GitHub Actions checks after these changes.
-- [ ] GitHub Pages publication remains unverified: green validation workflow may have skipped Pages upload/deploy.
+- [x] PR #4 automatic validation (38742979223) and merged main publication (38743595259) passed, including 18 tests and the exact public HTTPS SHA/assets check.
+- [x] GitHub Pages upload and deploy actually succeeded. The custom domain remains blocked by access to its existing DNS zone and still returns Apache HTTP 500; this is not a completed custom-domain launch.
