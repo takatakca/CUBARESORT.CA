@@ -1,124 +1,95 @@
 # Agent handoff — CUBARESORT.CA
 
-Updated: 2026-10-14
+Updated: 2026-10-15 · Agent: Claude (Opus 5) · Session `01EcgxTi4xXX2mQNqwqGVbAN`
 
-## Starting repository state
+Read this with `AGENTS.md` and `docs/TASK_QUEUE.md`. Do not restart the project:
+working code exists and is deployed.
 
-- Repository: takatakca/CUBARESORT.CA
-- Default branch: main
-- Pre-development commit: 1b567d6a6bc982a8b2058066e4ad2733cf5712f4 (Initial commit)
-- Only original file: README.md containing one line (# CUBARESORT.CA).
-- No issues, PRs, existing application code or handoff documents in the original tree.
+## Last completed task
 
-## First phase decision
+Consolidated three diverging branches into one and kept the published site working.
 
-With no product specification and no existing implementation, deliver a usable Cuba travel inspiration website. It must not impersonate a reservation engine or advertise unverified inventory. The booking provider, operator legal identity, contact mailbox, production hosting and payment arrangement are currently unknown.
+`main`, `feat/nextjs-conversion` (PR #3) and `fix/nextjs-feature-parity-20261014`
+had split apart: `main` carried on as the static site while two branches carried
+the Next.js rewrite. `feat/nextjs-consolidated` now contains all three.
 
-## Implementation guide
+## Task in progress
 
-- index.html and assets/styles.css: UI and responsive styles
-- assets/app.js: rendering, filtering, sorting, saved favourites, language switch, request draft
-- assets/catalog.js: editorial inspiration data, not confirmed hotel listings
-- assets/i18n.js: FR/EN/ES copy, FAQs and temporary legal text
-- assets/config.js: external integrations disabled by default
-- scripts/: Node preview server and output packaging
-- tests/: built-in Node tests
-- .github/workflows/publish.yml: main push validation and GitHub Pages attempt
-- docs/PRODUCTION_CHECKLIST.md: requirements and deployment blockers
+Getting `feat/nextjs-consolidated` through CI and merged, then proving the
+published site is the new commit.
 
-## Next agent tasks, prioritized
+## Current state
 
-1. Fetch latest main commit and Actions workflow run; inspect logs; address any errors without force pushing over someone else's work.
-2. Confirm actual Pages/DNS/hosting status. Use GitHub Pages only if authorized and configured, otherwise arrange a static output deployment to the verified CUBARESORT.CA cPanel root.
-3. Test in real browsers and on mobile, then correct layout and accessibility issues.
-4. Confirm operator identity, a working email mailbox and legally reviewed policies before allowing real lead collection.
-5. Obtain approved resort suppliers, feature requirements and booking agreements before building a secure backend, quote and transaction pipeline.
-6. Continue by fixing verified issues, updating tests and recording each completed commit and deployment in this handoff.
+| | |
+| --- | --- |
+| Branch | `feat/nextjs-consolidated` |
+| Last local commit | `2c669c3` |
+| Stack | Next.js 16.2.10, React 19.2.4, Node 22, Prisma 6.19.3, Supabase SSR, Tailwind 4 |
+| Published site | https://takatakca.github.io/CUBARESORT.CA/ — **live, HTTP 200** |
+| Published commit | `daa6f4a` (the static build, verified by run 38743595259) |
+| cubaresort.ca | **not pointed here.** Apex 209.42.24.125 (MochaHost), answers HTTP 500 |
 
-## Non-negotiable constraints
+## Files changed in this session
 
-- No fabricated prices, reviews, room availability, booking confirmation or hotel-specific photo claims.
-- No API keys or sensitive traveller data in the static client.
-- Preserve all three locales and keyboard accessibility.
-- GROUPE TAKATAK retains the master identity/customer-data authority; all vertical business data must be tenant scoped.
-- An information-site deployment is not a live commercial booking launch.
+- `next.config.ts` — dual build target (`static` for Pages, `node` for Coolify), `basePath`
+- `src/app/api/health/route.ts` — `force-static`, build-time facts only
+- `src/app/robots.ts`, `src/app/sitemap.ts` — `force-static` so export emits them
+- `src/components/site-chrome.tsx` — Escape closes the mobile menu and restores focus; desktop-width resize closes it
+- `src/components/travel-experiences.tsx` — scrolling honours `prefers-reduced-motion`
+- `src/lib/i18n/index.ts` — removed the exhaustive/guaranteed-quote wording
+- `scripts/verify-live.mjs` — re-pointed at the Next.js output
+- `scripts/write-release.mjs` — new; emits `out/release.json` for deploy verification
+- `.github/workflows/publish.yml` — Next.js build + Pages deploy + live verification
+- `tests/deployment.test.mjs` — fixtures updated for the export
+- `tests/directory.test.mjs` — added the overclaim guard
+- `package.json`, `docs/PRODUCTION_CHECKLIST.md`, `WORKLOG.md`, `README.md`
+- Deleted: `assets/`, `scripts/build.mjs`, `scripts/dev-server.mjs`, `tests/site.test.mjs`
 
-## 2026-10-14 release verification
+## Commands run, and what they actually returned
 
-- Feature release commit: 637a25cbb27494e7d6e3b97c396c02fe5bed3b19 pushed to main.
-- GitHub Actions run #38617962103: static validation and build **passed**. Publish job **failed** at actions/configure-pages because the repository GitHub Pages site is not enabled (404 Not Found).
-- GitHub Pages source must be configured once by a repository administrator: Settings > Pages > Build and deployment > Source: GitHub Actions; then rerun workflow. The built-in GITHUB_TOKEN cannot enable Pages automatically without an additional authorized token.
-- A Vercel project named cubaresort-ca was created (project id prj_YH0obrJP1zKgZTk3AAV98GdYLOUi) but deployment and project inspection returned 403 for scope takatakcas-projects. No Vercel deployment was confirmed. Do not claim it is live or retry without appropriate access.
-- custom domain https://cubaresort.ca/ and DNS/SSL remain unverified; avoid modifying production DNS absent a verified target.
+```
+npm run typecheck                      clean
+npm run lint                           clean
+npm test                               16/16 pass
+BUILD_TARGET=static npm run build:static   out/ produced, release.json written
+```
 
-## 2026-10-14 property directory release
+Then the export was served under the real project path and driven in Chromium:
 
-### What shipped
+- 169 properties, 14 region chips, 3 destinations, 9 stay ideas
+- **0 axe violations** (wcag2a/2aa/21aa) at 1440×1000 and 390×844; no horizontal overflow
+- mobile menu opens, Escape closes it, focus returns to `.menu-toggle`
+- region chip filters and writes `?region=` to the URL
 
-`assets/hotels.js` — a directory of **169 Cuban properties across 13 regions**, surfaced in a new
-`#hotels` section with region chips, a region select, accent-insensitive name search and reset.
-Trilingual (FR/EN/ES). Four new tests cover directory integrity, the no-commercial-claim rule and search.
+## Known problems
 
-### Where the data came from, and what it is worth
+- **`cubaresort.ca` MX points at the apex.** Repointing the apex to move the
+  site would break the mailbox. Export the existing zone before any cutover.
+- Unsplash images cannot load from this sandbox (egress allowlist). Not a code
+  defect; verify imagery from a normal network.
+- 34 of 169 properties are `confirmed: false` — archive records awaiting
+  re-confirmation against the supplier list.
+- No database, no auth and no supplier feed are connected. The app is in
+  foundation mode by design.
 
-Two sources were merged, de-duplicated by a normalised name key plus an explicit alias table:
+## Deployment status, as verified
 
-1. **Operator supplier list (135 properties).** Names read directly from screenshots of the
-   operator's own booking system supplied by the user. These carry `confirmed:true`.
-2. **Project archive (34 further properties).** Recovered from
-   `cubaresort-ALL-148-HOTELS-COMPLETE.tar.gz`, which held a 148-record `hotel-data.ts`.
-   These carry `confirmed:false` and need re-confirmation against the supplier list.
+- GitHub Pages: **live**, serving the static build at commit `daa6f4a`.
+- This branch is **not yet deployed**; it deploys when merged to `main`.
+- Coolify: **not provisioned for this project.** The Dockerfile exists and CI
+  builds it, but no Coolify app, token or DNS record has been confirmed. Do not
+  claim a Coolify deployment without evidence.
 
-Multi-centre combo packages (`2CT …`, `… AND …`) were excluded: they are products, not properties.
+## Access needed (no secrets here)
 
-### Correcting the record on the earlier "148 hotels complete" claim
+- For Coolify: `COOLIFY_API_TOKEN`, plus `DATABASE_URL`, `DIRECT_URL`,
+  `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SECRET_KEY`.
+- For the domain: the account holding the `cubaresort.ca` DNS zone.
 
-The recovered 148-record file was a **skeleton, not a populated database**: 117 of its records
-were literally marked `DATA EXTRACTION NEEDED`, and **no record had a non-zero room count**.
-Only 3 properties anywhere in the archives had restaurants, bars and room categories filled in.
-So the names and regions were real and worth recovering; the detail was never there. Any future
-handoff claiming a populated 148-hotel database should be checked against this paragraph first.
+## Exact next action
 
-### Deliberately NOT in `assets/hotels.js`
-
-No rate, availability, star rating, review, room count, chain ranking or hotel-specific photo.
-A test (`property directory carries no rate, availability or ranking claim`) asserts the record
-shape is exactly `{id, name, region, airport, confirmed}` and fails the build if a commercial
-field is added. Populate those only from an authorized supplier feed, never from memory or a
-public website.
-
-## 2026-10-14 accessibility pass (handoff priority 3)
-
-Audited with axe-core in Chromium at 1440x900, 820x1180 and 390x844, plus the mobile
-menu, the request dialog and the legal dialog opened.
-
-**Before:** 426 nodes failing `color-contrast` (WCAG 2 AA), serious impact, at every width.
-**After:** 0 violations in all six states. Horizontal overflow was already 0 and still is.
-
-27 palette values were darkened to reach 4.5:1 for body text and 3:1 for large text,
-each solved against the darkest background it actually renders on, with hue preserved.
-The CTA band background moved from `#cf725e` to `#985445` because no text colour could
-reach 4.5:1 over the original coral. The primary coral button moved from `#ee755e` to
-`#b75a48` for the same reason. The result reads as a deeper terracotta and the design
-intent survives.
-
-A test (`no low-contrast colour from the pre-audit palette comes back`) lists all 27
-retired values and fails the build if one reappears, so this does not silently regress.
-
-Not yet audited: keyboard-only traversal of the full page and screen-reader announcement
-order. axe covers neither.
-
-### Next tasks, prioritized
-
-1. Re-confirm the 34 `confirmed:false` properties against the current supplier list; correct or drop.
-2. Decide how multi-centre combo packages should be modelled, if they belong on the site at all.
-3. GitHub Pages is still not enabled — Settings > Pages > Source: GitHub Actions, then rerun. Still blocking.
-4. Per-property detail pages require the supplier feed first; do not hand-write them.
-
-## 2026-10-14 Next.js migration parity candidate (separate review branch)
-
-The open Next.js conversion PR #3 on `feat/nextjs-conversion` replaces the static homepage with a hotel directory and FAQ, dropping working editorial destination cards, nine stay ideas, destination/style/text filters, local favourites, the request draft, legal dialogs and the mobile navigation. Its green CI did not test those features.
-
-A separate branch `fix/nextjs-feature-parity-20261014` is proposed **against the conversion branch**, not main. It restores these features using `src/components/travel-experiences.tsx` and `src/components/travel-ui.tsx`, preserving the existing `cubaresort.preferences.v1` local-storage key, FR/EN/ES copy, no-booking rule, and URL filter parameters. It also adds `tests/parity.test.mjs` as a regression gate. The user must still approve the Next.js architecture/brand and database arrangement; no migrations, deployments, bookings, or data collection were activated.
-
-After review, check the feature-parity PR's CI and real browser behavior before merging it into `feat/nextjs-conversion`. Do not merge PR #3 into main until the parity changes are integrated and the production/brand decision is resolved. GitHub Pages remains disabled on main; its green deploy job is a **skipped publication**, not proof of a live site.
+1. Push `feat/nextjs-consolidated`, open its PR, and wait for CI.
+2. On green, merge to `main`. The deploy job then publishes and verifies.
+3. Confirm with `npm run verify:live -- --url https://takatakca.github.io/CUBARESORT.CA/ --sha <merge sha>`.
+   Do not record a successful deployment until that passes.
+4. Then pick up the next item in `docs/TASK_QUEUE.md`.
