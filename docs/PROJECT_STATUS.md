@@ -19,6 +19,11 @@ Updated 2026-10-15. Repository `takatakca/CUBARESORT.CA`; publication branch `ma
 
 - Fixed keyboard focus loss after interactive region-chip and favourite-card re-render; added static regression guards. Requires latest main live release verification before marking deployed.
 
+## Custom-domain Passenger error and preflight — 2026-10-15
+
+- Screenshot confirms a Passenger error on the old MochaHost site; external HTTPS returns 500. Without the legacy site account/logs, the underlying application exception cannot be determined.
+- Added a read-only DNS guard and unit tests to reject an unsafe apex+MX web cutover when the custom-domain production-ready check is enabled. Await new main's container/HTTPS pipeline before marking this safeguard deployed.
+
 ## Current Contabo status — 2026-10-15
 
 - The owner selected Contabo/Coolify with automatic deployment. Separate resource `ci7ltew4v50e4fwq63tfvtg6` is running healthy on `31.220.96.134` using `Dockerfile.coolify`, port 8080 and the existing GitHub App's main-push webhook.

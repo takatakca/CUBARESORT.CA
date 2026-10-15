@@ -7,10 +7,11 @@
   "engines": {"node": ">=20"},
   "scripts": {
     "dev": "node scripts/dev-server.mjs",
-    "check": "node --check assets/app.js && node --check assets/request.js && node --check assets/hotels.js && node --check assets/catalog.js && node --check assets/config.js && node --check assets/i18n.js && node --check scripts/build.mjs && node --check scripts/dev-server.mjs",
+    "check": "node --check assets/app.js && node --check assets/request.js && node --check assets/hotels.js && node --check assets/catalog.js && node --check assets/config.js && node --check assets/i18n.js && node --check scripts/build.mjs && node --check scripts/dev-server.mjs && node --check scripts/check-domain-dns.mjs",
     "test": "node --test",
     "validate": "npm run check && npm test",
     "build": "node scripts/build.mjs",
-    "verify:live": "node scripts/verify-live.mjs"
+    "verify:live": "node scripts/verify-live.mjs",
+    "check:domain-dns": "node scripts/check-domain-dns.mjs"
   }
 }

@@ -30,6 +30,14 @@ GitHub Pages from `main` continues as the verified fallback while Contabo become
 - The build creates a `release.json` file containing the full source SHA, build time and SHA-256 of first-party HTML/JS/CSS/asset files. The verifier must compare real HTTPS file bytes to each digest; the release metadata alone is not proof.
 - Verify the *latest* `main` SHA and its Actions deployment before declaring publication. A green PR run or successful build without deploy is insufficient.
 
+## Read-only domain/mail readiness guard — 2026-10-15
+
+The owner's mobile screenshot shows a generic Phusion Passenger error at `cubaresort.ca`; a public HTTPS request also returned HTTP 500. This is the legacy MochaHost application, not the deployed Contabo Nginx application. The precise Passenger exception requires access to that legacy application's logs.
+
+`npm run check:domain-dns` reads public DNS only. It requires apex and www to resolve exclusively to the verified Contabo IPv4 `31.220.96.134`, requires an MX pointing to a **separate, resolving mail host** rather than the web apex or web server, and refuses unapproved IPv6. When `CUBARESORT_COOLIFY_PRODUCTION_READY=true`, the CI runs this guard before the custom-domain HTTPS SHA/asset verifier. While the current MX still points at the apex, it deliberately fails.
+
+The guard never changes DNS. Its success cannot replace a backup of the **entire existing zone**, email send/receive checks, site-account verification or authorization to cut over. Do not enable the production-ready flag until these human-controlled requirements and apex/www TLS are fulfilled.
+
 ## Custom-domain state, not yet completed
 `https://cubaresort.ca/` remains separate from the working GitHub Pages path. Last authoritative investigation: apex A `209.42.24.125` at MochaHost, `www` CNAME to apex, no apex AAAA, MX to **the apex**, and HTTP/HTTPS Apache 500. The owner has the domain registered at MochaHost, but the existing zone is not accessible from the inspected application cPanel or reseller WHM.
 

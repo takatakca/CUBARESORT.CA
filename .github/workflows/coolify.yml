@@ -66,6 +66,9 @@ jobs:
             test "$(git ls-remote origin refs/heads/main | cut -f1)" = "$EXPECTED_SHA" || { echo 'Main moved; refusing stale release verification'; exit 1; }
             if npm run verify:live -- --url "$LIVE_URL" --sha "$EXPECTED_SHA"; then
               if [ "$PRODUCTION_READY" = true ]; then
+                # Never report an apex launch while its MX still follows the
+                # web A record or www/apex route to an unapproved host.
+                npm run check:domain-dns
                 npm run verify:live -- --url https://cubaresort.ca/ --sha "$EXPECTED_SHA"
               fi
               echo "Verified automatic Contabo release: $LIVE_URL at $EXPECTED_SHA" >> "$GITHUB_STEP_SUMMARY"
