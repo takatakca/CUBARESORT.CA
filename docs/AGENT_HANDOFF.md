@@ -1,6 +1,15 @@
 # Agent handoff — CUBARESORT.CA
 
-## 2026-10-15 — Authorized Coolify / Contabo migration in progress
+## 2026-10-15 — Verified automatic Contabo release
+
+- Release `5f47930af670fa387f6f5990b42394d8c62a7d11` was pushed normally to main. [Coolify container and live run 38776838876](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38776838876) passed both actual container testing and exact-current-main HTTPS/file-checksum verification. Pages fallback run 38776838801 also passed.
+- Native GitHub App push created the Coolify **Webhook** deployment `xofxdyeudps7innbmlkqzwzv`, on the separate CUBARESORT resource `ci7ltew4v50e4fwq63tfvtg6`. It finished successfully at 2026-10-15 17:25:57 UTC; Docker healthcheck passed on the first attempt. The shared server had a deployment queue, so Force start was used once to advance this already webhook-created deployment. No other application's deployment was cancelled or changed.
+- HTTPS URL **https://ci7ltew4v50e4fwq63tfvtg6.31.220.96.134.sslip.io/** renders the current static portal in the browser. Browser smoke checks confirmed property search, reset to all 169 properties, inquiry-dialog opening and Escape dismissal. All 20 application tests and the production container smoke checks passed. GitHub's external verifier confirmed full SHA and all nine first-party file digests, not only a green homepage.
+- Saved Coolify settings were re-read: Dockerfile `/Dockerfile.coolify`, internal `8080`, source commit available during build, build arguments managed explicitly, auto deploy **Deploy on push (webhooks)**, HTTPS enabled, DNS matches. The Dockerfile healthcheck controls readiness and rolling replacement.
+- Fresh public DNS still returns `cubaresort.ca A 209.42.24.125`, no AAAA, and `MX 0 cubaresort.ca.`; a new HTTPS request still returned Apache 500. The existing authoritative DNS-zone access blocker remains. This is a completed Contabo installation and release pipeline, **not a completed cubaresort.ca cutover**. Keep issue #1 open. No DNS/mail settings were changed or inaccessible legacy files backed up.
+- This evidence update creates another release SHA. Inspect its new workflow and webhook deployment, and verify the new SHA before reporting it as current. The next infrastructure action remains access to the existing zone/site account, export, preservation of the current mail route, apex/www cutover to verified Contabo, then certificate/domain/mail acceptance.
+
+## 2026-10-15 — Authorized Coolify / Contabo migration setup
 
 The owner requested the same automatic GitHub-to-Contabo behavior as the other independent applications. Created the separate CUBARESORT production project and GitHub App resource `ci7ltew4v50e4fwq63tfvtg6` on `31.220.96.134`. Added a test-gated unprivileged Nginx Dockerfile, runtime health check, real container CI and exact-main HTTPS verification. Preserved the newer nine-file SHA-256 manifest and all current product behavior from baseline `8e1459335f23cb085b04431e1ec15f8c3d256d74`. See `docs/DEPLOYMENT.md` for exact settings. Deployment, certificate, webhook evidence and the custom-domain cutover still require verification; this entry does not claim them complete. Existing DNS access and apex MX constraints remain until new verified access exists.
 

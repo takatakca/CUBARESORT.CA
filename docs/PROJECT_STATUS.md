@@ -10,7 +10,15 @@ Updated 2026-10-15. Repository `takatakca/CUBARESORT.CA`; publication branch `ma
 - Baseline privacy/terms notices; no user account, payment or backend collection.
 - Node 22 source checks and tests; static build; `release.json` for verifiable deployment.
 
-## Deployment truth at start of this session
+## Current Contabo status — 2026-10-15
+
+- The owner selected Contabo/Coolify with automatic deployment. Separate resource `ci7ltew4v50e4fwq63tfvtg6` is running healthy on `31.220.96.134` using `Dockerfile.coolify`, port 8080 and the existing GitHub App's main-push webhook.
+- Verified release `5f47930af670fa387f6f5990b42394d8c62a7d11`: actual production container tests and external HTTPS exact-SHA/nine-file-digest check passed in run 38776838876. Native Coolify webhook deployment xofxdyeudps7innbmlkqzwzv succeeded; browser rendering was verified.
+- Working HTTPS URL: https://ci7ltew4v50e4fwq63tfvtg6.31.220.96.134.sslip.io/ . GitHub Pages remains the fallback.
+- Custom domain still points to MochaHost and returns Apache 500. Its existing DNS zone is not in the accessible accounts, and its apex MX requires preservation. The application/pipeline are installed; the custom-domain cutover remains blocked.
+- This documentation update triggers a newer release; verify its current main SHA and live file digests before claiming that newer version is published.
+
+## Historical deployment baseline
 - Baseline `main`: `fb5f9d60e9ee251d59121d94f27c4231ac8c9d2a` (2026-10-15 13:47 UTC).
 - Workflow run [38745782187](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38745782187): build, Pages deploy, public exact-SHA check all succeeded.
 - Pages path: https://takatakca.github.io/CUBARESORT.CA/ . The existing check verifies `release.json` commit plus homepage and assets; current development strengthens it to check per-file digests.

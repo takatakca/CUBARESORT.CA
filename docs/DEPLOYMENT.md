@@ -13,13 +13,13 @@ The owner explicitly selected Coolify on Contabo with automatic GitHub deploymen
 - Build strategy Dockerfile, path `/Dockerfile.coolify`, base `/`, source commit available during build, explicit Dockerfile build arguments.
 - `Dockerfile.coolify` runs all application tests and the static build using the exact `SOURCE_COMMIT`, then exercises the final unprivileged Nginx image before it can replace a live container. Runtime health checks validate release identity, homepage, assets and `/healthz`.
 - `.github/workflows/coolify.yml` builds and starts the actual production container, verifies all first-party file digests, private-path isolation, cache behavior and runtime health. Main pushes also wait for the matching HTTPS Coolify release and verify its exact SHA and byte digests.
-- Initial HTTPS target: `https://ci7ltew4v50e4fwq63tfvtg6.31.220.96.134.sslip.io/`. This becomes a verified live URL only after the deployment and certificate checks succeed. The workflow can override it using `CUBARESORT_COOLIFY_HTTPS_URL`.
+- Verified HTTPS target: `https://ci7ltew4v50e4fwq63tfvtg6.31.220.96.134.sslip.io/`. Release `5f47930af670fa387f6f5990b42394d8c62a7d11` passed the real container and external HTTPS verification in run 38776838876; native webhook deployment `xofxdyeudps7innbmlkqzwzv` finished healthy at 17:25:57 UTC on 2026-10-15. The workflow can override it using `CUBARESORT_COOLIFY_HTTPS_URL`.
 - Set `CUBARESORT_COOLIFY_PRODUCTION_READY=true` only after the mail-preserving DNS cutover and domain acceptance; this adds the apex HTTPS check to every release. No production-domain completion is claimed by this setup document.
 - No database or uploads exist in this static portal. Content lives in Git, so no persistent volume is required. Browser-local favourites remain browser-local. Do not infer that an inaccessible legacy MochaHost website has been backed up.
 - Retain GitHub Pages as a verified fallback during domain migration. Do not disable it before Contabo acceptance.
 
 ## Existing GitHub Pages fallback
-GitHub Pages from `main` is the current verified publishing service, **not** an unverified cPanel document root. `main` push triggers `.github/workflows/publish.yml`: source check/tests → build `dist/` → upload artifact → Pages deploy → remote HTTPS verification. Pull requests run the validation job only.
+GitHub Pages from `main` continues as the verified fallback while Contabo becomes the selected production host. `main` push triggers `.github/workflows/publish.yml`: source check/tests → build `dist/` → upload artifact → Pages deploy → remote HTTPS verification. Pull requests run the validation job only.
 
 - Public project-path URL: https://takatakca.github.io/CUBARESORT.CA/
 - Repository: https://github.com/takatakca/CUBARESORT.CA
@@ -41,10 +41,24 @@ GitHub Pages from `main` is the current verified publishing service, **not** an 
 5. Verify HTTPS hostname/certificate, apex and www response, assets, and the exact `main` SHA / file integrity through the custom domain; check mail flow separately.
 6. Close issue #1 only after both website and email acceptance, with rollback details documented.
 
-No direct production DNS or hosting changes were authorized/possible during this session.
+The owner authorized the separate Contabo application and domain migration. The Contabo application is deployed; the existing authoritative domain-zone access is still unavailable. No domain DNS or mail changes were made.
 
 ## Incident / rollback
 - For a broken Pages release, inspect the failed job/remote verifier; do not claim success.
 - Fix on a reviewed branch, test and push a normal non-forced commit to `main` where permitted. Avoid resetting other agents' work.
 - Domain/DNS rollback means restoring the **exported existing records**, not guessing past values.
 - Keep PR #3 Next.js work independent. Do not activate private credentials, commercial booking, email collection or payments to repair publishing.
+
+## DNS cutover record (pending existing-zone access)
+
+Do not apply this table until the full existing zone has been exported and the current mail hostname/routing has been verified. It records the intended web target, not permission to replace unseen records.
+
+| Record | Current verified state | Required next state |
+|---|---|---|
+| cubaresort.ca A | 209.42.24.125 | 31.220.96.134 after mail separation and DNS backup |
+| cubaresort.ca AAAA | No record | Keep absent unless a verified Contabo IPv6 route is deliberately configured |
+| www | CNAME cubaresort.ca | Preserve alias, configure matching Coolify domain and HTTPS redirect |
+| MX | 0 cubaresort.ca. | Verified dedicated mail hostname resolving to the existing mail service before apex web changes |
+| SPF / DKIM / DMARC and other records | Existing SPF includes a, mx and MochaHost IP/include mechanisms | Export and preserve all records; confirm mail authorization still resolves correctly after separation |
+
+The concrete hosting intervention is to expose or attach the **existing cubaresort.ca authoritative DNS zone/site account serving 209.42.24.125** to the authorized MochaHost account. Do not create a blank zone or switch nameservers. After access: back up records, preserve mail, add apex/www HTTPS domains to this Coolify resource, change only verified web records, test HTTPS and the exact current main manifest plus every checksum, then verify mail before closing issue #1.

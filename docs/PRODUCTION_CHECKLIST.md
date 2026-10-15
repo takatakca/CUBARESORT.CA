@@ -14,6 +14,16 @@ Updated: 2026-10-15. Current scope: **static inspiration portal, not a live book
 - [x] GitHub Pages build and publication workflow
 - [x] Zero-dependency Node development server and automated code tests
 
+## Contabo deployment — 2026-10-15
+
+- [x] Separate CUBARESORT Coolify resource on Contabo 31.220.96.134, internal port 8080.
+- [x] Existing authorized GitHub App, main-push deployment webhook enabled.
+- [x] All 20 application tests, final production image smoke test, runtime health and private-path isolation passed.
+- [x] Actual Coolify webhook deployment xofxdyeudps7innbmlkqzwzv succeeded and became healthy at 17:25:57 UTC.
+- [x] External HTTPS exact commit and nine-file SHA-256 verification passed for 5f47930 in run 38776838876.
+- [x] Browser rendered https://ci7ltew4v50e4fwq63tfvtg6.31.220.96.134.sslip.io/ .
+- [ ] Existing-zone access, mail-preserving DNS cutover, cubaresort.ca certificate and current-main/domain/email acceptance. The domain still points to MochaHost and returns 500.
+
 ## Release-integrity enhancement (2026-10-15)
 
 - [x] Build stamps a SHA-256 manifest for the homepage and the required first-party assets.
