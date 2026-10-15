@@ -4,7 +4,7 @@ Updated 2026-10-15. Always compare with the latest `main` before starting an ite
 
 | Priority | Task | State / actual dependency | Definition of done |
 |---|---|---|---|
-| P0 | Verify and protect published Pages release identity | Implement checksum manifest, negative tests, CI verification; no external approvals needed | Main Actions succeeds after actual Pages deployment; `release.json` SHA and file digests match fetched live bytes |
+| Done | Verify and protect published Pages release identity | **Completed** in `3e9e10376f22532f0d24242a5598055e29bdf324` (run 38773832573 passed live SHA + nine file digests) | Keep manifest and negative tests passing for future releases |
 | P0 | Finish custom-domain cutover — issue #1 | **Blocked**: existing authoritative MochaHost DNS zone is absent from accessible cPanel/WHM accounts | Authorized zone access, full DNS export, mail route preserved, approved web cutover, HTTPS and exact-current-SHA checks |
 | P1 | Browser accessibility and multilingual acceptance | Actionable when real browser automation/hardware is available | Keyboard traversal, screen-reader dialogs/focus, desktop/mobile FR/EN/ES evidence and fixes |
 | P1 | Confirm 34 archive-sourced property names | Requires authoritative current supplier data | Reconcile, update or remove unconfirmed names with provenance recorded |

@@ -1,5 +1,16 @@
 # Agent handoff — CUBARESORT.CA
 
+## 2026-10-15 — Completed verified release-integrity implementation
+
+- Code and continuity commit: [`3e9e10376f22532f0d24242a5598055e29bdf324`](https://github.com/takatakca/CUBARESORT.CA/commit/3e9e10376f22532f0d24242a5598055e29bdf324), pushed as a non-forced main fast-forward.
+- GitHub Actions run [38773832573](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38773832573): static checks, automated tests, build, Pages deployment and live HTTPS verification all **successful**.
+- The deployment job log proves that the public Pages URL returned exactly SHA `3e9e10376f22532f0d24242a5598055e29bdf324` and passed SHA-256 checks for all nine first-party release files.
+- All five required continuity documents now exist: `AGENTS.md`, `docs/PROJECT_STATUS.md`, `docs/TASK_QUEUE.md`, `docs/DEPLOYMENT.md`, and `docs/DECISIONS.md`. The existing handoff/checklist were updated.
+- Latest release claim must always follow the current `main` HEAD; this documentation follow-up is itself a new commit and triggers a fresh Pages build. Verify that newer deployment before reporting its SHA.
+- Last completed task: release-file digest verification and baseline continuity files. Next actionable task: improve real browser keyboard/screen-reader acceptance when available; do not attempt DNS cutover without the existing zone's authorized access.
+- No new authorized DNS access route appeared. `cubaresort.ca` remains Apache 500 and issue #1 remains OPEN. Preserve MX mail routing and complete DNS record export before any approved cutover.
+- Operator/supplier/commercial booking issue #2 remains OPEN. PR #3 Next.js work remains separate.
+
 ## 2026-10-15 — Agent continuity and byte-verified publication
 
 ### Baseline evidence

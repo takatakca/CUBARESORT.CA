@@ -17,6 +17,11 @@ Updated 2026-10-15. Repository `takatakca/CUBARESORT.CA`; publication branch `ma
 - Custom domain `cubaresort.ca` last known to point to MochaHost `209.42.24.125` and return Apache 500. The current browser check also returned HTTP 500. **Do not claim the custom domain is launched.**
 - Public Pages content could not be directly re-fetched from this session's web/network clients; the documented CI release verification is the available evidence for the baseline. Re-check via latest Actions on any new push.
 
+## Verified release-integrity delivery
+- Code commit: `3e9e10376f22532f0d24242a5598055e29bdf324`.
+- Run [38773832573](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38773832573) passed tests, build, actual Pages publication and public file-by-file SHA-256 verification.
+- This status document is updated in a follow-up commit; check the newest `main` SHA and run before announcing *that* release.
+
 ## Separate remaining blocks
 - [Issue #1](https://github.com/takatakca/CUBARESORT.CA/issues/1): existing DNS zone/site-account access, mail-preserving cutover, custom-domain certificate and exact-main acceptance check.
 - [Issue #2](https://github.com/takatakca/CUBARESORT.CA/issues/2): supplier feeds, operator identity, legal terms, consent, payment/booking and TAKATAK tenant-scoped integrations; none are authorized or implemented.
