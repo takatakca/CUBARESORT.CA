@@ -1,4 +1,11 @@
-export const copy={
+// FR / EN / ES interface copy for CUBARESORT.CA.
+// Ported verbatim from the previous static build so no wording changed in the
+// Next.js conversion. Every key must exist in all three languages — enforced by
+// hasAllKeys() and by the test suite.
+
+import type { Lang } from "@/lib/hotels/types";
+
+const dictionary = {
 fr:{
  skip:"Aller au contenu",utility:"Le soleil, la mer et Cuba. Un voyage à imaginer ensemble.",utilityDisclaimer:"Inspiration de voyage · Aucune disponibilité en temps réel",
  navDestinations:"Destinations",navExperiences:"Séjours",navHotels:"Établissements",navAbout:"Notre approche",navFaq:"Questions",ctaPlan:"Planifier mon séjour",
@@ -95,7 +102,26 @@ es:{
  privacyTitle:"Privacidad",privacyHtml:"<p>Esta versión de CUBARESORT.CA no crea cuentas, recibe pagos ni envía solicitudes a un servidor. Los favoritos y el idioma pueden guardarse en el navegador. La información del borrador de viaje no se guarda en nuestro servidor.</p><h3>Servicios externos</h3><p>Google Fonts y las fotografías ilustrativas de Unsplash pueden recibir datos técnicos de conexión, incluida la dirección IP. No hay analítica activada en esta versión.</p><h3>Tus opciones</h3><p>Elimina los datos locales del sitio en tu navegador para borrar favoritos. No ingreses información sensible en el borrador. Antes de recoger datos personales deberá publicarse una política completa y los datos del responsable.</p>",
  termsTitle:"Condiciones de uso",termsHtml:"<p>CUBARESORT.CA ofrece ideas de viaje solo con fines informativos y de inspiración. Las descripciones no son ofertas de reserva, cotizaciones, asesoría migratoria oficial ni garantías de servicio.</p><p>No se ofrecen precios, inventario, transporte, seguros, pagos ni disponibilidad en tiempo real. Antes de reservar con terceros, confirma las condiciones con el proveedor. Las fotografías son ilustrativas.</p><p>La función de solicitud solo prepara un borrador. No se celebra un contrato ni se envía automáticamente un mensaje desde CUBARESORT.CA.</p>"
 }
-};
-export const langNames={fr:"Français",en:"English",es:"Español"};
-export function translation(lang,key){return copy[lang]?.[key] ?? copy.fr[key] ?? key;}
-export function hasAllKeys(){const base=Object.keys(copy.fr);return ["en","es"].every(l=>base.every(k=>Object.hasOwn(copy[l],k))) && base.every(k=>Object.hasOwn(copy.en,k)&&Object.hasOwn(copy.es,k));}
+} as const;
+
+export const copy = dictionary;
+export type CopyKey = keyof typeof dictionary.fr;
+
+export const langNames: Record<Lang, string> = { fr: "Français", en: "English", es: "Español" };
+
+export function translation<K extends CopyKey>(lang: Lang, key: K): (typeof dictionary)["fr"][K] {
+  const table = dictionary[lang] as (typeof dictionary)["fr"] | undefined;
+  return (table?.[key] ?? dictionary.fr[key]) as (typeof dictionary)["fr"][K];
+}
+
+/** True when en and es define every key fr defines. */
+export function hasAllKeys(): boolean {
+  const base = Object.keys(dictionary.fr) as CopyKey[];
+  return (["en", "es"] as const).every((lang) =>
+    base.every((key) => Object.hasOwn(dictionary[lang], key)),
+  );
+}
+
+export function isLang(value: string | undefined | null): value is Lang {
+  return value === "fr" || value === "en" || value === "es";
+}

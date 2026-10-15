@@ -1,5 +1,77 @@
 # Agent handoff — CUBARESORT.CA
 
+## 2026-10-15 17:50 UTC — Claude (Opus 5), session 01EcgxTi4xXX2mQNqwqGVbAN
+
+**Status: PR #5 is green and mergeable, and deliberately NOT merged.**
+
+`AGENTS.md` says "do not merge PR #3's incomplete Next.js conversion". The owner
+asked this session, in chat, to convert the project to Node and align it with
+`takatak-v1`. Those two instructions conflict, the conflict affects production,
+so the merge is left for the owner. Nothing was merged or deployed.
+
+### What PR #5 is
+
+`feat/nextjs-consolidated` (`33ba084`) folds together the three lineages that had
+split apart: `main`'s static work, `fix/nextjs-feature-parity-20261014`, and
+PR #3. Every objection behind the "do not merge" line has been addressed:
+
+| Objection to PR #3 | State now |
+| --- | --- |
+| Incomplete — lost the editorial site | Parity restored: 6 destinations, 9 stay ideas, favourites, request draft, legal dialogs, mobile nav |
+| Would break the Pages deployment | Builds a static export into `dist/`; the Pages workflow and `Dockerfile.coolify` consume it unchanged |
+| Conflicted with `main` | `mergeable: true`, state `clean` |
+| Overclaiming copy | Fixed; a test now fails the build if "au complet" / "Every resort in Cuba" / "we can quote on" returns |
+| Would discard the Contabo work | Preserved: Coolify pipeline, Nginx image, SHA-256 verifiers all kept and adapted |
+
+### Verified, not assumed
+
+Both pipelines green on `33ba084`:
+
+- `Validate and publish CUBARESORT.CA` — run 38780337091
+- `CUBARESORT Coolify container and live release` — run 38780336985
+  `PASS container cfb85e5...: health, exact commit, 26 asset digests, cache and private-path isolation`
+
+Locally: typecheck, lint, 17/17 tests, `npm run build` emits `dist/` with a
+26-file digest manifest. The export was served under the real `/CUBARESORT.CA/`
+path in Chromium — 169 properties, 3 destinations, 9 stay ideas, **0 axe
+violations** at 1440x1000 and 390x844, no overflow, Escape closes the mobile
+menu and returns focus to its toggle. A tampered homepage served with HTTP 200
+was correctly rejected on its SHA-256.
+
+### Three fixes that would otherwise have been lost
+
+The React port had silently dropped accessibility behaviour from PR #4. Restored
+by hand: Escape closes the mobile menu and restores focus; widening past the
+desktop breakpoint closes it; scrolling honours `prefers-reduced-motion`.
+
+### Infrastructure changes, if PR #5 is merged
+
+- `npm run build` emits the Next.js export to `dist/`; `npm run build:node`
+  keeps the standalone server for when server rendering is needed
+- `Dockerfile.coolify` installs dependencies (the static site had none) and
+  gates the image on typecheck, lint and tests at the exact `SOURCE_COMMIT`
+- `release-assets.mjs` validates the manifest's *shape* instead of a hardcoded
+  file list, because Next.js names chunks by content hash; the byte-level
+  guarantee is unchanged
+- `check-runtime.sh` reads the scripts to verify from the served page
+
+### The decision the owner owns
+
+Merge PR #5, or keep the static portal and close it. Both are coherent; they
+cannot both ship. Until that is answered, work on either lineage risks being
+thrown away — which already happened once this week.
+
+### Not done, and why
+
+- **No merge, no deploy.** See above.
+- **No DNS change.** The apex still answers HTTP 500 and **MX targets the
+  apex**; the authoritative zone is still not accessible.
+- **Coolify Node target not deployed.** The image builds in CI, but it would
+  only matter once a database, auth and a supplier feed exist.
+
+---
+
+
 ## 2026-10-15 — Verified automatic Contabo release
 
 - Release `5f47930af670fa387f6f5990b42394d8c62a7d11` was pushed normally to main. [Coolify container and live run 38776838876](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38776838876) passed both actual container testing and exact-current-main HTTPS/file-checksum verification. Pages fallback run 38776838801 also passed.

@@ -6,3 +6,8 @@ dist/
 !.env.example
 coverage/
 *.log
+.next/
+next-env.d.ts
+prisma/generated/
+tsconfig.tsbuildinfo
+out/

@@ -1,16 +1,45 @@
 {
   "name": "cubaresort-ca",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "private": true,
-  "type": "module",
-  "description": "Multilingual Cuba travel inspiration portal. No live booking or payment.",
-  "engines": {"node": ">=20"},
+  "description": "CUBARESORT.CA — Cuba travel portal for GROUPE TAKATAK. Next.js app aligned with takatak-v1 conventions.",
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
-    "dev": "node scripts/dev-server.mjs",
-    "check": "node --check assets/app.js && node --check assets/request.js && node --check assets/hotels.js && node --check assets/catalog.js && node --check assets/config.js && node --check assets/i18n.js && node --check scripts/build.mjs && node --check scripts/dev-server.mjs",
-    "test": "node --test",
-    "validate": "npm run check && npm test",
-    "build": "node scripts/build.mjs",
-    "verify:live": "node scripts/verify-live.mjs"
+    "dev": "next dev",
+    "build": "BUILD_TARGET=static next build --webpack && node scripts/write-release.mjs",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test tests/*.test.mjs",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "qa": "npm run typecheck && npm run lint && npm test && npm run build",
+    "verify:live": "node scripts/verify-live.mjs",
+    "build:node": "BUILD_TARGET=node next build --webpack"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "6.19.3",
+    "@prisma/client": "6.19.3",
+    "@supabase/ssr": "^0.12.0",
+    "@supabase/supabase-js": "^2.110.2",
+    "next": "16.2.10",
+    "pg": "^8.13.1",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^22",
+    "@types/pg": "^8.11.10",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.10",
+    "prisma": "6.19.3",
+    "tailwindcss": "^4",
+    "typescript": "^5"
   }
 }

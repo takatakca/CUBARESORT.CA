@@ -1,6 +1,10 @@
 # CUBARESORT.CA — Production checklist
 
-Updated: 2026-10-15. Current scope: **static inspiration portal, not a live booking service**.
+Updated: 2026-10-15. Current scope: **information portal, not a live booking service**.
+
+The site is now a Next.js 16 app aligned with `takatak-v1`, published to GitHub Pages as a
+static export. The same source builds for Coolify with `BUILD_TARGET=node` once the
+database, TAKATAK Auth and a supplier feed exist.
 
 ## Implemented in code
 
@@ -11,8 +15,11 @@ Updated: 2026-10-15. Current scope: **static inspiration portal, not a live book
 - [x] Browser-local favourites and language preference
 - [x] Trip request draft and clipboard export (no private data sent)
 - [x] Pricing/availability disclaimers, baseline privacy and terms
-- [x] GitHub Pages build and publication workflow
-- [x] Zero-dependency Node development server and automated code tests
+- [x] GitHub Pages build and publication workflow, with the published commit verified
+- [x] Next.js 16 app on takatak-v1 conventions (Node 22, React 19, Prisma 6.19.3, Supabase SSR)
+- [x] Property directory: 169 properties, 13 regions, 135 confirmed against the supplier list
+- [x] WCAG 2 AA contrast corrected and guarded by a test (426 violations -> 0)
+- [x] Automated tests: directory integrity, no-commercial-claim guard, wording guard, contrast guard, parity
 
 ## Contabo deployment — 2026-10-15
 

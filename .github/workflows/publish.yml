@@ -4,7 +4,6 @@ on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -16,26 +15,39 @@ concurrency:
 
 jobs:
   verify:
-    name: Static checks and build
+    name: Typecheck, lint, test and build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Validate source and run tests
-        run: npm run validate
-      - name: Prepare static release
+          cache: npm
+      # ignore-scripts=false so Prisma's postinstall generates the client.
+      - run: npm ci --ignore-scripts=false
+      - run: npm run db:generate
+        env:
+          DATABASE_URL: postgresql://ci:ci@localhost:6543/postgres?schema=cubaresort
+          DIRECT_URL: postgresql://ci:ci@localhost:5432/postgres?schema=cubaresort
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+      # Static export for GitHub Pages. The Node/Coolify target is built from
+      # the same source with BUILD_TARGET=node once that host is provisioned.
+      - name: Build the static release
         run: npm run build
-      - name: Upload release artifact
-        uses: actions/upload-artifact@v4
+        env:
+          NEXT_PUBLIC_BASE_PATH: ${{ github.event_name == 'push' && '/CUBARESORT.CA' || '' }}
+          RELEASE_SHA: ${{ github.sha }}
+      - uses: actions/upload-artifact@v4
         with:
           name: cubaresort-static
           path: dist/
           if-no-files-found: error
+
   deploy:
     name: Deploy GitHub Pages
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: verify
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -55,13 +67,13 @@ jobs:
         with:
           name: cubaresort-static
           path: dist/
-      - id: configure
-        uses: actions/configure-pages@v5
+      - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist/
       - id: deployment
         uses: actions/deploy-pages@v4
+      # Prove the public site really is this commit before calling it deployed.
       - name: Verify the exact public HTTPS release
         env:
           LIVE_URL: ${{ steps.deployment.outputs.page_url }}
