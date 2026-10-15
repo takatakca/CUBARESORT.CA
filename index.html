@@ -23,11 +23,11 @@
   <div class="utility-bar"><div class="container utility-inner"><span data-i18n="utility">Le soleil, la mer et Cuba. Un voyage à imaginer ensemble.</span><span class="utility-note" data-i18n="utilityDisclaimer">Inspiration de voyage · Aucune disponibilité en temps réel</span></div></div>
   <header class="site-header" id="top">
     <div class="container header-inner">
-      <a class="brand" href="#top" aria-label="CUBARESORT.CA — Accueil">
+      <a class="brand" href="#top" aria-label="CUBARESORT.CA — Accueil" data-i18n-aria-label="brandLabel">
         <span class="brand-icon" aria-hidden="true"><svg viewBox="0 0 44 44" fill="none"><circle cx="22" cy="22" r="20" stroke="currentColor" stroke-width="1.5"/><path d="M9 28c7-3 11-3 17 0s9 3 12 0M10 33c6-3 11-3 16 0s10 3 12 0M22 10v17M22 11c-6-1-11 1-14 6 5-2 9-1 14 2M23 11c6-2 12 0 14 5-5-1-10 0-14 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
         <span class="brand-word">CUBA<span>RESORT</span><small>.CA</small></span>
       </a>
-      <nav class="desktop-nav" aria-label="Navigation principale">
+      <nav class="desktop-nav" aria-label="Navigation principale" data-i18n-aria-label="primaryNavLabel">
         <a href="#destinations" data-i18n="navDestinations">Destinations</a>
         <a href="#experiences" data-i18n="navExperiences">Séjours</a>
         <a href="#hotels" data-i18n="navHotels">Établissements</a>
@@ -44,7 +44,7 @@
         <button type="button" class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="mobile-menu" aria-label="Ouvrir le menu"><span></span><span></span><span></span></button>
       </div>
     </div>
-    <nav id="mobile-menu" class="mobile-menu" aria-label="Navigation mobile" hidden>
+    <nav id="mobile-menu" class="mobile-menu" aria-label="Navigation mobile" data-i18n-aria-label="mobileNavLabel" hidden>
       <a href="#destinations" data-i18n="navDestinations">Destinations</a>
       <a href="#experiences" data-i18n="navExperiences">Séjours</a>
         <a href="#hotels" data-i18n="navHotels">Établissements</a>
@@ -55,7 +55,7 @@
   </header>
   <main id="main">
     <section class="hero" aria-labelledby="hero-title">
-      <div class="hero-image" role="img" aria-label="Plage tropicale ensoleillée, photographie d'illustration"></div>
+      <div class="hero-image" role="img" aria-label="Plage tropicale ensoleillée, photographie d'illustration" data-i18n-aria-label="heroImageLabel"></div>
       <div class="hero-shade"></div>
       <div class="container hero-content">
         <div class="hero-copy">
@@ -72,7 +72,7 @@
       <div class="hero-bottom"><div class="container hero-bottom-inner"><span data-i18n="heroPhoto">Photos d'ambiance à titre illustratif</span><span>22° N · 79° W <span aria-hidden="true">↗</span></span></div></div>
     </section>
 
-    <section class="search-panel-wrap" aria-label="Rechercher un séjour">
+    <section class="search-panel-wrap" aria-label="Rechercher un séjour" data-i18n-aria-label="searchSectionLabel">
       <div class="container"><form class="search-panel" id="search-form" role="search">
         <div class="search-intro"><span class="search-symbol" aria-hidden="true">⌕</span><div><strong data-i18n="searchTitle">Le Cuba qui vous ressemble</strong><small data-i18n="searchSubtitle">Affinez vos inspirations de voyage</small></div></div>
         <label class="field"><span data-i18n="labelDestination">Destination</span><select name="destination" id="destination-filter"><option value="all" data-i18n="allDestinations">Toutes les destinations</option></select></label>
@@ -94,7 +94,7 @@
         <div class="results-tools">
           <div class="results-count" id="results-count" role="status" aria-live="polite"></div>
           <label class="text-search"><span aria-hidden="true">⌕</span><span class="visually-hidden" data-i18n="textSearchLabel">Rechercher dans les séjours</span><input id="text-search" type="search" autocomplete="off" data-i18n-placeholder="textSearchPlaceholder" placeholder="Rechercher une destination..."></label>
-          <label class="sort-wrap"><span class="visually-hidden" data-i18n="sortLabel">Trier les séjours</span><select id="sort-select" aria-label="Trier les séjours"><option value="featured" data-i18n="sortFeatured">Sélection</option><option value="az" data-i18n="sortAz">A à Z</option></select></label>
+          <label class="sort-wrap"><span class="visually-hidden" data-i18n="sortLabel">Trier les séjours</span><select id="sort-select" aria-label="Trier les séjours" data-i18n-aria-label="sortLabel"><option value="featured" data-i18n="sortFeatured">Sélection</option><option value="az" data-i18n="sortAz">A à Z</option></select></label>
           <button class="filter-reset" type="button" id="reset-filters" data-i18n="resetFilters">Effacer les filtres ↺</button>
         </div>
         <div class="experience-grid" id="experience-grid"></div>
@@ -108,7 +108,7 @@
         <div class="section-head experiences-head"><div><p class="eyebrow" data-i18n="hotelsEyebrow">RÉPERTOIRE DES ÉTABLISSEMENTS</p><h2 id="hotels-title" data-i18n="hotelsTitle">Les hôtels de Cuba, <em>au complet.</em></h2></div><p class="section-head-description" data-i18n="hotelsIntro">Le répertoire des établissements cubains sur lesquels nous pouvons vous faire une proposition. Noms et régions seulement : aucun tarif, aucune disponibilité et aucun classement ne figure ici.</p></div>
         <div class="results-tools">
           <div class="results-count" id="hotel-count" role="status" aria-live="polite"></div>
-          <label class="sort-wrap"><span class="visually-hidden" data-i18n="hotelsRegionLabel">Région</span><select id="hotel-region" aria-label="Région"></select></label>
+          <label class="sort-wrap"><span class="visually-hidden" data-i18n="hotelsRegionLabel">Région</span><select id="hotel-region" aria-label="Région" data-i18n-aria-label="hotelsRegionLabel"></select></label>
           <label class="text-search"><span aria-hidden="true">⌕</span><span class="visually-hidden" data-i18n="hotelsSearchLabel">Rechercher un établissement</span><input id="hotel-search" type="search" autocomplete="off" data-i18n-placeholder="hotelsSearchPlaceholder" placeholder="Nom de l'hôtel..."></label>
           <button class="filter-reset" type="button" id="hotel-reset" data-i18n="hotelsReset">Effacer ↺</button>
         </div>
@@ -119,7 +119,7 @@
       </div>
     </section>
 
-    <section class="editorial" aria-labelledby="editorial-title"><div class="editorial-photo" role="img" aria-label="Eau turquoise et plage tropicale, photo illustrative"></div><div class="editorial-content"><p class="eyebrow eyebrow-light" data-i18n="editorialEyebrow">LE VOYAGE, AUTREMENT</p><h2 id="editorial-title" data-i18n="editorialTitle">Les plus beaux souvenirs ne se réservent pas. <em>Ils se vivent.</em></h2><p data-i18n="editorialBody">Prendre le temps. Goûter, marcher, découvrir. Laissez Cuba vous surprendre au-delà des cartes postales.</p><a href="#approach" class="light-link" data-i18n="editorialLink">Notre philosophie <span aria-hidden="true">↗</span></a></div></section>
+    <section class="editorial" aria-labelledby="editorial-title"><div class="editorial-photo" role="img" aria-label="Eau turquoise et plage tropicale, photo illustrative" data-i18n-aria-label="editorialImageLabel"></div><div class="editorial-content"><p class="eyebrow eyebrow-light" data-i18n="editorialEyebrow">LE VOYAGE, AUTREMENT</p><h2 id="editorial-title" data-i18n="editorialTitle">Les plus beaux souvenirs ne se réservent pas. <em>Ils se vivent.</em></h2><p data-i18n="editorialBody">Prendre le temps. Goûter, marcher, découvrir. Laissez Cuba vous surprendre au-delà des cartes postales.</p><a href="#approach" class="light-link" data-i18n="editorialLink">Notre philosophie <span aria-hidden="true">↗</span></a></div></section>
 
     <section id="approach" class="section approach-section" aria-labelledby="approach-title"><div class="container">
       <div class="section-head"><div><p class="eyebrow" data-i18n="approachEyebrow">SIMPLICITÉ, CLARTÉ, INSPIRATION</p><h2 id="approach-title" data-i18n="approachTitle">L'envie de partir, <em>en toute clarté.</em></h2></div></div>

@@ -52,6 +52,7 @@ function setStaticTranslations(){
    else node.textContent=tr(key);
  });
  $$("[data-i18n-placeholder]").forEach(node=>{node.placeholder=tr(node.dataset.i18nPlaceholder);});
+ $$("[data-i18n-aria-label]").forEach(node=>node.setAttribute("aria-label",tr(node.dataset.i18nAriaLabel)));
  $$("[data-lang]").forEach(button=>button.setAttribute("aria-pressed",String(button.dataset.lang===state.lang)));
  $("#menu-toggle").setAttribute("aria-label",state.lang==="en"?"Open menu":state.lang==="es"?"Abrir menú":"Ouvrir le menu");
  $("#inquiry-close").setAttribute("aria-label",state.lang==="en"?"Close":state.lang==="es"?"Cerrar":"Fermer");

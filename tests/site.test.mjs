@@ -168,3 +168,19 @@ test("modal dialogs have accessible names and keep keyboard focus inside",async(
  assert.ok(app.includes('active===last'));
  assert.ok(app.includes('dialog.addEventListener("keydown",event=>keepFocusInsideDialog(dialog,event))'));
 });
+
+test("explicit accessible names follow the selected language",async()=>{
+ const [html,app]=await Promise.all([
+  readFile(resolve(root,"index.html"),"utf8"),
+  readFile(resolve(root,"assets/app.js"),"utf8")
+ ]);
+ const keys=["brandLabel","primaryNavLabel","mobileNavLabel","searchSectionLabel","heroImageLabel","editorialImageLabel","sortLabel","hotelsRegionLabel"];
+ for(const key of keys){
+  assert.ok(html.includes(`data-i18n-aria-label="${key}"`),`missing translated aria-label binding: ${key}`);
+  for(const lang of ["fr","en","es"])assert.match(translation(lang,key),/\S/,`${lang}.${key}`);
+ }
+ assert.ok(app.includes('$$("[data-i18n-aria-label]")'));
+ assert.ok(app.includes('setAttribute("aria-label",tr(node.dataset.i18nAriaLabel))'));
+ assert.notEqual(copy.fr.sortLabel,copy.en.sortLabel);
+ assert.notEqual(copy.fr.hotelsRegionLabel,copy.es.hotelsRegionLabel);
+});
