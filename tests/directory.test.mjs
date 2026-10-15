@@ -49,6 +49,29 @@ test("all three languages define the same interface keys", async () => {
   }
 });
 
+test("the directory never claims to be exhaustive or to guarantee a quote", async () => {
+  const copy = await read("src/lib/i18n/index.ts");
+  // The directory holds 169 properties out of an unknown Cuban total, 34 of
+  // them awaiting re-confirmation. Wording corrected on main by PR #4
+  // (87f6046) after an earlier draft overclaimed; these phrasings must not
+  // return in any locale.
+  const overclaims = [
+    "au complet",            // fr: "Les hôtels de Cuba, au complet"
+    "Every resort in Cuba",  // en
+    "Todos los hoteles",     // es
+    "nous pouvons vous faire une proposition",
+    "we can quote on",
+    "podemos cotizar",
+  ];
+  for (const phrase of overclaims) {
+    assert.ok(!copy.includes(phrase), `overclaim "${phrase}" is back in the copy`);
+  }
+  // And the honest framing must still be there, once per language.
+  for (const marker of ["répertoire partiel", "A partial directory", "directorio parcial"]) {
+    assert.ok(copy.includes(marker), `missing the "partial directory" framing: ${marker}`);
+  }
+});
+
 test("no low-contrast colour from the pre-audit palette comes back", async () => {
   const css = (await read("src/app/globals.css")).toLowerCase();
   // Each failed WCAG 2 AA at the size and background it was used on.
