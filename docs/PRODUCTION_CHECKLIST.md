@@ -17,7 +17,7 @@ Updated: 2026-10-15. Current scope: **static inspiration portal, not a live book
 ## Accessibility follow-up (2026-10-15)
 
 - [x] Region-chip and favourite-card keyboard focus restoration implemented on `main`; `b607f3bf` verified by Contabo workflow 38790752444 and Pages workflow 38790752455.
-- [ ] Inquiry/legal dialog accessible names and forward/reverse Tab containment implemented; verify the new main release and record its run evidence.
+- [x] Inquiry/legal dialog accessible names and forward/reverse Tab containment verified in `e6dd1d26`; Contabo run 38818276620 and Pages run 38818276543 passed, followed by independent exact-SHA/nine-digest/health checks.
 - [ ] Real keyboard traversal, mobile assistive technology and screen-reader acceptance in FR/EN/ES.
 
 ## Contabo deployment — 2026-10-15

@@ -18,7 +18,7 @@ Updated 2026-10-15. Repository `takatakca/CUBARESORT.CA`; publication branch `ma
 ## Dialog keyboard acceptance follow-up — 2026-10-15
 
 - Live keyboard traversal found that forward Tab could leave the open inquiry dialog after its final action and briefly focus the page body. Both modal dialogs also lacked explicit `aria-labelledby` relationships.
-- The focused fix adds forward/reverse focus containment, explicit visible heading names and regression coverage. Treat it as pending until the newest main container and both public deployments pass exact-release verification.
+- Commit `e6dd1d26a36e72ca580bcfb79a8bae1b24eaa0f5` adds forward/reverse focus containment, explicit visible heading names and regression coverage. Contabo run 38818276620 and Pages run 38818276543 passed; independent exact-SHA, all-nine-digest and health verification passed after the rolling replacement stabilized.
 
 ## Accessibility improvement — 2026-10-15
 
