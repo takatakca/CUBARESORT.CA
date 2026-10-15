@@ -1,5 +1,19 @@
 # Agent handoff — CUBARESORT.CA
 
+## 2026-10-15 — Authorized deployment repair
+
+The owner requested immediate resolution of issue #1 and draft PR #4. Reused PR #4; PR #3's incomplete Next.js conversion remains separate.
+
+- GitHub Pages source was successfully saved as **GitHub Actions** in the authenticated repository settings. The earlier `has_pages: false` report is historical.
+- The workflow now validates pull requests as well as main pushes. Deployment is limited to main, after successful checks, with Pages/OIDC write permissions scoped to the deployment job. Configuration/publication failures are real failures instead of silent green skips.
+- Builds publish `release.json` containing only the application name, full source SHA and build time. The release workflow verifies the exact public HTTPS commit, homepage, JavaScript, CSS and hotel directory; a green build alone is insufficient.
+- PR #4's Escape/focus restoration and desktop-resize behavior is retained. Local validation/build passed before publication; final browser and Actions evidence belongs in PR #4's description and issue #1.
+- Public hosting inspection: `cubaresort.ca` A is `209.42.24.125`, no AAAA, `www` aliases the apex, and HTTP/HTTPS return Apache 500. MX currently points to **cubaresort.ca itself**. Any web DNS cutover must first retain mail delivery at the existing mail host/IP; do not point that MX at GitHub Pages.
+- The Vercel preview `https://cubaresort-ca.vercel.app/` now answers HTTP 200. The historical API 403 is not evidence that the preview is unavailable; Vercel administration is unnecessary for the selected Pages path.
+- Hosting/DNS administration currently requires the cPanel sign-in. Do not put credentials in Git, workflow files or chat. Preserve the existing site and DNS rollback information before any cutover.
+
+Commercial booking, payment, supplier and lead collection remain outside this deployment repair. All existing FR/EN/ES content and GROUPE TAKATAK boundaries are preserved.
+
 Updated: 2026-10-14
 
 ## Starting repository state

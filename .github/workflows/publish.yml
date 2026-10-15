@@ -3,15 +3,15 @@ name: Validate and publish CUBARESORT.CA
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: github-pages
+  group: cubaresort-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -33,44 +33,49 @@ jobs:
           name: cubaresort-static
           path: dist/
           if-no-files-found: error
-  # Publishing is best-effort and must never mask a real test or build failure.
-  # It stays red-free so that a red X on this workflow always means broken code.
-  # GitHub Pages must be switched on once by a repository administrator:
-  #   Settings > Pages > Build and deployment > Source: GitHub Actions
-  # Until then configure-pages returns 404 and this job reports "not enabled".
   deploy:
     name: Deploy GitHub Pages
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     needs: verify
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     environment:
       name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
       - uses: actions/download-artifact@v4
         with:
           name: cubaresort-static
           path: dist/
       - id: configure
         uses: actions/configure-pages@v5
-        continue-on-error: true
-      - if: steps.configure.outcome == 'success'
-        uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v3
         with:
           path: dist/
       - id: deployment
-        if: steps.configure.outcome == 'success'
         uses: actions/deploy-pages@v4
-      - name: Report publication status
+      - name: Verify the exact public HTTPS release
+        env:
+          LIVE_URL: ${{ steps.deployment.outputs.page_url }}
+          EXPECTED_SHA: ${{ github.sha }}
+        shell: bash
         run: |
-          if [ "${{ steps.configure.outcome }}" = "success" ]; then
-            echo "### Published to GitHub Pages" >> "$GITHUB_STEP_SUMMARY"
-            echo "${{ steps.deployment.outputs.page_url }}" >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "### GitHub Pages is not enabled for this repository" >> "$GITHUB_STEP_SUMMARY"
-            echo "" >> "$GITHUB_STEP_SUMMARY"
-            echo "The static build succeeded and is attached to this run as the" >> "$GITHUB_STEP_SUMMARY"
-            echo "\`cubaresort-static\` artifact, ready to upload to any static host." >> "$GITHUB_STEP_SUMMARY"
-            echo "" >> "$GITHUB_STEP_SUMMARY"
-            echo "To publish automatically, a repository administrator must set" >> "$GITHUB_STEP_SUMMARY"
-            echo "**Settings > Pages > Build and deployment > Source: GitHub Actions**," >> "$GITHUB_STEP_SUMMARY"
-            echo "then re-run this workflow. The built-in GITHUB_TOKEN cannot enable it." >> "$GITHUB_STEP_SUMMARY"
-          fi
+          set -euo pipefail
+          for attempt in {1..12}; do
+            if npm run verify:live -- --url "$LIVE_URL" --sha "$EXPECTED_SHA"; then
+              echo "### Published and verified CUBARESORT.CA" >> "$GITHUB_STEP_SUMMARY"
+              echo "$LIVE_URL — commit $EXPECTED_SHA" >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "::error::Public release did not match the tested commit or its assets failed."
+          exit 1

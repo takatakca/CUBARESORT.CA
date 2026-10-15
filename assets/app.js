@@ -299,6 +299,15 @@ $("#menu-toggle").addEventListener("click",()=>{
  const menu=$("#mobile-menu");menu.hidden=!menu.hidden;
  $("#menu-toggle").setAttribute("aria-expanded",String(!menu.hidden));
 });
+document.addEventListener("keydown",e=>{
+ if(e.key==="Escape" && !$("#mobile-menu").hidden){
+  closeMobile();
+  $("#menu-toggle").focus();
+ }
+});
+window.matchMedia("(min-width: 801px)").addEventListener("change",e=>{
+ if(e.matches)closeMobile();
+});
 $$("#mobile-menu a").forEach(a=>a.addEventListener("click",closeMobile));
 $("#inquiry-close").addEventListener("click",()=>$("#inquiry-dialog").close());
 $("#inquiry-destination").addEventListener("change",()=>{state.selectedHotelId=null;});
