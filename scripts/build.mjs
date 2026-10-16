@@ -2,7 +2,8 @@ import { cp, copyFile, mkdir, readFile, rm, stat, writeFile } from "node:fs/prom
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { VERIFIED_RELEASE_FILES } from "./release-assets.mjs";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
+import { GUIDE_PATHS, renderGuidePage } from "./guide-pages.mjs";
 
 const root=resolve(import.meta.dirname,"..");
 const output=join(root,"dist");
@@ -18,6 +19,12 @@ await rm(output,{recursive:true,force:true});
 await mkdir(output,{recursive:true});
 for(const name of entryFiles)await copyFile(join(root,name),join(output,name));
 await cp(join(root,"assets"),join(output,"assets"),{recursive:true});
+// Publish one complete, crawlable guide per language with unique canonical metadata.
+for(const [lang,relativePath] of Object.entries(GUIDE_PATHS)){
+ const target=join(output,relativePath);
+ await mkdir(dirname(target),{recursive:true});
+ await writeFile(target,renderGuidePage(lang));
+}
 // Record a SHA-256 checksum for every first-party document and runtime asset.
 // This detects a stale/mixed Pages release even when release.json has the right Git SHA.
 const assets = Object.fromEntries(await Promise.all(VERIFIED_RELEASE_FILES.map(async path => [
