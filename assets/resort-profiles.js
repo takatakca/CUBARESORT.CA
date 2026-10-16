@@ -82,7 +82,7 @@ export function profileDataIsValid(){
  const keys=Object.keys(profileCopy.fr);
  if(["en","es"].some(lang=>keys.some(key=>!profileCopy[lang][key])))return false;
  return Object.entries(resortProfiles).every(([id,p])=>
-  knownIds.has(id) && /^\\d{4}-\\d{2}-\\d{2}$/.test(p.checked) &&
+  knownIds.has(id) && /^\d{4}-\d{2}-\d{2}$/.test(p.checked) &&
   (p.beachfrontMeters===null || Number.isFinite(p.beachfrontMeters) && p.beachfrontMeters>0) &&
   (p.seasonalOperation===null || ["fr","en","es"].every(lang=>p.seasonalOperation[lang])) &&
   p.sources.length>0 && p.sources.every(s=>s.url.startsWith("https://") && !new URL(s.url).username && !new URL(s.url).password) &&
