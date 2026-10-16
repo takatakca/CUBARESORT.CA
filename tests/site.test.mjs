@@ -210,3 +210,9 @@ test("both destination-card and search-filter navigation respect reduced motion"
  assert.equal(app.split(' scrollToExperiences();').length-1,2,"both navigation paths must use the preference-aware helper");
  assert.ok(!app.includes('scrollIntoView({behavior:"smooth",block:"start"})'),"unconditional smooth scrolling must not return");
 });
+
+test("keyboard focus on stay search remains visible after removing the input outline",async()=>{
+ const css=await readFile(resolve(root,"assets/styles.css"),"utf8");
+ assert.ok(css.includes(".text-search input{border:0;outline:0;"),"input removes its own outline");
+ assert.ok(css.includes(".text-search:focus-within{outline:3px solid #a44f3f;outline-offset:3px}"),"search container must show a visible high-contrast ring when the input has focus");
+});

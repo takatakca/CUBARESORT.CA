@@ -2,6 +2,11 @@
 
 Updated 2026-10-16. Repository `takatakca/CUBARESORT.CA`; publication branch `main`.
 
+## Visible search keyboard focus — 2026-10-16
+
+- Restored a high-contrast 3px focus outline on the stay search field's container, whose input CSS previously overrode the general keyboard focus ring.
+- Regression check added. The latest confirmed full production release prior to this patch is `8c511044cb0232632940e38c42dc2e57cc2c02cd` (Contabo/apex/www run 38953151340, Pages run 38953151339). This newer change is pending its own tests and exact-main HTTPS release evidence.
+
 ## Reduced-motion navigation correction — 2026-10-16
 
 - Found a destination-card scroll path that always requested animation even when reduced motion was preferred. It now shares the preference-aware scroll helper used by stay search. Source regression tests guard both entry points.

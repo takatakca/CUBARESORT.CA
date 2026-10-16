@@ -1,3 +1,15 @@
+## 2026-10-16 — Restore visible keyboard focus on the stay-search field (release pending)
+
+- Verified predecessor: `8c511044cb0232632940e38c42dc2e57cc2c02cd` successfully deployed to Contabo and both public `cubaresort.ca` hostnames with exact SHA and nine file digests (run [38953151340](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38953151340)); Pages fallback succeeded (run [38953151339](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38953151339)).
+- Confirmed in `assets/styles.css`: global `input:focus-visible` is overridden later by the more-specific `.text-search input{outline:0}`, making keyboard focus on the stay-search field invisible. Applied a high-contrast, 3px `.text-search:focus-within` outline to its wrapper to restore a consistent visible focus indicator while keeping the input's clean visual treatment.
+- Regression test in `tests/site.test.mjs` checks that this focus ring accompanies the outline suppression. Files changed: `assets/styles.css`, `tests/site.test.mjs`, `docs/AGENT_HANDOFF.md`, `docs/PROJECT_STATUS.md`, `docs/TASK_QUEUE.md`.
+- No DNS, mail, Coolify configuration, booking, payment, provider data, personal-data collection or PR #3/#5 changes.
+- Last completed task: preference-aware scroll deployed and verified as `8c511044cb0232632940e38c42dc2e57cc2c02cd`; current task: validate/build and verify actual main-push container and public-domain release for this focus fix.
+- Required checks: Node 22 `npm run validate`, `npm run build`, production Docker image/runtime tests, DNS/mail separation and HTTPS `release.json` full latest-main SHA plus nine SHA-256 file digests on Contabo, apex and www, and Pages fallback. Read new SHA from GitHub after push.
+- Known limits: actual mail send/receive not verified; issue #2 suppliers/booking/legal/privacy and TAKATAK tenant-scoped backend approvals pending; cross-device assistive-technology and image rights remain open.
+- Next exact action: check `main` and both latest Actions workflows, inspect exact deployed SHA and nine checksums; resolve a failing verification before claiming release.
+
+
 ## 2026-10-16 — Reduced-motion destination navigation (CI / release pending)
 
 - Starting `main`: `31e5911f6dce61b145b00d6226a6b11a753cc0be`. The actual Coolify production-container and HTTPS verification in [run 38922319385](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38922319385) passed full SHA and all nine SHA-256 asset digests at the Contabo hostname, https://cubaresort.ca/ and https://www.cubaresort.ca/ with `PRODUCTION_READY=true` and DNS/mail host separation. Pages fallback [run 38922319404](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38922319404) passed.
