@@ -279,6 +279,24 @@ function updateMobileMenuState(open){
 function closeMobile(){
  updateMobileMenuState(false);
 }
+function focusMobileNavigationTarget(link){
+ const target=document.querySelector(link.hash);
+ const focusTarget=target?.querySelector("h1,h2,h3")||target;
+ if(!focusTarget)return;
+ focusTarget.setAttribute("tabindex","-1");
+ focusTarget.focus({preventScroll:true});
+}
+function closeMobileAtDesktopWidth(){
+ const menu=$("#mobile-menu"),active=document.activeElement;
+ const focusWasInMenu=menu.contains(active);
+ const activeHref=active?.closest?.('a[href^="#"]')?.getAttribute("href");
+ closeMobile();
+ if(!focusWasInMenu)return;
+ const desktopPeer=activeHref
+  ? $$(".desktop-nav a").find(link=>link.getAttribute("href")===activeHref)
+  : null;
+ (desktopPeer||$(".brand")).focus({preventScroll:true});
+}
 
 $$("[data-lang]").forEach(button=>button.addEventListener("click",()=>{
  state.lang=button.dataset.lang;
@@ -356,9 +374,13 @@ document.addEventListener("keydown",e=>{
  }
 });
 window.matchMedia("(min-width: 801px)").addEventListener("change",e=>{
- if(e.matches)closeMobile();
+ if(e.matches)closeMobileAtDesktopWidth();
 });
-$$("#mobile-menu a").forEach(a=>a.addEventListener("click",closeMobile));
+$$("#mobile-menu a").forEach(link=>link.addEventListener("click",()=>{
+ closeMobile();
+ // Wait until the native fragment navigation has run, then leave focus at its heading.
+ requestAnimationFrame(()=>focusMobileNavigationTarget(link));
+}));
 $$("dialog.modal").forEach(dialog=>dialog.addEventListener("keydown",event=>keepFocusInsideDialog(dialog,event)));
 $("#inquiry-close").addEventListener("click",()=>$("#inquiry-dialog").close());
 $("#inquiry-destination").addEventListener("change",()=>{state.selectedHotelId=null;renderSelectedHotelContext();});

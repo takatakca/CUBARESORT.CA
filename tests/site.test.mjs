@@ -164,7 +164,7 @@ test("preview HTTP server exposes only the production static allowlist",async(t)
  assert.equal(post.status,405);
 });
 
-test("mobile menu can be dismissed by Escape and closes at desktop width",async()=>{
+test("mobile menu closes without stranding keyboard focus",async()=>{
  const [app,i18n]=await Promise.all([
   readFile(resolve(root,"assets/app.js"),"utf8"),
   readFile(resolve(root,"assets/i18n.js"),"utf8")
@@ -172,6 +172,12 @@ test("mobile menu can be dismissed by Escape and closes at desktop width",async(
  assert.ok(app.includes('e.key==="Escape" && !$("#mobile-menu").hidden'));
  assert.ok(app.includes('$("#menu-toggle").focus()'));
  assert.ok(app.includes('matchMedia("(min-width: 801px)")'));
+ assert.ok(app.includes('if(e.matches)closeMobileAtDesktopWidth()'));
+ assert.ok(app.includes('menu.contains(active)'));
+ assert.ok(app.includes('(desktopPeer||$(".brand")).focus({preventScroll:true})'));
+ assert.ok(app.includes('requestAnimationFrame(()=>focusMobileNavigationTarget(link))'));
+ assert.ok(app.includes('target?.querySelector("h1,h2,h3")||target'));
+ assert.ok(app.includes('focusTarget.focus({preventScroll:true})'));
  assert.ok(app.includes('tr(open?"menuCloseLabel":"menuOpenLabel")'));
  assert.ok(app.includes('updateMobileMenuState(!$("#mobile-menu").hidden)'));
  assert.ok(app.includes('updateMobileMenuState($("#mobile-menu").hidden)'));

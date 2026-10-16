@@ -2,10 +2,16 @@
 
 Updated 2026-10-16. Repository `takatakca/CUBARESORT.CA`; publication branch `main`.
 
-## Hide unconfigured contact action — 2026-10-16
+## Mobile navigation focus continuity — 2026-10-16
+
+- Mobile same-page links now move keyboard focus to the destination heading after the menu closes, instead of leaving focus on a hidden link.
+- A responsive change to desktop width moves focus from the hidden mobile menu to the equivalent visible desktop navigation link, or to the visible brand fallback. Regression checks cover both paths.
+- Starting verified production baseline is `9809fd22a034ead16db9714bf18be69a11d95e0b` (Coolify/container/custom-domain run 38974291261; Pages fallback 38974291249). This newer patch requires its own container and all-host exact-SHA/nine-digest evidence before being called live.
+
+## Hide unconfigured contact action — verified 2026-10-16
 
 - The email CTA is now hidden until a verified contact mailbox is configured; the clipboard-only draft remains available. This prevents an unavailable mail action from appearing functional.
-- Initial HTML state, runtime configuration and CSS enforce that behavior; regression coverage added. Await actual new-main public release and asset integrity proof before claiming live.
+- Initial HTML state, runtime configuration and CSS enforce that behavior; regression coverage added. Main `9809fd22a034ead16db9714bf18be69a11d95e0b` passed Coolify/container/custom-domain run 38974291261 and Pages run 38974291249, including all-host exact SHA and nine-digest verification.
 
 ## Hotel-specific unsent inquiry visibility — 2026-10-16
 
