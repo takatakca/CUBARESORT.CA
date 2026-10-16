@@ -1,6 +1,6 @@
 # Architecture and release decisions — CUBARESORT.CA
 
-Updated 2026-10-15.
+Updated 2026-10-16.
 
 | Decision | Rationale / limit |
 |---|---|
@@ -10,7 +10,7 @@ Updated 2026-10-15.
 | Use a separate Coolify application on Contabo for the informational site, retaining Pages as fallback | Owner explicitly requested Contabo and automatic GitHub deployment on 2026-10-15. Preserve the existing static product and checksum verification. Confirm real deployment and DNS acceptance before claiming production cutover. |
 | Stamp `release.json` with SHA-256 of first-party files | SHA-only metadata can coexist with stale or mismatched assets; hashing the generated output and checking fetched bytes makes a mixed deployment fail CI. |
 | Reject unsafe custom-domain DNS when production-ready validation is enabled | Public read-only preflight must confirm apex/www web target and a separate resolving MX target; still require original-zone export and actual mail acceptance before any change. |
-| Keep the custom-domain DNS and MX unchanged until access exists | `cubaresort.ca`'s MX points to the apex; changing the web A record without a mail-preserving destination risks email disruption. The existing authoritative zone is outside accessible hosting accounts. |
+| Keep production on Contabo and mail independently on MochaHost | Existing-zone access and backup became available in bolonca; the owner repaired public DNS. On 2026-10-16 apex/www TLS and exact release acceptance passed after pending Coolify routing was applied. MX now targets mail.cubaresort.ca at 209.42.24.127. Preserve all original backups and nameservers; mail delivery remains untested. |
 | No backend lead collection, payment or booking without a provider | No verified recipient, approved travel operator, supplier agreements, consent processing or tenant-scoped permissions exist. Draft-only interactions avoid misleading transactions. |
 | GROUPE TAKATAK retains master identity/data authority | If integration is approved later, use authenticated server-side, tenant-scoped APIs; no duplicate master CRM or credentials in browser code. |
 

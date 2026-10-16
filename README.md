@@ -46,21 +46,13 @@ Photos currently use third-party Unsplash illustrative imagery. Verify licensing
 
 ## Deployment
 
-The selected production host is now a **separate Coolify application on Contabo**, authorized on 2026-10-15. `main` pushes trigger the existing GitHub App webhook. `Dockerfile.coolify` runs tests/build and validates the final unprivileged Nginx image before replacement; Docker health controls readiness. `.github/workflows/coolify.yml` tests the real image and verifies exact-current-main HTTPS/file checksums after deployment. No extra deployment token is needed.
+Production is **https://cubaresort.ca/** and **https://www.cubaresort.ca/** on a separate Coolify application at Contabo `31.220.96.134`. The 2026-10-16 domain repair applied the previously pending proxy routing, verified valid HTTPS, health, exact main SHA and all nine first-party file digests on both hostnames.
 
-Verified Contabo release `5f47930` passed [run 38776838876](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38776838876), and Coolify's webhook deployment completed healthy. Working URL: **https://ci7ltew4v50e4fwq63tfvtg6.31.220.96.134.sslip.io/**. The custom domain still points to MochaHost; existing-zone access and mail-preserving DNS cutover are required before cubaresort.ca can be declared migrated. See **docs/DEPLOYMENT.md**. New documentation commits trigger newer releases, so inspect current main and its verification before reporting the latest version.
+Main pushes trigger the existing authorized GitHub App webhook. `Dockerfile.coolify` runs tests/build and validates the final unprivileged Nginx image; Docker health controls replacement. `.github/workflows/coolify.yml` tests the actual container and checks the deployed full current-main SHA and real file bytes. The production-ready Actions flag enables public DNS/mail separation and apex/www acceptance on every release. Inspect the newest workflow and native **Webhook** deployment before reporting its SHA current.
 
-GitHub Pages remains a working fallback during domain migration.
+GitHub Pages remains an automatically verified fallback at **https://takatakca.github.io/CUBARESORT.CA/** through `.github/workflows/publish.yml`. No custom domain is assigned to Pages. Mail remains on MochaHost through the independent `mail.cubaresort.ca` record; mail delivery itself has not been tested.
 
-The **.github/workflows/publish.yml** action validates and builds every pull request. Main pushes publish only after those checks succeed, then verify the exact HTTPS release and its assets. It also supports manual runs. Failed publication fails the workflow.
-
-Initial publication requires GitHub repository Settings → Pages configured for **GitHub Actions** as the source. A green GitHub Actions run alone does not establish that the custom domain resolves.
-
-Pages source was activated on 2026-10-15. The first successful automatic main release is `daa6f4a8d7daf62f87a3d5dcdb24e7c2e6fd84cd` in [run 38743595259](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38743595259), with actual deployment and public HTTPS verification. The site is live at **https://takatakca.github.io/CUBARESORT.CA/**. Check the latest completed main workflow and `release.json` before claiming the current release. Use `npm run verify:live -- --url HTTPS_SITE_URL --sha FULL_40_CHARACTER_COMMIT` for a read-only release check; project Pages URLs with a repository path are supported. New releases embed SHA-256 checksums of the homepage and all required first-party files into `release.json`; the verifier compares actual public bytes, detecting a stale or mixed deployment even when HTTP 200 is returned.
-
-The intended production domain is **https://cubaresort.ca/**. Connect it to the verified Contabo resource only after obtaining the existing DNS zone and preserving mail; follow the cutover record in docs/DEPLOYMENT.md. Never overwrite another production deployment or DNS without confirmation.
-
-MochaHost/cPanel alternative: build in GitHub Actions and securely transfer dist contents to the correct domain document root. Do not assume secrets or SSH paths from another TAKATAK project. Only enable automated SSH deployment after host key, domain web root, account and permissions are verified.
+See **docs/DEPLOYMENT.md** and **docs/DOMAIN_CUTOVER_20261016.md** for resource settings, backups, rollback and acceptance evidence. Use `npm run verify:live -- --url https://cubaresort.ca/ --sha FULL_40_CHARACTER_COMMIT` for a read-only exact-release check.
 
 ## Privacy and ecosystem architecture
 

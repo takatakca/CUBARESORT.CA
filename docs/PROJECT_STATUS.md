@@ -1,6 +1,14 @@
 # Project status — CUBARESORT.CA
 
-Updated 2026-10-15. Repository `takatakca/CUBARESORT.CA`; publication branch `main`.
+Updated 2026-10-16. Repository `takatakca/CUBARESORT.CA`; publication branch `main`.
+
+## Current production hosting — 2026-10-16
+
+- https://cubaresort.ca/ and https://www.cubaresort.ca/ now serve the separate Coolify application on Contabo `31.220.96.134`. Saved routing was applied successfully at 15:06 UTC, fixing the proxy 404 and issuing valid HTTPS.
+- Initial domain acceptance passed exact main `ff907675207f32f0d113f07f01a1d7d11c97ed0e`, all nine asset digests, health and HTTP redirects on both hostnames.
+- Existing native GitHub App main-push auto deployment remains enabled. `CUBARESORT_COOLIFY_PRODUCTION_READY=true` makes public DNS/mail separation and apex/www HTTPS checks mandatory for new main releases. Verify the new operations merge's actual webhook and CI before claiming its SHA current.
+- Mail routes independently to MochaHost `209.42.24.127`; the original zone and confirmed bolonca document root are backed up. End-to-end mail delivery is untested. Pages remains an active fallback.
+- Historical pre-cutover blockers below are superseded by `docs/DOMAIN_CUTOVER_20261016.md`; do not ask for missing-zone access or the old support request again.
 
 ## Product currently implemented
 - Responsive editorial travel-inspiration site in static HTML, CSS and ES modules, with FR/EN/ES copy.
@@ -57,7 +65,7 @@ Updated 2026-10-15. Repository `takatakca/CUBARESORT.CA`; publication branch `ma
 - This status document is updated in a follow-up commit; check the newest `main` SHA and run before announcing *that* release.
 
 ## Separate remaining blocks
-- [Issue #1](https://github.com/takatakca/CUBARESORT.CA/issues/1): existing DNS zone/site-account access, mail-preserving cutover, custom-domain certificate and exact-main acceptance check.
+- [Issue #1](https://github.com/takatakca/CUBARESORT.CA/issues/1): final automatic custom-domain release evidence; initial DNS, routing, TLS and full-SHA checks have passed. Functional mail delivery remains explicitly untested.
 - [Issue #2](https://github.com/takatakca/CUBARESORT.CA/issues/2): supplier feeds, operator identity, legal terms, consent, payment/booking and TAKATAK tenant-scoped integrations; none are authorized or implemented.
 - [PR #3](https://github.com/takatakca/CUBARESORT.CA/pull/3): separate Next.js conversion, not part of the current static Pages path and not approved for merge.
 

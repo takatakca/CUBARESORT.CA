@@ -1,72 +1,58 @@
 # Deployment operations — CUBARESORT.CA
 
-Updated 2026-10-15.
+Updated 2026-10-16. Production hosting is the separate Coolify application on Contabo.
 
-## Authorized Contabo migration — 2026-10-15
+## Production settings
 
-The owner explicitly selected Coolify on Contabo with automatic GitHub deployment. This supersedes the earlier Pages-only hosting decision; the existing application and SHA-256 release verification remain intact.
+| Setting | Value |
+| --- | --- |
+| Production | https://cubaresort.ca/ and https://www.cubaresort.ca/ |
+| Contabo IPv4 | 31.220.96.134 |
+| Coolify project / environment | CUBARESORT / production |
+| Resource UUID | ci7ltew4v50e4fwq63tfvtg6 |
+| Repository / branch | takatakca/CUBARESORT.CA / main |
+| Deployment | Existing authorized GitHub App, Deploy on push (webhooks) |
+| Builder / path / base | Dockerfile / /Dockerfile.coolify / / |
+| Internal port | 8080, no host port mappings |
+| Source commit | Available during build; explicit Dockerfile build arguments |
+| Readiness | Dockerfile healthcheck: release identity, static files and /healthz |
+| HTTPS | Valid certificates for apex/www; HTTP redirects to HTTPS |
+| Production acceptance variable | CUBARESORT_COOLIFY_PRODUCTION_READY=true |
+| Generated HTTPS diagnostic URL | https://ci7ltew4v50e4fwq63tfvtg6.31.220.96.134.sslip.io/ |
+| Pages fallback | https://takatakca.github.io/CUBARESORT.CA/ |
 
-- Separate project `CUBARESORT`, production environment; resource UUID `ci7ltew4v50e4fwq63tfvtg6`.
-- Coolify resource: https://coolify.takatak.ca/project/ayhntlw7pcxy46nqiubhrnp5/environment/bkqnnzcbjc8q2lcxndyenjpl/application/ci7ltew4v50e4fwq63tfvtg6
-- Contabo host: `31.220.96.134`; internal port `8080`; no public port mappings.
-- Existing authorized GitHub App, repository `takatakca/CUBARESORT.CA`, branch `main`, auto deploy on push. No extra repository token or new GitHub permission grant is needed.
-- Build strategy Dockerfile, path `/Dockerfile.coolify`, base `/`, source commit available during build, explicit Dockerfile build arguments.
-- `Dockerfile.coolify` runs all application tests and the static build using the exact `SOURCE_COMMIT`, then exercises the final unprivileged Nginx image before it can replace a live container. Runtime health checks validate release identity, homepage, assets and `/healthz`.
-- `.github/workflows/coolify.yml` builds and starts the actual production container, verifies all first-party file digests, private-path isolation, cache behavior and runtime health. Main pushes also wait for the matching HTTPS Coolify release and verify its exact SHA and byte digests.
-- Verified HTTPS target: `https://ci7ltew4v50e4fwq63tfvtg6.31.220.96.134.sslip.io/`. Release `5f47930af670fa387f6f5990b42394d8c62a7d11` passed the real container and external HTTPS verification in run 38776838876; native webhook deployment `xofxdyeudps7innbmlkqzwzv` finished healthy at 17:25:57 UTC on 2026-10-15. The workflow can override it using `CUBARESORT_COOLIFY_HTTPS_URL`.
-- Set `CUBARESORT_COOLIFY_PRODUCTION_READY=true` only after the mail-preserving DNS cutover and domain acceptance; this adds the apex HTTPS check to every release. No production-domain completion is claimed by this setup document.
-- No database or uploads exist in this static portal. Content lives in Git, so no persistent volume is required. Browser-local favourites remain browser-local. Do not infer that an inaccessible legacy MochaHost website has been backed up.
-- Retain GitHub Pages as a verified fallback during domain migration. Do not disable it before Contabo acceptance.
+Coolify resource: https://coolify.takatak.ca/project/ayhntlw7pcxy46nqiubhrnp5/environment/bkqnnzcbjc8q2lcxndyenjpl/application/ci7ltew4v50e4fwq63tfvtg6
 
-## Existing GitHub Pages fallback
-GitHub Pages from `main` continues as the verified fallback while Contabo becomes the selected production host. `main` push triggers `.github/workflows/publish.yml`: source check/tests → build `dist/` → upload artifact → Pages deploy → remote HTTPS verification. Pull requests run the validation job only.
+Main pushes automatically create a native Coolify webhook deployment. No new deployment token or permissions are needed. `Dockerfile.coolify` runs the Node 22 checks, tests and build and validates the final unprivileged Nginx image before replacement. `.github/workflows/coolify.yml` independently exercises the actual container, private-path isolation and runtime integrity, then verifies the exact current-main HTTPS release and nine first-party file digests. With production readiness enabled it also requires mail-safe public DNS and exact apex/www releases. The whole group retries during rolling replacement; a newer main prevents a stale-release claim.
 
-- Public project-path URL: https://takatakca.github.io/CUBARESORT.CA/
-- Repository: https://github.com/takatakca/CUBARESORT.CA
-- Actions: https://github.com/takatakca/CUBARESORT.CA/actions
-- Node version: 22; no npm dependencies.
-- Local checks: `npm run validate`; `npm run build`.
-- Live check: `npm run verify:live -- --url https://takatakca.github.io/CUBARESORT.CA/ --sha FULL_40_CHARACTER_MAIN_SHA`.
-- The build creates a `release.json` file containing the full source SHA, build time and SHA-256 of first-party HTML/JS/CSS/asset files. The verifier must compare real HTTPS file bytes to each digest; the release metadata alone is not proof.
-- Verify the *latest* `main` SHA and its Actions deployment before declaring publication. A green PR run or successful build without deploy is insufficient.
+The portal has no server database or uploaded content; Git is the content source. No persistent volume is required. Browser-local favourites remain local. Keep the separate application, existing healthcheck and shared-server build limit intact.
 
-## Read-only domain/mail readiness guard — 2026-10-15
+## Accepted domain repair
 
-The owner's mobile screenshot shows a generic Phusion Passenger error at `cubaresort.ca`; a public HTTPS request also returned HTTP 500. This is the legacy MochaHost application, not the deployed Contabo Nginx application. The precise Passenger exception requires access to that legacy application's logs.
+The owner repaired provider DNS publication on 2026-10-16. The reported HTTP 404 was then traced to pending Coolify domain configuration. Deployment `1ckyac9swtil2zrjjhezhrcb` applied it and became healthy at 15:06:16 UTC. Independent checks passed on apex and www for full main SHA `ff907675207f32f0d113f07f01a1d7d11c97ed0e`, all nine asset digests, `/healthz=ok`, valid HTTPS and HTTP redirects. This is the initial routing acceptance, not a substitute for verifying the subsequent automatic operations-merge release. Record that release's actual SHA, native Webhook deployment and Actions links in issue #1.
 
-`npm run check:domain-dns` reads public DNS only. It requires apex and www to resolve exclusively to the verified Contabo IPv4 `31.220.96.134`, requires an MX pointing to a **separate, resolving mail host** rather than the web apex or web server, and refuses unapproved IPv6. When `CUBARESORT_COOLIFY_PRODUCTION_READY=true`, the CI runs this guard before the custom-domain HTTPS SHA/asset verifier. While the current MX still points at the apex, it deliberately fails.
+## DNS and mail preservation
 
-The guard never changes DNS. Its success cannot replace a backup of the **entire existing zone**, email send/receive checks, site-account verification or authorization to cut over. Do not enable the production-ready flag until these human-controlled requirements and apex/www TLS are fulfilled.
+The existing 25-record zone and four nameservers were exported before changes. Apex A is `31.220.96.134`; www remains an apex CNAME; no web AAAA is approved. Mail stays independent: MX `0 mail.cubaresort.ca`, mail A `209.42.24.127`, Local Mail Exchanger. SPF, DKIM, DMARC and service routes remain on their documented MochaHost destinations. Existing nameservers were retained.
 
-## Custom-domain state, not yet completed
-`https://cubaresort.ca/` remains separate from the working GitHub Pages path. Last authoritative investigation: apex A `209.42.24.125` at MochaHost, `www` CNAME to apex, no apex AAAA, MX to **the apex**, and HTTP/HTTPS Apache 500. The owner has the domain registered at MochaHost, but the existing zone is not accessible from the inspected application cPanel or reseller WHM.
+`npm run check:domain-dns` is read-only and rejects wrong apex/www hosts, unexpected IPv6, apex-following MX and mail pointing at the web server. It does not prove mail delivery. No send/receive test has been performed or email sent. See `docs/DOMAIN_CUTOVER_20261016.md` for exact records, backups and limitations. Historical missing-zone/REFUSED blockers and the unsubmitted support draft are superseded.
 
-### Safe cutover gate
-1. Gain access to the **existing** authoritative zone or have the host attach the existing zone to the authorized site account. Do not create an empty replacement zone.
-2. Export all existing DNS records, nameservers, TTLs and mail-related A/MX/TXT/SPF/DKIM/DMARC records; record previous values for rollback. Do not paste passwords, session URLs or private DNS credentials into Git.
-3. Because MX resolves to the apex, preserve inbound mail on the existing MochaHost IP using a verified dedicated mail host **before** changing apex web A records. Confirm with the responsible mail administrator.
-4. After verifying the Contabo application and preserving mail, configure its custom domain and the required web A/AAAA/CNAME records; do not blindly switch nameservers. Keep existing mail routes intact.
-5. Verify HTTPS hostname/certificate, apex and www response, assets, and the exact `main` SHA / file integrity through the custom domain; check mail flow separately.
-6. Close issue #1 only after both website and email acceptance, with rollback details documented.
+## Release verification
 
-The owner authorized the separate Contabo application and domain migration. The Contabo application is deployed; the existing authoritative domain-zone access is still unavailable. No domain DNS or mail changes were made.
+Use Node 22 in CI. Run `npm run validate` and `GITHUB_SHA=FULL_SHA npm run build` before release. After a main push, inspect both current-main Actions workflows and the native Coolify **Webhook** deployment. Then run:
 
-## Incident / rollback
-- For a broken Pages release, inspect the failed job/remote verifier; do not claim success.
-- Fix on a reviewed branch, test and push a normal non-forced commit to `main` where permitted. Avoid resetting other agents' work.
-- Domain/DNS rollback means restoring the **exported existing records**, not guessing past values.
-- Keep PR #3 Next.js work independent. Do not activate private credentials, commercial booking, email collection or payments to repair publishing.
+```sh
+npm run check:domain-dns
+npm run verify:live -- --url https://cubaresort.ca/ --sha FULL_40_CHARACTER_MAIN_SHA
+npm run verify:live -- --url https://www.cubaresort.ca/ --sha FULL_40_CHARACTER_MAIN_SHA
+```
 
-## DNS cutover record (pending existing-zone access)
+Require `/healthz` HTTP 200 and both HTTP-to-HTTPS redirects. Never disable TLS validation or accept metadata without fetched asset checksums. The executor may use public DoH through the guard's injected lookup when direct DNS sockets are unavailable; CI must still run the ordinary real-DNS guard.
 
-Do not apply this table until the full existing zone has been exported and the current mail hostname/routing has been verified. It records the intended web target, not permission to replace unseen records.
+## Pages fallback and rollback
 
-| Record | Current verified state | Required next state |
-|---|---|---|
-| cubaresort.ca A | 209.42.24.125 | 31.220.96.134 after mail separation and DNS backup |
-| cubaresort.ca AAAA | No record | Keep absent unless a verified Contabo IPv6 route is deliberately configured |
-| www | CNAME cubaresort.ca | Preserve alias, configure matching Coolify domain and HTTPS redirect |
-| MX | 0 cubaresort.ca. | Verified dedicated mail hostname resolving to the existing mail service before apex web changes |
-| SPF / DKIM / DMARC and other records | Existing SPF includes a, mx and MochaHost IP/include mechanisms | Export and preserve all records; confirm mail authorization still resolves correctly after separation |
+Settings → Pages uses GitHub Actions, with no custom domain. `.github/workflows/publish.yml` validates PRs and publishes main only after successful checks, then verifies exact HTTPS SHA and file bytes at the Pages project path. Keep this fallback active.
 
-The concrete hosting intervention is to expose or attach the **existing cubaresort.ca authoritative DNS zone/site account serving 209.42.24.125** to the authorized MochaHost account. Do not create a blank zone or switch nameservers. After access: back up records, preserve mail, add apex/www HTTPS domains to this Coolify resource, change only verified web records, test HTTPS and the exact current main manifest plus every checksum, then verify mail before closing issue #1.
+For an application regression, revert with a normal tested main commit or use this application's known healthy Coolify image; reverify exact release/health. Do not reset unrelated branches or change other server resources. DNS rollback restores the exported records, preserving independent mail; never guess original values or replace nameservers. The confirmed bolonca root archive is `/home/bolonca/migration-backups/cubaresort-20261016/site-before-cutover.tar.gz`; this is not a backup of the older inaccessible 209.42.24.125 installation. Merely restoring old web DNS may restore the former broken site, so test before any rollback.
+
+PR #3's Next.js proposal, supplier integrations, lead collection and payments remain separate from hosting operations.
