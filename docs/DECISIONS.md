@@ -15,3 +15,9 @@ Updated 2026-10-16.
 | GROUPE TAKATAK retains master identity/data authority | If integration is approved later, use authenticated server-side, tenant-scoped APIs; no duplicate master CRM or credentials in browser code. |
 
 Re-evaluate a decision only with new, verifiable evidence; update this record and the handoff in the same changeset.
+
+## 2026-10-16 — Evidence-first resort microsite expansion
+
+- Continue the existing static portal and its 169-property IDs, including 34 archival/unconfirmed entries. In phase one, use `?hotel=<id>` links for distinct localized informational profile views, not an unapproved Next.js migration or commercial booking implementation.
+- Keep third-party facts and dates in `assets/resort-profiles.js` with explicit source links; never imply that distributor-reported hotel features establish a current supplier agreement. Unknown beach frontage is represented as null. No third-party images, verbatim user reviews, ratings or pricing without appropriate rights and current authorization.
+- Include the new profiles module in the SHA-256 manifest. Preserve validation of the nine established first-party assets. Any new main merge still needs actual container, DNS/mail separation and exact SHA plus all manifest digests at all production hostnames and Pages. Functional mailbox acceptance has not been established.

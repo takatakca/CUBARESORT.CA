@@ -7,6 +7,8 @@ import { destinations, experiences, styles, catalogIsValid, imageUrl } from "../
 import { hotelRegions, hotels, hotelsInRegion, searchHotels, regionLabel, hotelDirectoryIsValid } from "../assets/hotels.js";
 import { copy, hasAllKeys, translation } from "../assets/i18n.js";
 import { SITE_CONFIG } from "../assets/config.js";
+import { profileCopy, resortProfiles, resortProfileFor, profileDataIsValid } from "../assets/resort-profiles.js";
+import { VERIFIED_RELEASE_FILES } from "../scripts/release-assets.mjs";
 import { formatTravelRequest } from "../assets/request.js";
 import { createPreviewServer } from "../scripts/dev-server.mjs";
 const root=resolve(dirname(fileURLToPath(import.meta.url)),"..");
@@ -33,6 +35,42 @@ test("this version must not accidentally activate a payment or booking integrati
  assert.equal(SITE_CONFIG.bookingProvider,null);
  assert.equal(SITE_CONFIG.analyticsEnabled,false);
 });
+test("resort detail pages are deep-linkable for all 169 hotels with evidence-only pilot data",async()=>{
+ assert.equal(profileDataIsValid(),true);
+ assert.equal(hotels.length,169);
+ assert.equal(Object.keys(resortProfiles).length,2);
+ for(const h of hotels){
+  const params=new URLSearchParams({hotel:h.id});
+  assert.equal(hotels.find(item=>item.id===params.get("hotel"))?.id,h.id);
+  const p=resortProfileFor(h.id);
+  if(p)assert.equal(typeof p.checked,"string");
+  else assert.equal(p,null,"no unsupported amenities can be fabricated for "+h.id);
+ }
+ assert.equal(resortProfileFor("not-a-real-property"),null);
+ for(const id of ["iberostar-selection-varadero-varadero","melia-las-americas-varadero"]){
+  const p=resortProfileFor(id);
+  assert.equal(p.beachfrontMeters,null,"property-specific beach width not measured");
+  assert.ok(p.sources.every(s=>s.url.startsWith("https://")));
+  assert.ok(p.facts.every(f=>p.sources[f.source]));
+ }
+ for(const lang of ["fr","en","es"]){
+  for(const key of Object.keys(profileCopy.fr))assert.match(profileCopy[lang][key],/\S/,lang+" "+key);
+ }
+ const [html,app,css]=await Promise.all([
+  readFile(resolve(root,"index.html"),"utf8"),
+  readFile(resolve(root,"assets/app.js"),"utf8"),
+  readFile(resolve(root,"assets/styles.css"),"utf8")
+ ]);
+ assert.ok(html.includes('id="hotel-profile"'));
+ assert.ok(app.includes('params.get("hotel")'));
+ assert.ok(app.includes('renderHotelProfile()'));
+ assert.ok(app.includes('profileCopy[state.lang].details'));
+ assert.ok(app.includes('link.rel="noopener noreferrer"'));
+ assert.ok(css.includes("body.profile-mode main > :not(#hotel-profile)"));
+ assert.ok(VERIFIED_RELEASE_FILES.includes("assets/resort-profiles.js"),"profile research data must be checksummed in deployed release");
+ assert.equal(new Set(VERIFIED_RELEASE_FILES).size,VERIFIED_RELEASE_FILES.length);
+});
+
 test("root HTML has landmarks, accessible dialogs and no external application framework",async()=>{
  const html=await readFile(resolve(root,"index.html"),"utf8");
  for(const tag of ['<main id="main">','<nav class="desktop-nav"','<dialog id="inquiry-dialog"','<html lang="fr">','id="destination-filter"','id="experience-grid"'])assert.ok(html.includes(tag),tag);
@@ -135,7 +173,7 @@ test("preview HTTP server exposes only the production static allowlist",async(t)
  });
  t.after(()=>new Promise(resolve=>server.close(resolve)));
  const base="http://127.0.0.1:"+server.address().port;
- for(const path of ["/","/index.html","/assets/app.js","/assets/request.js","/assets/styles.css","/robots.txt"]){
+ for(const path of ["/","/index.html","/assets/app.js","/assets/request.js","/assets/resort-profiles.js","/assets/styles.css","/robots.txt"]){
   const response=await fetch(base+path);
   assert.equal(response.status,200,path);
  }

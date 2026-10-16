@@ -5,6 +5,7 @@ export const VERIFIED_RELEASE_FILES = Object.freeze([
   "assets/app.js",
   "assets/catalog.js",
   "assets/hotels.js",
+  "assets/resort-profiles.js",
   "assets/config.js",
   "assets/i18n.js",
   "assets/request.js",
