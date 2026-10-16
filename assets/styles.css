@@ -22,3 +22,28 @@
 .hotel-foot button:hover{color:#d46852}
 @media(max-width:800px){.hotel-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.hotel-grid{grid-template-columns:1fr}.region-chips{gap:6px}.region-chip{padding:8px 12px;font-size:11px}}
+
+
+/* Cuba specialist editorial entry: quieter agency art direction, real information before sales. */
+.desktop-nav{gap:19px}
+.cuba-guide-teaser{background:#e8eee7;padding:106px 0;overflow:hidden}
+.cuba-guide-teaser-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);align-items:center;gap:70px}
+.cuba-guide-teaser-content .eyebrow{font-size:11px;font-weight:700;letter-spacing:.16em;color:#974732;margin:0 0 22px}
+.cuba-guide-teaser h2{font:500 clamp(43px,4.6vw,68px)/1.13 var(--serif);letter-spacing:-.05em;color:#173d3e;max-width:680px;margin:0 0 26px}
+.cuba-guide-teaser h2 em{font-weight:500;color:#99513c}
+.cuba-guide-teaser-lead{font-size:15px;line-height:1.82;color:#425f59;max-width:550px;margin:0 0 28px}
+.cuba-guide-teaser-topics{list-style:none;margin:0 0 33px;padding:0;max-width:540px}
+.cuba-guide-teaser-topics li{display:flex;align-items:center;gap:19px;padding:11px 0;border-bottom:1px solid #cedbd0;font-size:13px;color:#204a47;font-weight:700}
+.cuba-guide-teaser-topics li span:first-child{font-size:10px;letter-spacing:.13em;color:#a4523a}
+.cuba-guide-cta{min-height:51px}
+.cuba-guide-teaser-visual{position:relative;display:block;min-height:515px;align-self:stretch;overflow:hidden;background:#29494a;isolation:isolate}
+.cuba-guide-teaser-visual img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.78);transition:transform .5s ease}
+.cuba-guide-teaser-visual:hover img{transform:scale(1.025)}
+.cuba-guide-teaser-visual:after{content:"";position:absolute;inset:35% 0 0;background:linear-gradient(0deg,#082c32d9,transparent);z-index:0}
+.cuba-guide-teaser-image-overlay{position:absolute;bottom:28px;left:29px;right:20px;display:grid;gap:11px;z-index:1;color:#fff}
+.cuba-guide-teaser-image-overlay strong{font-family:var(--serif);font-size:clamp(23px,2.2vw,33px);font-weight:500;line-height:1.12;letter-spacing:-.035em}
+.cuba-guide-teaser-image-overlay small{font-size:10px;line-height:1.5;opacity:.9}
+@media(max-width:1120px){.desktop-nav{gap:12px}.cuba-guide-teaser-grid{gap:34px}}
+@media(max-width:800px){.cuba-guide-teaser{padding:75px 0}.cuba-guide-teaser-grid{grid-template-columns:1fr;gap:40px}.cuba-guide-teaser-visual{min-height:410px}}
+@media(max-width:600px){.cuba-guide-teaser{padding:65px 0}.cuba-guide-teaser h2{font-size:43px}.cuba-guide-teaser-visual{min-height:350px}.cuba-guide-teaser-image-overlay{left:22px;bottom:20px}}
+@media(prefers-reduced-motion:reduce){.cuba-guide-teaser-visual img{transition:none!important}.cuba-guide-teaser-visual:hover img{transform:none!important}}
