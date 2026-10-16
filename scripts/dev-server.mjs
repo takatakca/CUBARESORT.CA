@@ -2,6 +2,7 @@ import { createServer } from "node:http";
 import { readFile, realpath, stat } from "node:fs/promises";
 import { extname, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
+import { GUIDE_PATHS, renderGuidePage } from "./guide-pages.mjs";
 
 const root=resolve(import.meta.dirname,"..");
 const rootReal=await realpath(root);
@@ -23,6 +24,13 @@ export function createPreviewServer(){
   try{
    if(req.method!=="GET"&&req.method!=="HEAD"){res.writeHead(405);res.end();return;}
    const pathname=decodeURIComponent(new URL(req.url,"http://localhost").pathname);
+   const guide=Object.entries(GUIDE_PATHS).find(([,route])=>"/"+route===pathname);
+   if(guide){
+    const content=renderGuidePage(guide[0]);
+    res.writeHead(200,{"Content-Type":"text/html; charset=utf-8","Cache-Control":"no-cache","X-Content-Type-Options":"nosniff"});
+    res.end(req.method==="HEAD"?"":content);
+    return;
+   }
    const rel=publicAssetPath(pathname);
    if(!rel){res.writeHead(403);res.end("Forbidden");return;}
    const file=resolve(root,rel);
