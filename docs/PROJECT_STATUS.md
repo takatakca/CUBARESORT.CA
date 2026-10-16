@@ -12,7 +12,7 @@ Updated 2026-10-15. Repository `takatakca/CUBARESORT.CA`; publication branch `ma
 
 ## Verified accessibility release — 2026-10-15
 
-- Multilingual accessible-name commit `050fd18cdac1ea1a84299be1317bc4155b796bb3` passed 31 tests, build, Pages run 38826028471 and the real production-container job. Coolify run 38826028392 failed only at external live acceptance because the public resource stayed on prior release `111ad171`; the new commit is therefore **not yet verified on Contabo**.
+- Multilingual accessible-name commit `050fd18cdac1ea1a84299be1317bc4155b796bb3` passed 31 tests, build and Pages run 38826028471. Its first Coolify verifier expired during a deployment queue delay; follow-up main `894e5eae6fe0aad0bfdd4411bcd328d07511373b` passed container/live run 38827678357, exact SHA, all nine digests and health. Live FR/EN/ES label inspection passed.
 
 - Functional commit `b607f3bfaa0c81585237547f8c3c690e87fce11e`: [Contabo container and live workflow 38790752444](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38790752444) passed exact SHA + nine file digests; [Pages workflow 38790752455](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38790752455) passed.
 - A subsequent documentation-only commit requires its own fresh release verification; check current main. Custom-domain cutover remains blocked.

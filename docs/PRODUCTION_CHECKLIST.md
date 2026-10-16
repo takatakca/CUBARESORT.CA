@@ -19,7 +19,7 @@ Updated: 2026-10-15. Current scope: **static inspiration portal, not a live book
 - [x] Region-chip and favourite-card keyboard focus restoration implemented on `main`; `b607f3bf` verified by Contabo workflow 38790752444 and Pages workflow 38790752455.
 - [x] Inquiry/legal dialog accessible names and forward/reverse Tab containment verified in `e6dd1d26`; Contabo run 38818276620 and Pages run 38818276543 passed, followed by independent exact-SHA/nine-digest/health checks.
 - [x] Explicit brand/navigation/search/image/filter names now follow FR/EN/ES in `050fd18c`; 31 tests, build, Pages and the production-container job passed.
-- [ ] Restore the stalled Coolify main-push deployment and verify `050fd18c` (or newer current main) by exact release SHA, all nine live digests and `/healthz`; run 38826028392 remained on `111ad171` and failed closed.
+- [x] Queued Coolify deployment recovered without configuration changes; current main `894e5eae` passed run 38827678357, independent exact-SHA/nine-digest verification and `/healthz=ok`.
 - [ ] Real keyboard traversal, mobile assistive technology and screen-reader acceptance in FR/EN/ES.
 
 ## Contabo deployment — 2026-10-15
