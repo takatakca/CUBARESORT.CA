@@ -1,3 +1,7 @@
+## 2026-10-16 — bolonca zone found; custom-domain settings saved
+
+The owner supplied an actionable access route: cubaresort.ca is now visible in bolonca cPanel. Backed up its 25 DNS records and existing document root; saved web A to Contabo, independent mail/MX and MochaHost service routes, and apex/www HTTPS domains in the existing Coolify application. Public authoritative nameservers still return REFUSED, causing public SERVFAIL; the MochaHost portal login did not complete. Coolify domain changes remain pending and production-ready remains disabled. See `docs/DOMAIN_CUTOVER_20261016.md` for exact values, backup limits and the next action. Keep issue #1 open. Current main ff907675 passed container/live run 38852247513 and Pages run 38852247489; independent full-SHA/nine-file verification passed. Do not repeat the earlier claim that the zone is absent, or claim the public domain is live.
+
 ## 2026-10-16 — Verified past-departure validation release
 
 - Last verified `main` at task start: `ab4325811e9418d96aa06990d987f1eb1a66d07a`. Main Coolify/Contabo actual production-container and HTTPS SHA-256 verification passed in [run 38828658167](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38828658167); Pages fallback passed in [run 38828658021](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38828658021). The proof log reports exact main SHA and all nine first-party file digests.
