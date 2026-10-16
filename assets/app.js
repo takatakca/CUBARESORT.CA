@@ -1,5 +1,6 @@
 import { destinations, experiences, styles, imageUrl } from "./catalog.js";
 import { hotelRegions, hotels, searchHotels, regionLabel } from "./hotels.js";
+import { resortProfileFor, profileCopy } from "./resort-profiles.js";
 import { copy, translation } from "./i18n.js";
 import { SITE_CONFIG } from "./config.js";
 import { formatTravelRequest } from "./request.js";
@@ -32,6 +33,7 @@ const state = {
   hotelRegion: REGION_IDS.has(params.get("region")) ? params.get("region") : "all",
   hotelQuery: (params.get("hq") || "").slice(0,100),
   selectedHotelId:null,
+  profileHotelId:hotels.some(h=>h.id===params.get("hotel")) ? params.get("hotel") : null,
   favorites:new Set(Array.isArray(stored.favorites) ? stored.favorites.filter(id => EXPERIENCE_IDS.has(id)) : [])
 };
 function tr(key){return translation(state.lang,key);}
@@ -167,9 +169,103 @@ function renderHotels(){
    +'<p class="hotel-meta"><span class="hotel-region">'+escapedAttr(regionLabel(h.region,state.lang))+'</span>'
    +'<span class="hotel-airport">'+escapedAttr(tr("hotelsAirport"))+' '+escapedAttr(h.airport)+'</span></p></div>'
    +'<div class="hotel-foot"><span class="hotel-badge'+(h.confirmed?"":" hotel-badge-pending")+'">'+escapedAttr(badge)+'</span>'
+   +'<a class="hotel-profile-link" href="?hotel='+encodeURIComponent(h.id)+(state.lang==="fr"?"":"&lang="+state.lang)+'">'+escapedAttr(profileCopy[state.lang].details)+'</a>'
    +'<button type="button" data-hotel-inquire="'+escapedAttr(h.id)+'">'+escapedAttr(tr("hotelsAsk"))+'</button></div>';
   grid.append(li);
  }
+}
+
+
+function profileNode(tag,text,className){
+ const element=document.createElement(tag);
+ if(className)element.className=className;
+ if(text!==undefined)element.textContent=text;
+ return element;
+}
+function renderHotelProfile(){
+ const section=$("#hotel-profile"),container=$("#resort-profile-content");
+ const hotel=hotels.find(h=>h.id===state.profileHotelId);
+ section.hidden=!hotel;
+ document.body.classList.toggle("profile-mode",Boolean(hotel));
+ if(!hotel)return;
+ const labels=profileCopy[state.lang],profile=resortProfileFor(hotel.id);
+ container.replaceChildren();
+ const back=profileNode("a",labels.directory,"resort-back");
+ back.href="./#hotels";
+ const nav=profileNode("nav",undefined,"resort-breadcrumbs");
+ nav.setAttribute("aria-label",labels.directory);
+ nav.append(back);
+ container.append(nav);
+ const header=profileNode("header",undefined,"resort-heading");
+ header.append(
+  profileNode("p",labels.eyebrow,"eyebrow"),
+  profileNode("h1",hotel.name),
+  profileNode("p",regionLabel(hotel.region,state.lang)+" · "+labels.airport+": "+hotel.airport,"resort-location"),
+  profileNode("p",labels.scope,"resort-disclaimer")
+ );
+ const alert=profileNode("p",labels.availability,"resort-alert");
+ header.append(alert);
+ container.append(header);
+ const columns=profileNode("div",undefined,"resort-columns");
+ const facts=profileNode("section",undefined,"resort-facts");
+ facts.append(profileNode("h2",labels.snapshot));
+ if(profile){
+  const list=profileNode("ul",undefined,"resort-fact-list");
+  profile.facts.forEach(f=>{
+   const li=profileNode("li");
+   li.append(profileNode("p",f.text[state.lang]));
+   const source=profile.sources[f.source];
+   const link=profileNode("a",labels.evidence+": "+source.title,"resort-evidence-link");
+   link.href=source.url;
+   link.target="_blank";
+   link.rel="noopener noreferrer";
+   li.append(link);
+   list.append(li);
+  });
+  facts.append(list);
+ }else{
+  facts.append(profileNode("p",labels.pending,"resort-empty"));
+ }
+ const inquiry=profileNode("button",labels.request,"button button-dark resort-draft");
+ inquiry.type="button";
+ inquiry.addEventListener("click",()=>openInquiry(hotel.region,hotel.id));
+ facts.append(inquiry);
+ const aside=profileNode("aside",undefined,"resort-aside");
+ const beach=profileNode("section",undefined,"resort-info-card");
+ beach.append(profileNode("h2",labels.beach),profileNode("p",labels.beachUnknown));
+ aside.append(beach);
+ const season=profileNode("section",undefined,"resort-info-card");
+ season.append(profileNode("h2",labels.season),profileNode("p",profile?.seasonalOperation?.[state.lang]||labels.seasonUnknown));
+ aside.append(season);
+ const inclusions=profileNode("section",undefined,"resort-info-card");
+ inclusions.append(profileNode("h2",labels.inclusions),profileNode("p",profile?labels.sourceNote:labels.inclusionsUnknown));
+ aside.append(inclusions);
+ columns.append(facts,aside);
+ container.append(columns);
+ const review=profileNode("section",undefined,"resort-reviews");
+ review.append(profileNode("h2",labels.reviews),profileNode("p",labels.reviewsUnknown));
+ container.append(review);
+ const sources=profileNode("section",undefined,"resort-sources");
+ sources.append(profileNode("h2",labels.sources));
+ if(profile){
+  const ul=profileNode("ul");
+  for(const source of profile.sources){
+   const li=profileNode("li");
+   const link=profileNode("a",source.title);
+   link.href=source.url;
+   link.rel="noopener noreferrer";
+   link.target="_blank";
+   li.append(link);
+   ul.append(li);
+  }
+  sources.append(ul,profileNode("p",labels.reviewed+": "+profile.checked+" · "+labels.sourceNote,"resort-source-note"));
+ }else sources.append(profileNode("p",labels.unverified));
+ container.append(sources,profileNode("p",labels.provenance,"resort-source-note"));
+ document.title=hotel.name+" | CUBARESORT.CA";
+ const description=document.querySelector('meta[name="description"]');
+ if(description)description.content=hotel.name+" · "+regionLabel(hotel.region,state.lang)+". "+labels.scope;
+ const canonical=document.querySelector('link[rel="canonical"]');
+ if(canonical)canonical.href="https://cubaresort.ca/?hotel="+encodeURIComponent(hotel.id);
 }
 
 function resetHotels(){
@@ -190,7 +286,7 @@ function renderFaq(){
 }
 function render(){
  setStaticTranslations();updateSelects();renderDestinations();renderExperiences();
- updateHotelSelect();renderRegionChips();renderHotels();renderFaq();
+ updateHotelSelect();renderRegionChips();renderHotels();renderFaq();renderHotelProfile();
 }
 function syncUrl(){
  const url=new URL(window.location.href);
@@ -379,5 +475,10 @@ $("#email-inquiry").addEventListener("click",()=>{
 $("#footer-privacy").addEventListener("click",()=>openLegal("privacy"));
 $("#footer-terms").addEventListener("click",()=>openLegal("terms"));
 $("#legal-close").addEventListener("click",()=>$("#legal-dialog").close());
+document.querySelectorAll('.site-header a[href^="#"], .site-footer a[href^="#"]').forEach(link=>link.addEventListener("click",e=>{
+ if(!state.profileHotelId)return;
+ e.preventDefault();
+ window.location.href="./"+link.getAttribute("href");
+}));
 $("#year").textContent=String(new Date().getFullYear());
 render();
