@@ -2,6 +2,12 @@
 
 Updated 2026-10-16. Always compare with the latest `main` before starting an item.
 
+## Cuba guide / partner marketplace expansion — 2026-10-16
+
+- **In review branch:** localized professional guide layout, six sourced concepts, popup detail and filter interactions, official visa/travel-advisory links and three crawlable SEO pages; validate PR check results and manual accessibility before promoting.
+- **Next independent coding:** human-reviewed operator profiles and licensed imagery; more distinct city/activity content rather than thin keyword pages; performance and browser smoke checks; carefully reconcile PR #7 resort details without overwriting its branch.
+- **External operator/TAKATAK dependency:** reviewed entitlement/SSO integration contract and approved partner/legal identity before server-only dashboard, listing CRUD, price modifications or AI generation can be enabled. Issue #2 remains open. Conditional 5% match is draft policy, **not a live promotion**.
+
 | Priority | Task | State / actual dependency | Definition of done |
 |---|---|---|---|
 | Done | Verify and protect published Pages release identity | **Completed** in `3e9e10376f22532f0d24242a5598055e29bdf324` (run 38773832573 passed live SHA + nine file digests) | Keep manifest and negative tests passing for future releases |
