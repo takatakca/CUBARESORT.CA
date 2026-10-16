@@ -36,3 +36,11 @@ export function formatTravelRequest({lang="fr",destination="all",hotelId=null,mo
   t("dialogIntro")
  ].join("\n");
 }
+
+// An optional visible summary for a draft opened from a property card.
+// The value is derived from the trusted local directory and never transmitted.
+export function selectedHotelContext(lang,hotelId){
+ const property=properties.get(hotelId);
+ if(!property || !languages.has(lang))return "";
+ return translation(lang,"formHotel")+": "+property.name;
+}

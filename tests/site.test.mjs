@@ -7,7 +7,7 @@ import { destinations, experiences, styles, catalogIsValid, imageUrl } from "../
 import { hotelRegions, hotels, hotelsInRegion, searchHotels, regionLabel, hotelDirectoryIsValid } from "../assets/hotels.js";
 import { copy, hasAllKeys, namedTranslation, translation } from "../assets/i18n.js";
 import { SITE_CONFIG } from "../assets/config.js";
-import { formatTravelRequest } from "../assets/request.js";
+import { formatTravelRequest, selectedHotelContext } from "../assets/request.js";
 import { createPreviewServer } from "../scripts/dev-server.mjs";
 const root=resolve(dirname(fileURLToPath(import.meta.url)),"..");
 test("destination IDs, translated data and experience relations are sound",()=>{
@@ -238,4 +238,27 @@ test("keyboard focus on stay search remains visible after removing the input out
  const css=await readFile(resolve(root,"assets/styles.css"),"utf8");
  assert.ok(css.includes(".text-search input{border:0;outline:0;"),"input removes its own outline");
  assert.ok(css.includes(".text-search:focus-within{outline:3px solid #a44f3f;outline-offset:3px}"),"search container must show a visible high-contrast ring when the input has focus");
+});
+
+test("selected hotel summary identifies the chosen directory property in all languages",async()=>{
+ const hotel=hotels[0];
+ for(const lang of ["fr","en","es"]){
+  const label=selectedHotelContext(lang,hotel.id);
+  assert.equal(label,translation(lang,"formHotel")+": "+hotel.name);
+ }
+ assert.equal(selectedHotelContext("fr","missing-hotel"),"");
+ assert.equal(selectedHotelContext("unlisted",hotel.id),"");
+ assert.equal(selectedHotelContext("fr",null),"");
+ const [html,app,css]=await Promise.all([
+  readFile(resolve(root,"index.html"),"utf8"),
+  readFile(resolve(root,"assets/app.js"),"utf8"),
+  readFile(resolve(root,"assets/styles.css"),"utf8")
+ ]);
+ assert.ok(html.includes('id="inquiry-hotel-context"'));
+ assert.ok(html.includes('role="status" aria-live="polite" hidden'));
+ assert.ok(app.includes("function renderSelectedHotelContext()"));
+ assert.ok(app.includes("context.hidden=!text"));
+ assert.ok(app.includes("renderHotels();renderFaq();renderSelectedHotelContext()"));
+ assert.ok(app.includes('state.selectedHotelId=null;renderSelectedHotelContext()'));
+ assert.ok(css.includes(".selected-hotel-context[hidden]{display:none}"));
 });

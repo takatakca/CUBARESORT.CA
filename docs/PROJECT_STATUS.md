@@ -2,6 +2,11 @@
 
 Updated 2026-10-16. Repository `takatakca/CUBARESORT.CA`; publication branch `main`.
 
+## Hotel-specific unsent inquiry visibility — 2026-10-16
+
+- Display the selected property's verified directory name in the inquiry modal, localized in FR/EN/ES and correctly cleared when the region changes; a native live status announces the context. No new contact/supplier or personal-data collection.
+- A current-main production release with exact SHA and all nine file digests is required before this change is called live.
+
 ## Card action accessible names — 2026-10-16
 
 - Favourite and request buttons in repeated experience/property cards now include the current item name in their programmatic label, so screen-reader button lists distinguish each action.

@@ -2,7 +2,7 @@ import { destinations, experiences, styles, imageUrl } from "./catalog.js";
 import { hotelRegions, hotels, searchHotels, regionLabel } from "./hotels.js";
 import { copy, namedTranslation, translation } from "./i18n.js";
 import { SITE_CONFIG } from "./config.js";
-import { formatTravelRequest } from "./request.js";
+import { formatTravelRequest, selectedHotelContext } from "./request.js";
 
 // Static discovery application. No reservations, payments, API calls or collection of PII.
 const $ = (selector) => document.querySelector(selector);
@@ -191,7 +191,7 @@ function renderFaq(){
 }
 function render(){
  setStaticTranslations();updateSelects();renderDestinations();renderExperiences();
- updateHotelSelect();renderRegionChips();renderHotels();renderFaq();
+ updateHotelSelect();renderRegionChips();renderHotels();renderFaq();renderSelectedHotelContext();
 }
 function syncUrl(){
  const url=new URL(window.location.href);
@@ -214,11 +214,18 @@ function scrollToExperiences(){
  const reduced=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
  $("#experiences").scrollIntoView({behavior:reduced?"auto":"smooth",block:"start"});
 }
+function renderSelectedHotelContext(){
+ const context=$("#inquiry-hotel-context");
+ const text=selectedHotelContext(state.lang,state.selectedHotelId);
+ context.textContent=text;
+ context.hidden=!text;
+}
 function openInquiry(dest="all",hotelId=null){
  const dialog=$("#inquiry-dialog");
  $("#inquiry-destination").value=REGION_IDS.has(dest) ? dest : "all";
  // Hotel interest is ephemeral, never persisted or transmitted automatically.
  state.selectedHotelId=hotels.some(h=>h.id===hotelId && h.region===dest) ? hotelId : null;
+ renderSelectedHotelContext();
  $("#inquiry-status").textContent="";
  const now=new Date(),month=now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0");
  const departure=$("#inquiry-date");
@@ -354,7 +361,7 @@ window.matchMedia("(min-width: 801px)").addEventListener("change",e=>{
 $$("#mobile-menu a").forEach(a=>a.addEventListener("click",closeMobile));
 $$("dialog.modal").forEach(dialog=>dialog.addEventListener("keydown",event=>keepFocusInsideDialog(dialog,event)));
 $("#inquiry-close").addEventListener("click",()=>$("#inquiry-dialog").close());
-$("#inquiry-destination").addEventListener("change",()=>{state.selectedHotelId=null;});
+$("#inquiry-destination").addEventListener("change",()=>{state.selectedHotelId=null;renderSelectedHotelContext();});
 $("#inquiry-form").addEventListener("submit",e=>e.preventDefault());
 $("#copy-inquiry").addEventListener("click",async()=>{
  const request=formatRequest();

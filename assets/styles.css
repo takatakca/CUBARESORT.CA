@@ -22,3 +22,7 @@
 .hotel-foot button:hover{color:#d46852}
 @media(max-width:800px){.hotel-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.hotel-grid{grid-template-columns:1fr}.region-chips{gap:6px}.region-chip{padding:8px 12px;font-size:11px}}
+
+/* Identify the selected property in the unsent inquiry, including to assistive technology. */
+.selected-hotel-context{margin:0 0 18px;padding:12px 15px;border-inline-start:4px solid #a44f3f;background:#f7f3e9;color:#244840;font-size:13px;font-weight:700;line-height:1.6}
+.selected-hotel-context[hidden]{display:none}
