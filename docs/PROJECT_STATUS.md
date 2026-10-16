@@ -2,6 +2,11 @@
 
 Updated 2026-10-16. Repository `takatakca/CUBARESORT.CA`; publication branch `main`.
 
+## Hide unconfigured contact action — 2026-10-16
+
+- The email CTA is now hidden until a verified contact mailbox is configured; the clipboard-only draft remains available. This prevents an unavailable mail action from appearing functional.
+- Initial HTML state, runtime configuration and CSS enforce that behavior; regression coverage added. Await actual new-main public release and asset integrity proof before claiming live.
+
 ## Hotel-specific unsent inquiry visibility — 2026-10-16
 
 - Display the selected property's verified directory name in the inquiry modal, localized in FR/EN/ES and correctly cleared when the region changes; a native live status announces the context. No new contact/supplier or personal-data collection.

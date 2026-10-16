@@ -26,3 +26,6 @@
 /* Identify the selected property in the unsent inquiry, including to assistive technology. */
 .selected-hotel-context{margin:0 0 18px;padding:12px 15px;border-inline-start:4px solid #a44f3f;background:#f7f3e9;color:#244840;font-size:13px;font-weight:700;line-height:1.6}
 .selected-hotel-context[hidden]{display:none}
+
+/* An unconfigured contact action must stay truly hidden despite flex button styling. */
+#email-inquiry[hidden]{display:none!important}

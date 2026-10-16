@@ -374,7 +374,9 @@ $("#copy-inquiry").addEventListener("click",async()=>{
   showStatus(tr("copyError")+"\n"+request);
  }
 });
-$("#email-inquiry").addEventListener("click",()=>{
+const emailInquiryButton=$("#email-inquiry");
+emailInquiryButton.hidden=!SITE_CONFIG.contactEmail;
+emailInquiryButton.addEventListener("click",()=>{
  const request=formatRequest();
  if(!request){showStatus(tr("invalidForm"));return;}
  if(!SITE_CONFIG.contactEmail){showStatus(tr("emailUnconfigured"));return;}

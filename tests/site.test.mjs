@@ -262,3 +262,17 @@ test("selected hotel summary identifies the chosen directory property in all lan
  assert.ok(app.includes('state.selectedHotelId=null;renderSelectedHotelContext()'));
  assert.ok(css.includes(".selected-hotel-context[hidden]{display:none}"));
 });
+
+test("unconfigured email action is absent from the interactive UI, but copy remains usable",async()=>{
+ const [html,app,css]=await Promise.all([
+  readFile(resolve(root,"index.html"),"utf8"),
+  readFile(resolve(root,"assets/app.js"),"utf8"),
+  readFile(resolve(root,"assets/styles.css"),"utf8")
+ ]);
+ assert.equal(SITE_CONFIG.contactEmail,"","no email recipient is authorized");
+ assert.match(html,/<button[^>]*id="email-inquiry"[^>]*hidden>/);
+ assert.match(html,/<button[^>]*id="copy-inquiry"/);
+ assert.ok(app.includes("emailInquiryButton.hidden=!SITE_CONFIG.contactEmail"),"only a configured recipient may reveal email action");
+ assert.ok(app.includes('emailInquiryButton.addEventListener("click",()=>{'),"verified recipient can use existing mailto flow");
+ assert.ok(css.includes("#email-inquiry[hidden]{display:none!important}"),"flex layout must not override hidden");
+});
