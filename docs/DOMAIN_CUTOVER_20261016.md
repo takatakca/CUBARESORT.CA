@@ -2,6 +2,12 @@
 
 The owner confirmed that cubaresort.ca is in the bolonca hosting account and authorized completing its separate Coolify/Contabo migration. The zone is now present in that account. The earlier missing-zone diagnosis is historical.
 
+## Verified automatic production release — 2026-10-16
+
+Main `d64603349ed7c967590c41b7e2005cab391142de` automatically deployed through native Coolify Webhook `5yufbgsdz9bccmoe9h15vnzc` on 2026-10-16. Production container/live [run 38921978874](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38921978874) and Pages [run 38921978877](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38921978877) both passed. The live job explicitly reports `PRODUCTION_READY: true`, public DNS/mail separation, and full SHA plus all nine file digests on both apex and www.
+
+The hosting incident is resolved. Later evidence-only main commits require their own normal automatic verification; the final current SHA/run/deployment is recorded in issue #1. Functional mail delivery is still untested. Earlier instructions to merge PR #6 or finish its acceptance describe the completed checkpoint.
+
 ## Saved infrastructure configuration
 
 | Record or setting | Saved value |

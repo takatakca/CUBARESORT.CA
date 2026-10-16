@@ -1,3 +1,11 @@
+## 2026-10-16 — Automatic public-domain production release verified
+
+Main `d64603349ed7c967590c41b7e2005cab391142de` automatically deployed through native Coolify Webhook `5yufbgsdz9bccmoe9h15vnzc` on 2026-10-16. Production container/live [run 38921978874](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38921978874) and Pages [run 38921978877](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38921978877) both passed. The live job explicitly reports `PRODUCTION_READY: true`, public DNS/mail separation, and full SHA plus all nine file digests on both apex and www.
+
+The reported 404 is resolved and the requested separate Contabo hosting plus automatic GitHub-to-live pipeline is accepted. PR #6 is merged. No manual start was used for the accepted webhook release. Preserve the production-ready flag and apex/www checks, mail separation, Pages fallback and rollback backups. Functional mailbox delivery remains untested; no message was sent. This evidence-only follow-up is another main release: require its own latest-main workflow and live verification, and keep the final accepted SHA/run/deployment evidence in issue #1 rather than creating an endless documentation-release loop.
+
+The previous entry's merge/verify next action is complete. Future work begins by reading current main and actual production checks. Do not reopen the obsolete DNS synchronization ticket or request the same login.
+
 ## 2026-10-16 — Public Coolify domain activated; production acceptance enabled
 
 - Owner confirmed DNS repair. Fresh public DNS now resolves apex/www to Contabo `31.220.96.134`; separate MX `mail.cubaresort.ca` resolves to MochaHost `209.42.24.127`, with no apex/www IPv6. The read-only mail-safe DNS guard passed via a public DoH lookup adapter.

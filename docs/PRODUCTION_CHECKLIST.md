@@ -10,7 +10,7 @@ Updated: 2026-10-16. Current scope: **static inspiration portal, not a live book
 - [x] Coolify pending domain routing applied; Docker healthy, valid apex/www HTTPS, HTTP redirects and /healthz=ok.
 - [x] Both domains passed full ff907675 SHA and all nine asset digests independently.
 - [x] Production-ready Actions flag enabled; workflow requires public DNS/mail separation and both production HTTPS hostnames.
-- [ ] Verify the operations merge's automatic native Webhook deployment and both current-main CI workflows; put exact SHA/run/deployment evidence in issue #1.
+- [x] Operations merge d646033 deployed through native Webhook 5yufbgsdz9bccmoe9h15vnzc without manual start; container/live 38921978874 and Pages 38921978877 passed, including real DNS and both public HTTPS full-SHA/nine-digest checks. Reverify later main releases.
 - [ ] Functional mailbox send/receive test (no email sent; DNS success alone is insufficient).
 
 Historical deployment entries below describe earlier checkpoints and do not override the current cutover record.
