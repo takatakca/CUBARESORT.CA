@@ -33,11 +33,11 @@ export const guideTopics=Object.freeze([
  {id:"varadero",type:"nature",photo:"photo-1507525428034-b723cf961d3e",place:"Varadero",
   title:L("Varadero, au-delà de l'hôtel","Varadero beyond the resort","Varadero más allá del hotel"),
   intro:L("Une idée de journée pour découvrir les espaces publics du littoral et mieux comprendre la destination. L'accès aux plages et aux services varie selon les lieux.","An idea for exploring public coastal spaces beyond your hotel. Beach access and facilities vary by location.","Una idea para explorar espacios públicos de la costa fuera del hotel. El acceso a playas y servicios varía según el lugar."),
-  tip:L("Vérifiez les transports, les conditions de baignade et les zones effectivement accessibles.","Check transport, swimming conditions and which areas are actually open to visitors.","Consulta transporte, condiciones del mar y zonas abiertas al público."),source:official.canada},
+  tip:L("Vérifiez les transports, les conditions de baignade et les zones effectivement accessibles.","Check transport, swimming conditions and which areas are actually open to visitors.","Consulta transporte, condiciones del mar y zonas abiertas al público."),source:null},
  {id:"local-guide",type:"excursion",photo:"photo-1514282401047-d79a71a590e8",place:"Cuba",
   title:L("Une excursion conçue avec un guide local","An excursion with a local guide","Una excursión con guía local"),
   intro:L("Notre futur espace partenaires permettra à des prestataires vérifiés de présenter des sorties avec conditions, prix et disponibilités documentés. Aucun partenaire n'est actuellement réservable ici.","A future partner portal will let vetted providers describe trips with documented conditions, prices and availability. No partner activity can currently be booked here.","El futuro portal permitirá a proveedores verificados publicar excursiones con condiciones, precios y disponibilidad. Hoy no se pueden reservar aquí."),
-  tip:L("Avant de payer : exigez identité du prestataire, modalités d'annulation, prestations exactes et preuve de conformité.","Before paying: verify the provider's identity, cancellation terms, inclusions and legal standing.","Antes de pagar: verifica identidad, cancelación, inclusiones y autorización del proveedor."),source:official.canada}
+  tip:L("Avant de payer : exigez identité du prestataire, modalités d'annulation, prestations exactes et preuve de conformité.","Before paying: verify the provider's identity, cancellation terms, inclusions and legal standing.","Antes de pagar: verifica identidad, cancelación, inclusiones y autorización del proveedor."),source:null}
 ]);
 const language={
  fr:{
