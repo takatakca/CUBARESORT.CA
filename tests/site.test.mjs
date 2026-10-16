@@ -54,7 +54,7 @@ test("resort detail pages are deep-linkable for all 169 hotels with evidence-onl
   assert.ok(p.facts.every(f=>p.sources[f.source]));
  }
  for(const lang of ["fr","en","es"]){
-  for(const key of Object.keys(profileCopy.fr))assert.match(profileCopy[lang][key],/\\S/,lang+" "+key);
+  for(const key of Object.keys(profileCopy.fr))assert.match(profileCopy[lang][key],/\S/,lang+" "+key);
  }
  const [html,app,css]=await Promise.all([
   readFile(resolve(root,"index.html"),"utf8"),
