@@ -1,3 +1,10 @@
+## 2026-10-15 — Multilingual accessible-name fix; Coolify hook did not advance
+
+- Commit `050fd18cdac1ea1a84299be1317bc4155b796bb3` translates eight explicit accessible names with the selected FR/EN/ES locale: brand/home, desktop and mobile navigation, search region, two illustrative images, stay sorting and property-region filtering. Regression coverage raises the suite to 31 tests; local validation/build and the real production-container job passed.
+- Pages fallback run [38826028471](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38826028471) passed. Coolify run [38826028392](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38826028392) passed the production-container job but failed live acceptance after the public resource remained on prior release `111ad1719cf055bebbf935252f42e75568d831e9` for the full ten-minute window.
+- This is a changed deployment blocker: the existing GitHub App main-push hook did not expose the new release. Do not describe `050fd18c` as deployed to Contabo until the resource has a healthy deployment and the live verifier passes the exact current-main SHA plus all nine digests.
+- Custom-domain issue #1 is unchanged and remains open; no DNS, mail, nameserver or production-ready setting was changed.
+
 ## 2026-10-15 — Verified inquiry-dialog keyboard containment release
 
 - Release commit: `e6dd1d26a36e72ca580bcfb79a8bae1b24eaa0f5` (normal expected-head fast-forward of `main`).
