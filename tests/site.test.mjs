@@ -38,7 +38,8 @@ test("Cuba guide generates three crawlable, useful and accurately localized edit
  assert.throws(()=>renderGuidePage("zz"),/Unknown guide language/);
  for(const topic of guideTopics){
   assert.ok(["free","nature","excursion"].includes(topic.type));
-  assert.match(topic.source,/^https:\/\//);
+  if(topic.source!==null)assert.match(topic.source,/^https:\/\//);
+  else assert.ok(["local-guide","varadero"].includes(topic.id),"unsourced ideas cannot masquerade as verified sources");
   for(const lang of ["fr","en","es"]){
    assert.ok(topic.title[lang].length>=6);
    assert.ok(topic.intro[lang].length>=45);
@@ -58,6 +59,7 @@ test("travel guide is a no-PII, no-fake-price UI with tenable SEO evidence and a
  assert.ok(html.includes('data-guide-language'));
  assert.ok(html.includes('data-i18n="guideTitle"'));
  assert.ok(js.includes('dialog.close()')&&js.includes("modal.showModal()"));
+ assert.ok(js.includes("source.hidden=!item.source"),"unsourced editorial ideas must not show fake supporting citations");
  assert.ok(!js.includes("fetch(")&&!js.includes("innerHTML")&&!js.includes("localStorage"));
  assert.ok(css.includes("prefers-reduced-motion:reduce"));
  assert.ok(build.includes("renderGuidePage(lang)"));
