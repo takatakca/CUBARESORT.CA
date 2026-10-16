@@ -197,9 +197,11 @@ function renderHotelProfile(){
  nav.append(back);
  container.append(nav);
  const header=profileNode("header",undefined,"resort-heading");
+ const heading=profileNode("h1",hotel.name);
+ heading.id="resort-profile-title";
  header.append(
   profileNode("p",labels.eyebrow,"eyebrow"),
-  profileNode("h1",hotel.name),
+  heading,
   profileNode("p",regionLabel(hotel.region,state.lang)+" · "+labels.airport+": "+hotel.airport,"resort-location"),
   profileNode("p",labels.scope,"resort-disclaimer")
  );
