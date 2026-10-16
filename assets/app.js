@@ -214,7 +214,10 @@ function openInquiry(dest="all",hotelId=null){
  state.selectedHotelId=hotels.some(h=>h.id===hotelId && h.region===dest) ? hotelId : null;
  $("#inquiry-status").textContent="";
  const now=new Date(),month=now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0");
- $("#inquiry-date").min=month;
+ const departure=$("#inquiry-date");
+ departure.min=month;
+ // Clear a stale departure month when the draft is opened again later.
+ if(departure.value && departure.value<month)departure.value="";
  if(!dialog.open)dialog.showModal();
 }
 function formatRequest(){

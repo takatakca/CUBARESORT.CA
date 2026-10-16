@@ -1,3 +1,14 @@
+## 2026-10-16 — Prevent past departure months in unsent travel drafts (release pending)
+
+- Last verified `main` at task start: `ab4325811e9418d96aa06990d987f1eb1a66d07a`. Main Coolify/Contabo actual production-container and HTTPS SHA-256 verification passed in [run 38828658167](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38828658167); Pages fallback passed in [run 38828658021](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38828658021). The proof log reports exact main SHA and all nine first-party file digests.
+- Verified code defect: `assets/request.js` accepted a syntactically valid **past** YYYY-MM departure month, despite `assets/app.js` setting the form input's minimum month when opening the draft. The previously selected stale month also survived reopening the dialog.
+- Fix: `formatTravelRequest` rejects past months using the user's local current month, with an injectable clock for deterministic tests; `openInquiry` clears a stale month if an existing draft is reopened later. The month remains optional; FR, EN and ES are preserved.
+- Added regression tests for earlier month, prior year, current month, next year, empty month in all three locales, and source-level stale-input reset protection. No submission/PII, booking, supplier, payment, DNS or unrelated Next.js PR changes.
+- Files modified: `assets/request.js`, `assets/app.js`, `tests/site.test.mjs`, `docs/AGENT_HANDOFF.md`, `docs/TASK_QUEUE.md`, `docs/PROJECT_STATUS.md`.
+- Current task: run `npm run validate` and `npm run build` in GitHub Actions; require actual production Docker container test and Coolify public HTTPS exact-new-main SHA plus nine first-party file digests, and Pages fallback verification. The new SHA is read from `main` after the non-forced push.
+- Known blockers unchanged: issue #1 existing MochaHost authoritative DNS zone inaccessible and apex MX mail routing not separated; `cubaresort.ca` returns Passenger/Apache HTTP 500. Issue #2 requires approved suppliers/operator/legal prerequisites. PRs #3/#5 remain separate.
+- Next exact action: check the new main-push Coolify and Pages workflow results, read the external verifier log for the SHA and digests, address CI errors if any. Continue realistic accessibility/browser acceptance after verified publication.
+
 ## 2026-10-15 — Verified multilingual accessible-name release
 
 - Commit `050fd18cdac1ea1a84299be1317bc4155b796bb3` translates eight explicit accessible names with the selected FR/EN/ES locale: brand/home, desktop and mobile navigation, search region, two illustrative images, stay sorting and property-region filtering. Regression coverage raises the suite to 31 tests; local validation/build and the real production-container job passed.

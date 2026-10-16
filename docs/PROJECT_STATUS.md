@@ -10,6 +10,11 @@ Updated 2026-10-15. Repository `takatakca/CUBARESORT.CA`; publication branch `ma
 - Baseline privacy/terms notices; no user account, payment or backend collection.
 - Node 22 source checks and tests; static build; `release.json` for verifiable deployment.
 
+## Travel draft date validation — 2026-10-16
+
+- The frontend draft formatter now rejects past departure months rather than relying only on an HTML input minimum, and the dialog clears a previously selected past month when reopened.
+- Added deterministic FR/EN/ES regression tests; the change does not collect, transmit or persist personal data. Publication remains pending the new main release's container and HTTPS SHA-256 checks.
+
 ## Verified accessibility release — 2026-10-15
 
 - Multilingual accessible-name commit `050fd18cdac1ea1a84299be1317bc4155b796bb3` passed 31 tests, build and Pages run 38826028471. Its first Coolify verifier expired during a deployment queue delay; follow-up main `894e5eae6fe0aad0bfdd4411bcd328d07511373b` passed container/live run 38827678357, exact SHA, all nine digests and health. Live FR/EN/ES label inspection passed.

@@ -110,6 +110,23 @@ test("a property-specific inquiry draft preserves the exact selected property, n
  assert.equal(formatTravelRequest({destination:h.region,month:"2026-99"}),null);
 });
 
+test("request draft rejects past months and preserves current/future dates in every locale",()=>{
+ const fixedToday=new Date(2026,9,16,12);
+ for(const lang of ["fr","en","es"]){
+  const opts={lang,destination:"varadero"};
+  assert.equal(formatTravelRequest({...opts,month:"2026-09"},fixedToday),null);
+  assert.equal(formatTravelRequest({...opts,month:"2025-12"},fixedToday),null);
+  assert.ok(formatTravelRequest({...opts,month:"2026-10"},fixedToday)?.includes("2026-10"));
+  assert.ok(formatTravelRequest({...opts,month:"2027-01"},fixedToday)?.includes("2027-01"));
+  assert.ok(formatTravelRequest({...opts,month:""},fixedToday));
+ }
+ const ui=readFile(resolve(root,"assets/app.js"),"utf8");
+ return ui.then(source=>{
+  assert.ok(source.includes('departure.min=month'));
+  assert.ok(source.includes('if(departure.value && departure.value<month)departure.value=""'));
+ });
+});
+
 test("preview HTTP server exposes only the production static allowlist",async(t)=>{
  const server=createPreviewServer();
  await new Promise((resolve,reject)=>{
