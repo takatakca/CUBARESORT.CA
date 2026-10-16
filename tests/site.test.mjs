@@ -201,3 +201,12 @@ test("explicit accessible names follow the selected language",async()=>{
  assert.notEqual(copy.fr.sortLabel,copy.en.sortLabel);
  assert.notEqual(copy.fr.hotelsRegionLabel,copy.es.hotelsRegionLabel);
 });
+
+test("both destination-card and search-filter navigation respect reduced motion",async()=>{
+ const app=await readFile(resolve(root,"assets/app.js"),"utf8");
+ assert.match(app,/function scrollToExperiences\(\)/);
+ assert.ok(app.includes('window.matchMedia("(prefers-reduced-motion: reduce)").matches'));
+ assert.ok(app.includes('scrollIntoView({behavior:reduced?"auto":"smooth",block:"start"})'));
+ assert.equal(app.split(' scrollToExperiences();').length-1,2,"both navigation paths must use the preference-aware helper");
+ assert.ok(!app.includes('scrollIntoView({behavior:"smooth",block:"start"})'),"unconditional smooth scrolling must not return");
+});

@@ -207,6 +207,12 @@ function reset(){
  state.destination="all";state.style="all";state.q="";state.sort="featured";
  updateSelects();renderExperiences();syncUrl();
 }
+
+function scrollToExperiences(){
+ // Explicit smooth scrolling bypasses the CSS reduced-motion override.
+ const reduced=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+ $("#experiences").scrollIntoView({behavior:reduced?"auto":"smooth",block:"start"});
+}
 function openInquiry(dest="all",hotelId=null){
  const dialog=$("#inquiry-dialog");
  $("#inquiry-destination").value=REGION_IDS.has(dest) ? dest : "all";
@@ -271,7 +277,7 @@ $("#search-form").addEventListener("submit",e=>{
  state.destination=$("#destination-filter").value;
  state.style=$("#style-filter").value;
  renderExperiences();syncUrl();
- $("#experiences").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
+ scrollToExperiences();
 });
 $("#text-search").addEventListener("input",e=>{
  state.q=e.target.value.slice(0,100);
@@ -288,7 +294,7 @@ $("#destination-grid").addEventListener("click",e=>{
  // A destination card narrows the property directory to the same region.
  if(REGION_IDS.has(state.destination)){state.hotelRegion=state.destination;state.hotelQuery="";}
  updateSelects();renderExperiences();updateHotelSelect();renderRegionChips();renderHotels();syncUrl();
- $("#experiences").scrollIntoView({behavior:"smooth",block:"start"});
+ scrollToExperiences();
 });
 $("#experience-grid").addEventListener("click",e=>{
  const favourite=e.target.closest("[data-favorite]");

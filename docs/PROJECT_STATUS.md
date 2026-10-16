@@ -2,6 +2,11 @@
 
 Updated 2026-10-16. Repository `takatakca/CUBARESORT.CA`; publication branch `main`.
 
+## Reduced-motion navigation correction — 2026-10-16
+
+- Found a destination-card scroll path that always requested animation even when reduced motion was preferred. It now shares the preference-aware scroll helper used by stay search. Source regression tests guard both entry points.
+- The latest tested production release before this code change is `31e5911f6dce61b145b00d6226a6b11a753cc0be`; this patch must pass its own main/Contabo/apex/www exact-SHA/nine-digest release checks before it is called live.
+
 ## Verified automatic production release — 2026-10-16
 
 Main `d64603349ed7c967590c41b7e2005cab391142de` automatically deployed through native Coolify Webhook `5yufbgsdz9bccmoe9h15vnzc` on 2026-10-16. Production container/live [run 38921978874](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38921978874) and Pages [run 38921978877](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38921978877) both passed. The live job explicitly reports `PRODUCTION_READY: true`, public DNS/mail separation, and full SHA plus all nine file digests on both apex and www.

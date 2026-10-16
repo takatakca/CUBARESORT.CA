@@ -1,3 +1,15 @@
+## 2026-10-16 — Reduced-motion destination navigation (CI / release pending)
+
+- Starting `main`: `31e5911f6dce61b145b00d6226a6b11a753cc0be`. The actual Coolify production-container and HTTPS verification in [run 38922319385](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38922319385) passed full SHA and all nine SHA-256 asset digests at the Contabo hostname, https://cubaresort.ca/ and https://www.cubaresort.ca/ with `PRODUCTION_READY=true` and DNS/mail host separation. Pages fallback [run 38922319404](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38922319404) passed.
+- Verified accessibility problem: the destination-card click handler used `scrollIntoView({behavior:"smooth"})` unconditionally. This explicit option ignores the CSS `prefers-reduced-motion` handling. The separate search-filter submit handler already respected the preference.
+- Correction in `assets/app.js`: route **both** interactions through one preference-aware `scrollToExperiences()` that uses `auto` for reduced motion and `smooth` otherwise. A regression guard was added to `tests/site.test.mjs` for both entry points.
+- Files changed in this patch: `assets/app.js`, `tests/site.test.mjs`, `docs/AGENT_HANDOFF.md`, `docs/PROJECT_STATUS.md`, `docs/TASK_QUEUE.md`. No hosting, email DNS, payment, real inventory, personal-data collection, or Next.js PR #3/#5 changes.
+- Last completed task prior to this patch: confirmed automatic public-domain release `31e5911f6dce61b145b00d6226a6b11a753cc0be`. Current task: validate, build, and verify a new exact-`main` production release following this one safe code change.
+- Required checks: `npm run validate`, `npm run build`, production image/container health and integrity, read-only DNS/mail separation, Contabo + apex/www HTTPS `release.json` full SHA and all nine first-party SHA-256 digests, and Pages fallback. New commit SHA must be read from GitHub after push; it cannot be embedded in its own tree.
+- Known remaining blockers: issue #2 needs authorized supplier/operator/legal identity and tenant-scoped booking/lead integrations. Actual functional mail send/receive testing was never authorized and remains unverified, despite DNS separation; do not claim otherwise. Hardware/assistive-tech accessibility acceptance and photo rights remain outstanding.
+- Next exact action: inspect the two latest `main` GitHub Actions runs for the new SHA and their release logs. Fix actual CI failures if any; preserve the closed DNS issue #1, current mail routing, and production-ready checks.
+
+
 ## 2026-10-16 — Automatic public-domain production release verified
 
 Main `d64603349ed7c967590c41b7e2005cab391142de` automatically deployed through native Coolify Webhook `5yufbgsdz9bccmoe9h15vnzc` on 2026-10-16. Production container/live [run 38921978874](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38921978874) and Pages [run 38921978877](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38921978877) both passed. The live job explicitly reports `PRODUCTION_READY: true`, public DNS/mail separation, and full SHA plus all nine file digests on both apex and www.
