@@ -1,6 +1,19 @@
 # CUBARESORT.CA — Production checklist
 
-Updated: 2026-10-15. Current scope: **static inspiration portal, not a live booking service**.
+Updated: 2026-10-16. Current scope: **static inspiration portal, not a live booking service**.
+
+## Current hosting acceptance — 2026-10-16
+
+- [x] Existing bolonca DNS zone and confirmed document root backed up.
+- [x] Apex/www publicly resolve to Contabo 31.220.96.134, without web AAAA.
+- [x] Independent MX/mail A and MochaHost service routes preserved; cPanel Local Mail Exchanger.
+- [x] Coolify pending domain routing applied; Docker healthy, valid apex/www HTTPS, HTTP redirects and /healthz=ok.
+- [x] Both domains passed full ff907675 SHA and all nine asset digests independently.
+- [x] Production-ready Actions flag enabled; workflow requires public DNS/mail separation and both production HTTPS hostnames.
+- [ ] Verify the operations merge's automatic native Webhook deployment and both current-main CI workflows; put exact SHA/run/deployment evidence in issue #1.
+- [ ] Functional mailbox send/receive test (no email sent; DNS success alone is insufficient).
+
+Historical deployment entries below describe earlier checkpoints and do not override the current cutover record.
 
 ## Implemented in code
 

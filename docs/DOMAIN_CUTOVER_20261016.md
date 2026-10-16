@@ -1,4 +1,4 @@
-# Custom-domain cutover checkpoint — 16 October 2026
+# Custom-domain cutover record — 16 October 2026
 
 The owner confirmed that cubaresort.ca is in the bolonca hosting account and authorized completing its separate Coolify/Contabo migration. The zone is now present in that account. The earlier missing-zone diagnosis is historical.
 
@@ -16,9 +16,9 @@ The owner confirmed that cubaresort.ca is in the bolonca hosting account and aut
 | Existing DKIM, DMARC and other service A/TXT records | Retained |
 | cPanel email routing | Local Mail Exchanger |
 | Nameservers | Existing ns1–ns4.mysecurecloudhost.com retained |
-| Coolify apex and www domains | HTTPS, internal port 8080, HTTP-to-HTTPS enabled; saved, deployment changes pending |
+| Coolify apex and www domains | HTTPS, internal port 8080, HTTP-to-HTTPS enabled; applied successfully at 15:06:16 UTC |
 
-The existing mail hostname was a CNAME to the web apex. It is now an independent A record so it cannot follow the web move to Contabo. SPF no longer authorizes the web apex through `+a`. FTP and calendar/address-book destinations similarly remain on MochaHost. These are saved local-zone settings, not proof of public DNS publication or end-to-end mail delivery.
+The existing mail hostname was a CNAME to the web apex. It is now an independent A record so it cannot follow the web move to Contabo. SPF no longer authorizes the web apex through `+a`. FTP and calendar/address-book destinations similarly remain on MochaHost. Fresh public DNS and the mail-safe DNS guard now confirm web/mail separation. End-to-end mail delivery remains untested.
 
 ## Backup and source inspection
 
@@ -37,16 +37,18 @@ Main at inspection: `ff907675207f32f0d113f07f01a1d7d11c97ed0e`.
 - Independent `verify:live` passed that full SHA and all nine first-party SHA-256 digests at https://ci7ltew4v50e4fwq63tfvtg6.31.220.96.134.sslip.io/ . Local validation passed all 32 tests and the static build.
 - Separate application remains `ci7ltew4v50e4fwq63tfvtg6` on Contabo `31.220.96.134`, Dockerfile.coolify, internal port 8080, existing GitHub App webhook.
 
-## Current blocker and next action
+## Domain activation and automatic-release acceptance
 
-All four delegated MochaHost nameservers returned **REFUSED** for this domain. Both Google and Cloudflare public DNS returned **SERVFAIL**, explicitly identifying refused authoritative queries. Queries to bolonca's local DNS server returned **NOERROR** and an authoritative SOA. Therefore this is an authoritative-zone publication/synchronization problem; waiting for ordinary A-record cache expiry cannot by itself establish success.
+The owner confirmed provider DNS repair on 2026-10-16. Fresh public Google DNS returns apex A `31.220.96.134`, www CNAME to apex, MX `0 mail.cubaresort.ca`, mail A `209.42.24.127`, and no apex/www AAAA. The read-only `verifyDomainDns` guard passed using an injected public DoH lookup; normal DNS guard execution remains mandatory in CI.
 
-Coolify shows DNS mismatch for apex/www and configuration changes pending. The generated Contabo hostname still works. The owner completed MochaHost customer-portal sign-in at approximately 11:15 UTC. The authenticated bolonca hosting and registered-domain General/Settings screens expose no DNS synchronization control. Fresh direct queries from s3650 again show public REFUSED versus local authoritative NOERROR with the saved A/MX/mail A records. A Support-category ticket is fully prepared for bolon.ca (Ultimate), titled `cubaresort.ca DNS outage - authoritative nameservers return REFUSED`, but has NOT been submitted; explicit permission to send a support message is pending. No support message was sent.
+The public HTTP 404 was caused by **saved but unapplied Coolify domain routing**, not missing application files. Manual deployment `1ckyac9swtil2zrjjhezhrcb` applied those changes, retained exact main `ff907675207f32f0d113f07f01a1d7d11c97ed0e`, and became healthy on its first Docker health attempt at 15:06:16 UTC. Coolify reports DNS matches for all three configured hostnames.
 
-1. MochaHost portal sign-in is complete and bolonca cPanel SSO was verified. No customer-facing synchronization control was found in the hosting/domain settings. Keep the prepared support ticket available; do not ask for the same sign-in again while the session remains valid. Do not create a blank zone or change nameservers blindly.
-2. If provider administration is required, obtain authorization before sending a support request asking MochaHost to publish/synchronize the existing cubaresort.ca zone from s3650.can1.stableserver.net to ns1–ns4.mysecurecloudhost.com. The exact saved values above must be retained.
-3. Require authoritative/public DNS to return web A 31.220.96.134, www alias, separate MX/mail A and preserved TXT/service records. Verify apex/www TLS and apply the pending Coolify domain configuration to this application only.
-4. Perform the mail checks applicable to the actual mailbox/service; no mailbox delivery test has yet passed. Do not describe mail as verified.
-5. Only after acceptance, set CUBARESORT_COOLIFY_PRODUCTION_READY=true, require the apex DNS/mail guard and exact-SHA/file checks, and verify a real GitHub-triggered main release through the public domain. Keep issue #1 open until then.
+Independent HTTPS verification passed that full SHA and all nine real first-party file digests on both https://cubaresort.ca/ and https://www.cubaresort.ca/ . Both health endpoints return 200 `ok`; HTTP redirects to the corresponding HTTPS hostname. TLS validation was never disabled.
 
-This checkpoint is intentionally on an operations branch while DNS publication is blocked; it does not claim a completed custom-domain launch or change main solely to produce an unnecessary deployment failure.
+Repository variable `CUBARESORT_COOLIFY_PRODUCTION_READY=true` now activates public DNS/mail and production-hostname verification for main releases. The operations merge must pass a **new native GitHub App Webhook deployment**, actual container tests, Pages fallback publication and exact-new-main verification on both domains. Store the final merge SHA, native deployment UUID and Actions links in issue #1, then close its hosting incident once that proof succeeds. Do not call the manual routing deployment the automatic-release proof.
+
+Mail routing and original records are preserved; no functional send/receive test or external mail was performed. The earlier local-only zone, public REFUSED and pending routing states are historical. The prepared MochaHost support ticket was never submitted and is no longer necessary.
+
+## Rollback limits
+
+Restore original records from the verified 25-record export only if a tested rollback is needed; retain separate mail routes rather than making mail follow the web. Keep the bolonca archive and Pages fallback. The archive does not cover the previously inaccessible 209.42.24.125 installation, which was already failing before this migration. Prefer a tested normal main revert or known healthy image on this same Coolify application for application regressions.
