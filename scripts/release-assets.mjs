@@ -9,5 +9,10 @@ export const VERIFIED_RELEASE_FILES = Object.freeze([
   "assets/i18n.js",
   "assets/request.js",
   "assets/styles.css",
-  "assets/favicon.svg"
+  "assets/favicon.svg",
+  "assets/guide.css",
+  "assets/guide.js",
+  "guides/fr/cuba.html",
+  "guides/en/cuba.html",
+  "guides/es/cuba.html"
 ]);
