@@ -22,3 +22,36 @@
 .hotel-foot button:hover{color:#d46852}
 @media(max-width:800px){.hotel-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.hotel-grid{grid-template-columns:1fr}.region-chips{gap:6px}.region-chip{padding:8px 12px;font-size:11px}}
+
+
+/* Progressive, shareable property profiles; text-only until hotel media rights are cleared. */
+.hotel-profile-link{font-size:12px;font-weight:700;color:#0c474b;text-decoration:underline;text-underline-offset:3px;padding:6px 0}
+.hotel-profile-link:hover{color:#a34f3e}
+body.profile-mode main > :not(#hotel-profile){display:none!important}
+.resort-profile[hidden]{display:none!important}
+.resort-profile{padding:64px 0 110px;background:linear-gradient(180deg,#eef4f0 0,#fcfaf5 330px)}
+.resort-breadcrumbs{margin-bottom:32px}
+.resort-back{display:inline-block;color:#0b494d;font-weight:700;text-decoration:underline;text-underline-offset:4px}
+.resort-heading{max-width:900px;margin-bottom:36px}
+.resort-heading h1{font-size:clamp(42px,6vw,78px);line-height:1.08;margin:13px 0 18px}
+.resort-heading .eyebrow{color:#a34f3e;font-size:12px;font-weight:700;letter-spacing:.13em}
+.resort-location{font-size:15px;font-weight:700;color:#305e60}
+.resort-disclaimer{font-size:15px;line-height:1.7;max-width:680px}
+.resort-alert{display:inline-block;border:1px solid #bfcfca;background:#fff;color:#17484a;border-radius:6px;font-size:13px;font-weight:700;padding:12px 16px}
+.resort-columns{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(270px,1fr);gap:23px;align-items:start}
+.resort-facts,.resort-info-card,.resort-reviews,.resort-sources{background:#fff;border:1px solid #dfe5df;border-radius:10px;padding:29px}
+.resort-facts h2,.resort-info-card h2,.resort-reviews h2,.resort-sources h2{font-family:var(--serif);font-size:clamp(22px,2.5vw,30px);margin-bottom:18px;letter-spacing:-.02em}
+.resort-fact-list{padding-left:22px;margin:0 0 28px}
+.resort-fact-list li{padding-left:5px;margin-bottom:23px;line-height:1.65}
+.resort-fact-list p{margin-bottom:5px}
+.resort-evidence-link,.resort-sources a{color:#0b575c;text-decoration:underline;text-underline-offset:3px;font-weight:700;font-size:13px;overflow-wrap:anywhere}
+.resort-aside{display:grid;gap:14px}
+.resort-info-card h2{font-size:23px}
+.resort-info-card p,.resort-reviews p,.resort-sources p{color:#526461;line-height:1.7}
+.resort-draft{margin-top:8px}
+.resort-reviews,.resort-sources{margin-top:24px}
+.resort-sources ul{padding-left:22px}
+.resort-sources li{margin:10px 0;line-height:1.6}
+.resort-source-note{font-size:12px;color:#596e68;line-height:1.65}
+.resort-empty{color:#566c67;line-height:1.75}
+@media(max-width:760px){.resort-columns{grid-template-columns:1fr}.resort-profile{padding:44px 0 75px}.resort-facts,.resort-info-card,.resort-reviews,.resort-sources{padding:23px}.resort-heading{margin-bottom:24px}}
