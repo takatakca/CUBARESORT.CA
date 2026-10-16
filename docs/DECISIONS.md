@@ -15,3 +15,10 @@ Updated 2026-10-16.
 | GROUPE TAKATAK retains master identity/data authority | If integration is approved later, use authenticated server-side, tenant-scoped APIs; no duplicate master CRM or credentials in browser code. |
 
 Re-evaluate a decision only with new, verifiable evidence; update this record and the handoff in the same changeset.
+
+## 2026-10-16 — Curated multilingual travel guide and controlled partner roadmap
+
+- Preserve current Contabo static site and existing main. Add separate crawlable guides for FR/EN/ES with helpful original summaries, official visa/advisory/UNESCO links, unique metadata and human-confirmed sources; reject automatically generated thin or duplicative SEO pages. Google position #1 is not guaranteed.
+- Professional travel-agency aesthetics do not establish legal travel-agent status. No real booking, lead capture, public 5% price-matching promise or live partner registration while commercial authority in issue #2 remains unresolved.
+- TAKATAK V1 stays master for identity/tenant/permissions. CUBARESORT will require a distinct server-side, tenant-scoped partner content service and reviewer moderation; no shadow identities, API tokens or prices in static files. AI may draft but may never bypass human review.
+- Add the three guide pages, stylesheet and interaction module to the checksum manifest (14 total) and use full built release validation before public launch. Keep FR/EN/ES and existing Pages fallback intact.

@@ -2,6 +2,12 @@
 
 Updated 2026-10-16. Repository `takatakca/CUBARESORT.CA`; publication branch `main`.
 
+## Trilingual Cuba travel guide + future partners — 2026-10-16 (review branch)
+
+- New separate branch `feat/cuba-editorial-guide-partners-20261016` adds professional editorial travel-guide art direction and three crawlable language pages with independently linked UNESCO, Cuban eVisa and Canada travel-advisory sources. Six editorial experience ideas explicitly distinguish free public walks, outdoor activities and excursions requiring later authorized local operators. No actual bookings, customer intake or rate advertising.
+- Distinct localized titles/descriptions, canonical/hreflang, sitemap, WebPage structured data, responsive cards, accessible filter buttons and detail/partner-information dialogs, with main-page navigation. 14 SHA-256 protected first-party release files (existing 9 plus 5 guide files) when published. All production changes require fresh verified CI and exact SHA on Contabo/apex/www/Pages.
+- Partner integration, real TAKATAK SSO, listing management, approved price revisions, AI backend and any 5% campaign are **planned only** in `docs/PARTNER_PORTAL_TAKATAK_V1_20261016.md`, blocked by issue #2 and required identity/operator/legal contracts. Existing verified main left unchanged; PR #7 remains separate.
+
 ## Card action accessible names — 2026-10-16
 
 - Favourite and request buttons in repeated experience/property cards now include the current item name in their programmatic label, so screen-reader button lists distinguish each action.

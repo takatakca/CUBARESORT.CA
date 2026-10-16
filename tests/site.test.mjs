@@ -9,7 +9,72 @@ import { copy, hasAllKeys, namedTranslation, translation } from "../assets/i18n.
 import { SITE_CONFIG } from "../assets/config.js";
 import { formatTravelRequest } from "../assets/request.js";
 import { createPreviewServer } from "../scripts/dev-server.mjs";
+import { GUIDE_PATHS, guideTopics, renderGuidePage } from "../scripts/guide-pages.mjs";
+import { VERIFIED_RELEASE_FILES } from "../scripts/release-assets.mjs";
 const root=resolve(dirname(fileURLToPath(import.meta.url)),"..");
+test("Cuba guide generates three crawlable, useful and accurately localized editorial pages",()=>{
+ assert.deepEqual(Object.keys(GUIDE_PATHS).sort(),["en","es","fr"]);
+ assert.ok(guideTopics.length>=6);
+ assert.equal(new Set(guideTopics.map(topic=>topic.id)).size,guideTopics.length);
+ for(const lang of ["fr","en","es"]){
+  const html=renderGuidePage(lang);
+  assert.ok(html.startsWith("<!doctype html>"));
+  assert.ok(html.includes('<html lang="'+lang+'">'));
+  assert.ok(html.includes('<link rel="canonical" href="https://cubaresort.ca/'+GUIDE_PATHS[lang]+'">'));
+  for(const alt of ["fr","en","es"]){
+   assert.ok(html.includes('hreflang="'+alt+'" href="https://cubaresort.ca/'+GUIDE_PATHS[alt]+'"'),"missing alternate "+alt);
+   assert.ok(html.includes('href="../../'+GUIDE_PATHS[alt]+'"'),"fallback locale navigation missing "+alt);
+  }
+  assert.ok(html.includes('<meta name="description"'));
+  assert.ok(html.includes('application/ld+json'));
+  assert.equal((html.match(/class="guide-card" data-kind=/g)||[]).length,guideTopics.length);
+  assert.ok(html.includes('id="guide-dialog"')&&html.includes('id="partner-dialog"'));
+  assert.ok(html.includes('https://travel.gc.ca/destinations/cuba'));
+  assert.ok(html.includes('https://evisacuba.cu/fr/inicio'));
+  assert.ok(html.includes('no bookings')||html.includes('aucune réservation')||html.includes('sin reservas'));
+  assert.ok(!html.includes('application/ld+json">{"@context":"https://schema.org","@type":"Product"'),"no product/price rich snippet without supplier authority");
+  assert.ok(html.includes("CUBARESORT.CA"));
+ }
+ assert.throws(()=>renderGuidePage("zz"),/Unknown guide language/);
+ for(const topic of guideTopics){
+  assert.ok(["free","nature","excursion"].includes(topic.type));
+  if(topic.source!==null)assert.match(topic.source,/^https:\/\//);
+  else assert.ok(["local-guide","varadero"].includes(topic.id),"unsourced ideas cannot masquerade as verified sources");
+  for(const lang of ["fr","en","es"]){
+   assert.ok(topic.title[lang].length>=6);
+   assert.ok(topic.intro[lang].length>=45);
+   assert.ok(topic.tip[lang].length>=20);
+  }
+ }
+});
+test("travel guide is a no-PII, no-fake-price UI with tenable SEO evidence and asset integrity",async()=>{
+ const [html,js,sitemap,css,build]=await Promise.all([
+  readFile(resolve(root,"index.html"),"utf8"),
+  readFile(resolve(root,"assets/guide.js"),"utf8"),
+  readFile(resolve(root,"sitemap.xml"),"utf8"),
+  readFile(resolve(root,"assets/guide.css"),"utf8"),
+  readFile(resolve(root,"scripts/build.mjs"),"utf8")
+ ]);
+ assert.ok(html.includes('id="cuba-guide"'));
+ assert.ok(html.includes('data-guide-language'));
+ assert.ok(html.includes('data-i18n="guideTitle"'));
+ assert.ok(js.includes('dialog.close()')&&js.includes("modal.showModal()"));
+ assert.ok(js.includes("source.hidden=!item.source"),"unsourced editorial ideas must not show fake supporting citations");
+ assert.ok(!js.includes("fetch(")&&!js.includes("innerHTML")&&!js.includes("localStorage"));
+ assert.ok(css.includes("prefers-reduced-motion:reduce"));
+ assert.ok(build.includes("renderGuidePage(lang)"));
+ const paths=Object.values(GUIDE_PATHS);
+ for(const path of paths){
+  assert.ok(sitemap.includes("https://cubaresort.ca/"+path));
+  assert.ok(VERIFIED_RELEASE_FILES.includes(path),"all generated pages must be hashed "+path);
+ }
+ for(const asset of ["assets/guide.css","assets/guide.js"]){
+  assert.ok(VERIFIED_RELEASE_FILES.includes(asset));
+ }
+ assert.equal(new Set(VERIFIED_RELEASE_FILES).size,VERIFIED_RELEASE_FILES.length);
+ assert.equal(VERIFIED_RELEASE_FILES.length,14);
+});
+
 test("destination IDs, translated data and experience relations are sound",()=>{
  assert.equal(catalogIsValid(),true);
  assert.equal(new Set(destinations.map(d=>d.id)).size,destinations.length);
@@ -149,7 +214,7 @@ test("preview HTTP server exposes only the production static allowlist",async(t)
  });
  t.after(()=>new Promise(resolve=>server.close(resolve)));
  const base="http://127.0.0.1:"+server.address().port;
- for(const path of ["/","/index.html","/assets/app.js","/assets/request.js","/assets/styles.css","/robots.txt"]){
+ for(const path of ["/","/index.html","/assets/app.js","/assets/request.js","/assets/styles.css","/assets/guide.css","/assets/guide.js","/guides/fr/cuba.html","/guides/en/cuba.html","/guides/es/cuba.html","/robots.txt"]){
   const response=await fetch(base+path);
   assert.equal(response.status,200,path);
  }

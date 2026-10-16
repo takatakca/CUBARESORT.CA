@@ -2,6 +2,12 @@
 
 Updated 2026-10-16. Production hosting is the separate Coolify application on Contabo.
 
+## Proposed editorial guide deployment (branch-only as of 2026-10-16)
+
+- New distinct FR/EN/ES static guide pages are generated at `guides/{fr,en,es}/cuba.html`, linked from the homepage and indexed in `sitemap.xml`. Guide pages use relative first-party assets/navigation so the Pages fallback path also works. No backend, account system, live booking or AI has been activated.
+- The generated pages and `assets/guide.css` / `assets/guide.js` are included alongside the original nine integrity files. A future merge must prove all **14** SHA-256 manifest digests and the full current GitHub main SHA at generated Contabo HTTPS, apex, www and Pages; the public DNS/MX separation preflight remains mandatory. Production main is untouched until PR approval.
+- The master TAKATAK V1 SSO, approved operators, rights-cleared media and 5% price-match terms are separate activation gates; do not invent secrets or modify Coolify webhook/domain/DNS/mail. Real mailbox delivery is still untested.
+
 ## Verified automatic production release — 2026-10-16
 
 Main `d64603349ed7c967590c41b7e2005cab391142de` automatically deployed through native Coolify Webhook `5yufbgsdz9bccmoe9h15vnzc` on 2026-10-16. Production container/live [run 38921978874](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38921978874) and Pages [run 38921978877](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38921978877) both passed. The live job explicitly reports `PRODUCTION_READY: true`, public DNS/mail separation, and full SHA plus all nine file digests on both apex and www.
