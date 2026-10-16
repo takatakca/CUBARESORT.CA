@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 import { destinations, experiences, styles, catalogIsValid, imageUrl } from "../assets/catalog.js";
 import { hotelRegions, hotels, hotelsInRegion, searchHotels, regionLabel, hotelDirectoryIsValid } from "../assets/hotels.js";
-import { copy, hasAllKeys, translation } from "../assets/i18n.js";
+import { copy, hasAllKeys, namedTranslation, translation } from "../assets/i18n.js";
 import { SITE_CONFIG } from "../assets/config.js";
 import { formatTravelRequest } from "../assets/request.js";
 import { createPreviewServer } from "../scripts/dev-server.mjs";
@@ -24,6 +24,20 @@ test("all three languages define the complete UI dictionary",()=>{
   assert.equal(translation(lang,"searchTitle"),copy[lang].searchTitle);
   assert.match(copy[lang].inventoryNotice,/./);
  }
+});
+test("repeated card actions have item-specific accessible names in every language",async()=>{
+ const item="Sample Resort";
+ for(const lang of ["fr","en","es"]){
+  for(const key of ["favoriteFor","unfavoriteFor","inquiryFor","hotelsAskFor"]){
+   const label=namedTranslation(lang,key,item);
+   assert.ok(label.includes(item),`${lang}.${key} must identify its card`);
+   assert.ok(!label.includes("{name}"),`${lang}.${key} placeholder must be resolved`);
+  }
+ }
+ const app=await readFile(resolve(root,"assets/app.js"),"utf8");
+ assert.ok(app.includes('namedTr(favourite?"unfavoriteFor":"favoriteFor",e.name[state.lang])'));
+ assert.ok(app.includes('namedTr("inquiryFor",e.name[state.lang])'));
+ assert.ok(app.includes('namedTr("hotelsAskFor",h.name)'));
 });
 test("image URLs are HTTPS and only reference a known photo CDN",()=>{
  for(const d of destinations)assert.match(imageUrl(d.image),/^https:\/\/images\.unsplash\.com\/photo-/);

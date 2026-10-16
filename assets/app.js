@@ -1,6 +1,6 @@
 import { destinations, experiences, styles, imageUrl } from "./catalog.js";
 import { hotelRegions, hotels, searchHotels, regionLabel } from "./hotels.js";
-import { copy, translation } from "./i18n.js";
+import { copy, namedTranslation, translation } from "./i18n.js";
 import { SITE_CONFIG } from "./config.js";
 import { formatTravelRequest } from "./request.js";
 
@@ -35,6 +35,7 @@ const state = {
   favorites:new Set(Array.isArray(stored.favorites) ? stored.favorites.filter(id => EXPERIENCE_IDS.has(id)) : [])
 };
 function tr(key){return translation(state.lang,key);}
+function namedTr(key,name){return namedTranslation(state.lang,key,name);}
 function persist(){
  try {localStorage.setItem(storageKey,JSON.stringify({lang:state.lang,favorites:[...state.favorites]}));} catch {/* private mode or full storage */}
 }
@@ -119,7 +120,7 @@ function renderExperiences(){
    const favourite=state.favorites.has(e.id);
    const article=document.createElement("article");
    article.className="experience-card";
-   article.innerHTML='<div class="experience-photo-wrap"><img class="experience-photo" src="'+escapedAttr(imageUrl(e.image,900))+'" loading="lazy" decoding="async" alt="'+escapedAttr(tr("photoAlt"))+'"><span class="card-tag">'+escapedAttr(tr("style"+e.style.charAt(0).toUpperCase()+e.style.slice(1)))+'</span><button type="button" class="favorite-button" data-favorite="'+escapedAttr(e.id)+'" aria-pressed="'+String(favourite)+'" aria-label="'+escapedAttr(tr(favourite?"unfavorite":"favorite"))+'">'+(favourite?"♥":"♡")+'</button></div><div class="experience-body"><p class="experience-location">'+escapedAttr(destName(e.destination))+'</p><h3>'+escapedAttr(e.name[state.lang])+'</h3><p>'+escapedAttr(e.summary[state.lang])+'</p></div><div class="card-footer"><span>'+escapedAttr(tr("inspiration"))+'</span><button type="button" data-inquire="'+escapedAttr(e.destination)+'">'+escapedAttr(tr("inquiry"))+'</button></div>';
+   article.innerHTML='<div class="experience-photo-wrap"><img class="experience-photo" src="'+escapedAttr(imageUrl(e.image,900))+'" loading="lazy" decoding="async" alt="'+escapedAttr(tr("photoAlt"))+'"><span class="card-tag">'+escapedAttr(tr("style"+e.style.charAt(0).toUpperCase()+e.style.slice(1)))+'</span><button type="button" class="favorite-button" data-favorite="'+escapedAttr(e.id)+'" aria-pressed="'+String(favourite)+'" aria-label="'+escapedAttr(namedTr(favourite?"unfavoriteFor":"favoriteFor",e.name[state.lang]))+'">'+(favourite?"♥":"♡")+'</button></div><div class="experience-body"><p class="experience-location">'+escapedAttr(destName(e.destination))+'</p><h3>'+escapedAttr(e.name[state.lang])+'</h3><p>'+escapedAttr(e.summary[state.lang])+'</p></div><div class="card-footer"><span>'+escapedAttr(tr("inspiration"))+'</span><button type="button" data-inquire="'+escapedAttr(e.destination)+'" aria-label="'+escapedAttr(namedTr("inquiryFor",e.name[state.lang]))+'">'+escapedAttr(tr("inquiry"))+'</button></div>';
    grid.append(article);
  }
 }
@@ -167,7 +168,7 @@ function renderHotels(){
    +'<p class="hotel-meta"><span class="hotel-region">'+escapedAttr(regionLabel(h.region,state.lang))+'</span>'
    +'<span class="hotel-airport">'+escapedAttr(tr("hotelsAirport"))+' '+escapedAttr(h.airport)+'</span></p></div>'
    +'<div class="hotel-foot"><span class="hotel-badge'+(h.confirmed?"":" hotel-badge-pending")+'">'+escapedAttr(badge)+'</span>'
-   +'<button type="button" data-hotel-inquire="'+escapedAttr(h.id)+'">'+escapedAttr(tr("hotelsAsk"))+'</button></div>';
+   +'<button type="button" data-hotel-inquire="'+escapedAttr(h.id)+'" aria-label="'+escapedAttr(namedTr("hotelsAskFor",h.name))+'">'+escapedAttr(tr("hotelsAsk"))+'</button></div>';
   grid.append(li);
  }
 }

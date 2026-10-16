@@ -2,6 +2,12 @@
 
 Updated 2026-10-16. Repository `takatakca/CUBARESORT.CA`; publication branch `main`.
 
+## Card action accessible names — 2026-10-16
+
+- Favourite and request buttons in repeated experience/property cards now include the current item name in their programmatic label, so screen-reader button lists distinguish each action.
+- All templates and rendered call sites are covered for FR/EN/ES. Visible labels and draft-only behavior are unchanged.
+- Starting verified production baseline is `87bfd6304017b63d5e8366da7cecedff97c9ccf0` (Coolify/container/custom-domain run 38961583924; Pages fallback 38961583852). This newer patch requires its own full container and all-host exact-SHA/nine-digest evidence.
+
 ## Visible search keyboard focus — 2026-10-16
 
 - Restored a high-contrast 3px focus outline on the stay search field's container, whose input CSS previously overrode the general keyboard focus ring.

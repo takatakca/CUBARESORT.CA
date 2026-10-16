@@ -1,3 +1,12 @@
+## 2026-10-16 — Item-specific card action names (release pending)
+
+- Starting verified production baseline: main `87bfd6304017b63d5e8366da7cecedff97c9ccf0`; Coolify/container/custom-domain run [38961583924](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38961583924) passed on retry after its queued native webhook deployment completed, and Pages fallback run [38961583852](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38961583852) passed. Exact SHA and all nine digests were verified at the generated Contabo hostname, apex, www and Pages.
+- Verified accessibility defect: every favourite control exposed the same accessible name, every experience request control exposed the same visible-only name, and all property request controls likewise repeated one name. Screen-reader button navigation therefore did not identify the card each action controls.
+- Added localized FR/EN/ES item-specific accessible names for favourite/unfavourite and request actions while preserving the existing visible labels. The shared interpolation helper is directly tested, including all four templates in every locale.
+- Scope is limited to `assets/i18n.js`, `assets/app.js`, tests and continuity notes. No DNS, mail, hosting configuration, supplier content, booking, payment, personal-data collection or draft PR #3/#5/#7 changes.
+- Required release proof: 35 tests/build, production container, public DNS/mail separation, exact latest-main `release.json` and all nine digests at the generated Contabo hostname, apex and www, plus Pages fallback. Functional mailbox delivery remains untested and no email was sent.
+- Next exact action: publish as a normal expected-head fast-forward only if `main` remains at the starting baseline, then inspect both resulting workflows and fix only demonstrated release failures.
+
 ## 2026-10-16 — Mobile navigation action announced correctly (release pending)
 
 - Starting production baseline: main `25ba3ce46118a97aaa8262e3cd14cd08dc49f2c1`; Coolify/container/custom-domain run [38953495749](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38953495749) and Pages fallback run [38953495767](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38953495767) passed.
