@@ -27,9 +27,13 @@ for(const button of document.querySelectorAll("[data-guide-open]")){
   document.getElementById("guide-dialog-intro").textContent=item.intro;
   document.getElementById("guide-dialog-tip").textContent=item.tip;
   const source=document.getElementById("guide-dialog-source");
-  const url=new URL(item.source);
-  if(url.protocol!=="https:"||url.username||url.password)return;
-  source.href=url.href;
+  // An original editorial idea is not evidence of a currently bookable product.
+  source.hidden=!item.source;
+  if(item.source){
+   const url=new URL(item.source);
+   if(url.protocol!=="https:"||url.username||url.password)return;
+   source.href=url.href;
+  }
   modal.showModal();
  });
 }
