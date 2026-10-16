@@ -2,6 +2,12 @@
 
 Updated 2026-10-16. Always compare with the latest `main` before starting an item.
 
+## Resort microsite expansion — 2026-10-16
+
+- **In review branch:** `feat/resort-microsite-research-20261016` adds query-addressable localized detail views for the 169 directory entries; sourced content initially covers Iberostar Selection Varadero and Meliá Las Américas. No new backend or live-booking feature.
+- **Next:** verify PR validation and production-container jobs; manually audit mobile, keyboard and FR/EN/ES; add crawlable dedicated URLs/canonicals and sitemap enumeration after review; source amenities, photos with permissions, beach-frontage measurements, seasonal operation and original review links for the remaining 167. Keep unknown facts blank until independently supported.
+- **Do not unblock:** issue #2 travel supplier, legal, operator, booking and TAKATAK tenant isolation prerequisites.
+
 | Priority | Task | State / actual dependency | Definition of done |
 |---|---|---|---|
 | Done | Verify and protect published Pages release identity | **Completed** in `3e9e10376f22532f0d24242a5598055e29bdf324` (run 38773832573 passed live SHA + nine file digests) | Keep manifest and negative tests passing for future releases |
