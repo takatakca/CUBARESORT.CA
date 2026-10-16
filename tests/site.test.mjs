@@ -151,10 +151,19 @@ test("preview HTTP server exposes only the production static allowlist",async(t)
 });
 
 test("mobile menu can be dismissed by Escape and closes at desktop width",async()=>{
- const app=await readFile(resolve(root,"assets/app.js"),"utf8");
+ const [app,i18n]=await Promise.all([
+  readFile(resolve(root,"assets/app.js"),"utf8"),
+  readFile(resolve(root,"assets/i18n.js"),"utf8")
+ ]);
  assert.ok(app.includes('e.key==="Escape" && !$("#mobile-menu").hidden'));
  assert.ok(app.includes('$("#menu-toggle").focus()'));
  assert.ok(app.includes('matchMedia("(min-width: 801px)")'));
+ assert.ok(app.includes('tr(open?"menuCloseLabel":"menuOpenLabel")'));
+ assert.ok(app.includes('updateMobileMenuState(!$("#mobile-menu").hidden)'));
+ assert.ok(app.includes('updateMobileMenuState($("#mobile-menu").hidden)'));
+ for(const label of ["Ouvrir le menu","Fermer le menu","Open menu","Close menu","Abrir menú","Cerrar menú"]){
+  assert.ok(i18n.includes(label),"missing translated mobile-menu action: "+label);
+ }
 });
 
 test("required English agent continuity files exist",async()=>{

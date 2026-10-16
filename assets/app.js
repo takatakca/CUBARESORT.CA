@@ -54,7 +54,7 @@ function setStaticTranslations(){
  $$("[data-i18n-placeholder]").forEach(node=>{node.placeholder=tr(node.dataset.i18nPlaceholder);});
  $$("[data-i18n-aria-label]").forEach(node=>node.setAttribute("aria-label",tr(node.dataset.i18nAriaLabel)));
  $$("[data-lang]").forEach(button=>button.setAttribute("aria-pressed",String(button.dataset.lang===state.lang)));
- $("#menu-toggle").setAttribute("aria-label",state.lang==="en"?"Open menu":state.lang==="es"?"Abrir menú":"Ouvrir le menu");
+ updateMobileMenuState(!$("#mobile-menu").hidden);
  $("#inquiry-close").setAttribute("aria-label",state.lang==="en"?"Close":state.lang==="es"?"Cerrar":"Fermer");
  $("#legal-close").setAttribute("aria-label",state.lang==="en"?"Close":state.lang==="es"?"Cerrar":"Fermer");
  document.title = state.lang === "en" ? "CUBARESORT.CA — Cuba, your way" : state.lang === "es" ? "CUBARESORT.CA — Cuba a tu manera" : "CUBARESORT.CA — Cuba, à votre façon";
@@ -263,9 +263,13 @@ function keepFocusInsideDialog(dialog,event){
   first.focus({preventScroll:true});
  }
 }
+function updateMobileMenuState(open){
+ $("#mobile-menu").hidden=!open;
+ $("#menu-toggle").setAttribute("aria-expanded",String(open));
+ $("#menu-toggle").setAttribute("aria-label",tr(open?"menuCloseLabel":"menuOpenLabel"));
+}
 function closeMobile(){
- $("#mobile-menu").hidden=true;
- $("#menu-toggle").setAttribute("aria-expanded","false");
+ updateMobileMenuState(false);
 }
 
 $$("[data-lang]").forEach(button=>button.addEventListener("click",()=>{
@@ -335,8 +339,7 @@ for(const id of ["header-inquiry","mobile-inquiry","band-inquiry","footer-inquir
  $("#"+id).addEventListener("click",()=>{closeMobile();openInquiry(state.destination);});
 }
 $("#menu-toggle").addEventListener("click",()=>{
- const menu=$("#mobile-menu");menu.hidden=!menu.hidden;
- $("#menu-toggle").setAttribute("aria-expanded",String(!menu.hidden));
+ updateMobileMenuState($("#mobile-menu").hidden);
 });
 document.addEventListener("keydown",e=>{
  if(e.key==="Escape" && !$("#mobile-menu").hidden){

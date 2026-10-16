@@ -1,3 +1,11 @@
+## 2026-10-16 — Mobile navigation action announced correctly (release pending)
+
+- Starting production baseline: main `25ba3ce46118a97aaa8262e3cd14cd08dc49f2c1`; Coolify/container/custom-domain run [38953495749](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38953495749) and Pages fallback run [38953495767](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38953495767) passed.
+- Verified defect: the mobile-menu button retained the localized “Open menu” accessible name while expanded. It now announces the state-appropriate “Open menu” / “Close menu” action in French, English and Spanish, including after an in-place language change.
+- Regression coverage guards all six localized action labels and the shared menu-state updater. No DNS, mail, hosting, inventory, booking, payment, personal-data or Next.js PR #3/#5 changes.
+- Required release proof: validation/build, production container, public DNS/mail separation, exact latest-main `release.json` and all nine digests at the Contabo hostname, apex and www, plus Pages fallback. Functional mailbox delivery remains untested and no email was sent.
+- Next exact action: inspect the resulting main workflows and repair only a demonstrated failure before calling this change live.
+
 ## 2026-10-16 — Restore visible keyboard focus on the stay-search field (release pending)
 
 - Verified predecessor: `8c511044cb0232632940e38c42dc2e57cc2c02cd` successfully deployed to Contabo and both public `cubaresort.ca` hostnames with exact SHA and nine file digests (run [38953151340](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38953151340)); Pages fallback succeeded (run [38953151339](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38953151339)).
