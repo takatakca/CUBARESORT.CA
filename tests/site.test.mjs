@@ -31,7 +31,7 @@ test("Cuba guide generates three crawlable, useful and accurately localized edit
   assert.ok(html.includes('id="guide-dialog"')&&html.includes('id="partner-dialog"'));
   assert.ok(html.includes('https://travel.gc.ca/destinations/cuba'));
   assert.ok(html.includes('https://evisacuba.cu/fr/inicio'));
-  assert.ok(html.includes('not a booking offer')||html.includes('aucune réservation')||html.includes('sin reservas'));
+  assert.ok(html.includes('no bookings')||html.includes('aucune réservation')||html.includes('sin reservas'));
   assert.ok(!html.includes('application/ld+json">{"@context":"https://schema.org","@type":"Product"'),"no product/price rich snippet without supplier authority");
   assert.ok(html.includes("CUBARESORT.CA"));
  }
