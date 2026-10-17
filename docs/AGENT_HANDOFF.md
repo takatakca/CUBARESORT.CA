@@ -1,11 +1,20 @@
-## 2026-10-16 — Preserve focus when mobile navigation closes (release pending)
+## 2026-10-17 — Keep no-contact and no-JavaScript claims honest (release pending)
+
+- Verified starting production release: main `0c184652431b0fb798c42b63280eee74bf9bc0d0`; [Coolify container/live run 38975920255](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38975920255) and [Pages fallback run 38975920298](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38975920298) passed. The container passed 37 tests plus health, exact-SHA, nine-digest and private-path checks; CI passed public DNS/web-versus-mail separation and all three production HTTPS hosts. Independent verification also passed the generated host, apex, www and Pages.
+- Verified honest-functionality defect: the initial/no-JavaScript French markup still called the directory complete and claimed CUBARESORT could make offers, contradicting the maintained partial-directory copy and blocked supplier state. FR/EN/ES benefit and copy-success text also advertised email sending while the official contact address is unconfigured and the email action is hidden.
+- Fix: synchronize the initial French directory markup with maintained translations and describe the request consistently as an unsent draft visitors can copy and keep in their chosen tool. The separate future email action and FAQ remain ready for an authorized monitored recipient.
+- Regression coverage rejects the obsolete offer/completeness claims and email-send wording while `SITE_CONFIG.contactEmail` is empty. No supplier, pricing, inventory, booking, payment, personal-data, mail/DNS/hosting or draft PR change is included.
+- Required release proof: validation/build, real production Docker runtime, public DNS/mail separation, exact latest-main `release.json` and all nine digests at generated Contabo/apex/www, plus Pages fallback. Functional mailbox delivery remains untested and no message was sent.
+- Next exact action: publish only by an expected-head fast-forward if GitHub `main` remains `0c184652431b0fb798c42b63280eee74bf9bc0d0`, then inspect both workflows and fix only demonstrated failures.
+
+## 2026-10-16 — Preserve focus when mobile navigation closes (verified)
 
 - Verified starting production release: main `9809fd22a034ead16db9714bf18be69a11d95e0b`; [Coolify container/live run 38974291261](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38974291261) and [Pages fallback run 38974291249](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38974291249) passed. The generated Contabo hostname, apex and www served the exact full SHA and all nine first-party SHA-256 digests; public web/MX separation passed.
 - Verified keyboard-accessibility defect: activating a mobile same-page navigation link immediately hid the focused link without relocating focus to the destination. Changing from mobile to desktop width while focus was inside the mobile menu could likewise leave focus on hidden content.
 - Fix: after native fragment navigation, focus the destination section heading; on transition to desktop width, focus the matching visible desktop link or the visible brand fallback. Escape behavior and localized open/close action names are unchanged.
 - Regression coverage protects both focus-continuity paths. Scope is limited to `assets/app.js`, tests and continuity notes; no DNS, mail, hosting settings, draft PRs, supplier claims, pricing, booking, payment or personal-data collection changed.
-- Required release proof: validation/build, production Docker runtime, public DNS/mail separation, exact latest-main `release.json` plus all nine digests on the generated Contabo host, apex and www, and Pages fallback. Functional mailbox delivery remains untested; no email was sent.
-- Next exact action: publish by an expected-head fast-forward only if GitHub `main` remains `9809fd22a034ead16db9714bf18be69a11d95e0b`, then inspect both workflows and repair only a demonstrated failure.
+- Release verified as main `0c184652431b0fb798c42b63280eee74bf9bc0d0`: Coolify/container/custom-domain run 38975920255 and Pages run 38975920298 passed, including 37 tests, runtime/private-path checks, DNS/mail separation, and exact SHA plus all nine digests on the generated host, apex, www and Pages.
+- Next exact action: continue safe honest-functionality and accessibility checks without merging draft branches.
 
 ## 2026-10-16 — Remove unconfigured email CTA from live inquiry (verified)
 

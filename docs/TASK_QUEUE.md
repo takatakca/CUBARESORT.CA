@@ -1,13 +1,14 @@
 # Task queue — CUBARESORT.CA
 
-Updated 2026-10-16. Always compare with the latest `main` before starting an item.
+Updated 2026-10-17. Always compare with the latest `main` before starting an item.
 
 | Priority | Task | State / actual dependency | Definition of done |
 |---|---|---|---|
 | Done | Verify and protect published Pages release identity | **Completed** in `3e9e10376f22532f0d24242a5598055e29bdf324` (run 38773832573 passed live SHA + nine file digests) | Keep manifest and negative tests passing for future releases |
 | Done | Verify automatic GitHub to Contabo releases | Queue delay recovered without configuration changes; current main `894e5eae` passed container/live run 38827678357 with exact SHA and nine digests | Keep exact-current-main container and external HTTPS verification passing |
 | Done | Automatic GitHub-to-public-domain Contabo deployment — issue #1 | d646033 automatically deployed by native Webhook 5yufbgsdz9bccmoe9h15vnzc; container/live 38921978874 and Pages 38921978877 passed with production-ready true and apex/www exact SHA + all nine digests | Preserve checks; always verify newest main after subsequent releases |
-| P1 | Mobile navigation focus continuity | Hidden-link focus loss corrected for same-page activation and mobile-to-desktop transitions; source regression added, awaiting a fresh release | Validate/build, container, generated/apex/www/Pages exact SHA and all nine digests |
+| P1 | Honest no-contact fallback copy | Initial French directory claims and FR/EN/ES request-copy text aligned with the actual partial directory and copy-only draft; regression added, awaiting fresh release | Validate/build, container, generated/apex/www/Pages exact SHA and all nine digests |
+| Done | Mobile navigation focus continuity | Hidden-link focus loss corrected for same-page activation and mobile-to-desktop transitions; main `0c184652` passed container, DNS/mail, all-host exact-SHA/nine-digest and Pages verification | Preserve focus behavior in browser/assistive-technology acceptance |
 | Done | Disable unavailable email action | Hidden in initial HTML and CSS whenever verified recipient is unconfigured; clipboard remains usable; main `9809fd22` passed container, all-host exact-SHA/nine-digest and Pages verification | Reveal only after mailbox is explicitly authorized |
 | P1 | Hotel-specific inquiry clarity | Show localized selected hotel name in the draft modal; clear it on generic requests and destination changes; pure and markup regression added, pending main release | Confirm current-main HTTPS SHA/digests and accessible visual/voice acceptance |
 | P1 | Distinguishable repeated card actions | Item-specific FR/EN/ES accessible names added for favourite and request controls; pending fresh main release proof | 35 tests/build, container and generated/apex/www/Pages exact-SHA plus nine-digest verification |

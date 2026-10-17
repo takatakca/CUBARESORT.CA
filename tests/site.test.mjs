@@ -282,3 +282,17 @@ test("unconfigured email action is absent from the interactive UI, but copy rema
  assert.ok(app.includes('emailInquiryButton.addEventListener("click",()=>{'),"verified recipient can use existing mailto flow");
  assert.ok(css.includes("#email-inquiry[hidden]{display:none!important}"),"flex layout must not override hidden");
 });
+
+test("unconfigured contact copy stays honest before and after JavaScript loads",async()=>{
+ const html=await readFile(resolve(root,"index.html"),"utf8");
+ assert.equal(SITE_CONFIG.contactEmail,"","this guard applies while no official recipient exists");
+ assert.ok(html.includes(copy.fr.hotelsTitle),"initial rich directory title must match the maintained French copy");
+ assert.ok(html.includes(copy.fr.hotelsIntro),"initial directory description must not claim an offer relationship");
+ assert.ok(html.includes(copy.fr.benefit3Body),"initial request benefit must match the copy-only behavior");
+ assert.ok(!html.includes("au complet"));
+ assert.ok(!html.includes("nous pouvons vous faire une proposition"));
+ for(const lang of ["fr","en","es"]){
+  assert.doesNotMatch(copy[lang].benefit3Body,/messagerie|courriel|email|correo/i,`${lang} must not advertise the hidden email action`);
+  assert.doesNotMatch(copy[lang].copySuccess,/envoy|send|envi/i,`${lang} copy success must not claim a send occurred`);
+ }
+});

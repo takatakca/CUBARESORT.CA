@@ -1,12 +1,18 @@
 # Project status — CUBARESORT.CA
 
-Updated 2026-10-16. Repository `takatakca/CUBARESORT.CA`; publication branch `main`.
+Updated 2026-10-17. Repository `takatakca/CUBARESORT.CA`; publication branch `main`.
 
-## Mobile navigation focus continuity — 2026-10-16
+## Honest no-contact fallback copy — 2026-10-17
+
+- Correct the initial/no-JavaScript French directory copy so it no longer claims completeness or an offer relationship. Keep the partial, source-limited directory description visible before modules load.
+- FR/EN/ES request benefit and clipboard-success messages now describe an unsent draft to copy and keep, without advertising the hidden email action while no official monitored recipient is configured.
+- Starting verified production baseline is `0c184652431b0fb798c42b63280eee74bf9bc0d0` (Coolify/container/custom-domain run 38975920255; Pages fallback 38975920298). This newer patch requires its own container and all-host exact-SHA/nine-digest verification before being called live.
+
+## Mobile navigation focus continuity — verified 2026-10-16
 
 - Mobile same-page links now move keyboard focus to the destination heading after the menu closes, instead of leaving focus on a hidden link.
 - A responsive change to desktop width moves focus from the hidden mobile menu to the equivalent visible desktop navigation link, or to the visible brand fallback. Regression checks cover both paths.
-- Starting verified production baseline is `9809fd22a034ead16db9714bf18be69a11d95e0b` (Coolify/container/custom-domain run 38974291261; Pages fallback 38974291249). This newer patch requires its own container and all-host exact-SHA/nine-digest evidence before being called live.
+- Main `0c184652431b0fb798c42b63280eee74bf9bc0d0` passed Coolify/container/custom-domain run 38975920255 and Pages fallback 38975920298, including exact SHA and all nine digests on every public host.
 
 ## Hide unconfigured contact action — verified 2026-10-16
 
