@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https://images.unsplash.com data:; script-src 'self'; style-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
   <meta name="theme-color" content="#073d43">
   <meta name="description" content="Explorez les plages, les cayos et les expériences de Cuba. CUBARESORT.CA vous aide à préparer un séjour sur mesure.">
   <meta property="og:type" content="website">
@@ -146,6 +147,6 @@
     <label class="dialog-full"><span data-i18n="formNotes">Vos envies et précisions (facultatif)</span><textarea id="inquiry-notes" name="notes" maxlength="1000" rows="3" data-i18n-placeholder="formNotesPlaceholder" placeholder="Voyage en famille, plage tranquille, budget approximatif..."></textarea></label>
   </div><div class="dialog-actions"><button class="button button-dark" type="button" id="copy-inquiry" data-i18n="copyRequest">Copier ma demande</button><button class="button button-coral" type="button" id="email-inquiry" data-i18n="emailRequest" hidden>Ouvrir mon courriel ↗</button></div><p class="dialog-status" id="inquiry-status" role="status" aria-live="polite"></p></form></dialog>
   <dialog id="legal-dialog" class="modal legal-modal" aria-labelledby="legal-heading"><div class="dialog-shell"><div class="dialog-head"><h2 id="legal-heading"></h2><button type="button" id="legal-close" class="icon-close" aria-label="Fermer">×</button></div><div id="legal-copy" class="legal-copy"></div></div></dialog>
-  <noscript><p style="padding:2rem;text-align:center">Cette page nécessite JavaScript pour afficher le catalogue interactif. / This page needs JavaScript to display the interactive catalog. / Esta página necesita JavaScript para mostrar el catálogo.</p></noscript>
+  <noscript><p class="noscript-message">Cette page nécessite JavaScript pour afficher le catalogue interactif. / This page needs JavaScript to display the interactive catalog. / Esta página necesita JavaScript para mostrar el catálogo.</p></noscript>
 </body>
 </html>

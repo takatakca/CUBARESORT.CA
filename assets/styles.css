@@ -29,3 +29,6 @@
 
 /* An unconfigured contact action must stay truly hidden despite flex button styling. */
 #email-inquiry[hidden]{display:none!important}
+
+/* Keep the no-JavaScript notice compatible with a strict style-src policy. */
+.noscript-message{padding:2rem;text-align:center}

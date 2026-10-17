@@ -53,6 +53,23 @@ test("root HTML has landmarks, accessible dialogs and no external application fr
  assert.ok(!html.includes("stripe.com"));
  assert.ok(!html.includes("book now"));
 });
+test("static and container delivery enforce a strict browser security policy",async()=>{
+ const [html,css,nginx]=await Promise.all([
+  readFile(resolve(root,"index.html"),"utf8"),
+  readFile(resolve(root,"assets/styles.css"),"utf8"),
+  readFile(resolve(root,"deploy/coolify/nginx.conf"),"utf8")
+ ]);
+ assert.match(html,/http-equiv="Content-Security-Policy"/);
+ for(const directive of ["default-src 'self'","script-src 'self'","style-src 'self'","object-src 'none'","base-uri 'self'","form-action 'self'"]){
+  assert.ok(html.includes(directive),directive);
+ }
+ assert.ok(!html.includes("style="),"inline style attributes would require unsafe-inline");
+ assert.match(css,/\.noscript-message\{padding:2rem;text-align:center\}/);
+ assert.match(nginx,/add_header X-Frame-Options DENY always;/);
+ assert.match(nginx,/add_header Permissions-Policy "camera=\(\), geolocation=\(\), microphone=\(\), payment=\(\)" always;/);
+ assert.ok(nginx.includes("frame-ancestors 'none'"));
+ assert.ok(!nginx.includes("'unsafe-inline'"));
+});
 test("property directory is internally consistent and every region is translated",()=>{
  assert.equal(hotelDirectoryIsValid(),true);
  assert.equal(new Set(hotels.map(h=>h.id)).size,hotels.length);

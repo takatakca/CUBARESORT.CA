@@ -1,11 +1,18 @@
-## 2026-10-17 — Keep no-contact and no-JavaScript claims honest (release pending)
+## 2026-10-17 — Enforce browser security policy (release pending)
+
+- Verified starting production release: main `46ddfe587802efbb8574345a650dc173b6d25415`; [Coolify container/live run 39068210647](https://github.com/takatakca/CUBARESORT.CA/actions/runs/39068210647) and [Pages fallback run 39068210584](https://github.com/takatakca/CUBARESORT.CA/actions/runs/39068210584) passed. The exact full SHA and all nine first-party digests passed at the generated Contabo host, apex, www and Pages; public DNS/web-versus-mail separation also passed.
+- Verified security gap: production sent `X-Content-Type-Options` and a referrer policy, but did not restrict framing, browser features or the sources from which executable content could load.
+- Fix: add a strict Content Security Policy, `X-Frame-Options: DENY`, and a least-privilege Permissions Policy to the production Nginx response. A matching CSP meta policy protects the static Pages fallback. The sole inline style was moved to the stylesheet, so neither policy requires `unsafe-inline`.
+- Regression coverage checks the configuration and the real production-container response headers. No application behavior, third-party service, DNS, mail, supplier content, booking/payment flow, personal-data collection or draft PR is changed.
+- Required release proof: validation/build, actual production container including runtime header assertions, public DNS/mail separation, exact latest-main `release.json` and all nine digests on generated Contabo/apex/www, plus Pages fallback.
+
+## 2026-10-17 — Keep no-contact and no-JavaScript claims honest (verified)
 
 - Verified starting production release: main `0c184652431b0fb798c42b63280eee74bf9bc0d0`; [Coolify container/live run 38975920255](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38975920255) and [Pages fallback run 38975920298](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38975920298) passed. The container passed 37 tests plus health, exact-SHA, nine-digest and private-path checks; CI passed public DNS/web-versus-mail separation and all three production HTTPS hosts. Independent verification also passed the generated host, apex, www and Pages.
 - Verified honest-functionality defect: the initial/no-JavaScript French markup still called the directory complete and claimed CUBARESORT could make offers, contradicting the maintained partial-directory copy and blocked supplier state. FR/EN/ES benefit and copy-success text also advertised email sending while the official contact address is unconfigured and the email action is hidden.
 - Fix: synchronize the initial French directory markup with maintained translations and describe the request consistently as an unsent draft visitors can copy and keep in their chosen tool. The separate future email action and FAQ remain ready for an authorized monitored recipient.
 - Regression coverage rejects the obsolete offer/completeness claims and email-send wording while `SITE_CONFIG.contactEmail` is empty. No supplier, pricing, inventory, booking, payment, personal-data, mail/DNS/hosting or draft PR change is included.
-- Required release proof: validation/build, real production Docker runtime, public DNS/mail separation, exact latest-main `release.json` and all nine digests at generated Contabo/apex/www, plus Pages fallback. Functional mailbox delivery remains untested and no message was sent.
-- Next exact action: publish only by an expected-head fast-forward if GitHub `main` remains `0c184652431b0fb798c42b63280eee74bf9bc0d0`, then inspect both workflows and fix only demonstrated failures.
+- Release verified as main `46ddfe587802efbb8574345a650dc173b6d25415`: Coolify/container/custom-domain run 39068210647 and Pages run 39068210584 passed, including 38 tests, runtime/private-path checks, DNS/mail separation, and exact SHA plus all nine digests on the generated host, apex, www and Pages. Functional mailbox delivery remains untested and no message was sent.
 
 ## 2026-10-16 — Preserve focus when mobile navigation closes (verified)
 

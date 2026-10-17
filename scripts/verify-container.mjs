@@ -10,6 +10,19 @@ assert.match(sha || "", /^[0-9a-f]{40}$/);
 const read = (path, options = {}) => fetch(new URL(path, base), {
   redirect: "manual", signal: AbortSignal.timeout(10000), ...options
 });
+const homepage = await read("./");
+assert.equal(homepage.status, 200);
+assert.equal(homepage.headers.get("x-content-type-options"), "nosniff");
+assert.equal(homepage.headers.get("x-frame-options"), "DENY");
+const permissions = homepage.headers.get("permissions-policy") || "";
+for (const feature of ["camera=()", "geolocation=()", "microphone=()", "payment=()"] ) {
+  assert.ok(permissions.includes(feature), `Permissions-Policy must disable ${feature}`);
+}
+const csp = homepage.headers.get("content-security-policy") || "";
+for (const directive of ["default-src 'self'", "script-src 'self'", "style-src 'self'", "object-src 'none'", "base-uri 'self'", "form-action 'self'", "frame-ancestors 'none'"]) {
+  assert.ok(csp.includes(directive), `Content-Security-Policy must include ${directive}`);
+}
+assert.ok(!csp.includes("'unsafe-inline'"), "Content-Security-Policy must not allow inline code or styles");
 const marker = await read("release.json");
 assert.equal(marker.status, 200);
 assert.match(marker.headers.get("cache-control"), /no-store/);
@@ -27,4 +40,4 @@ for (const path of [".env", ".git/config", "README.md", "package.json", "docs/AG
   assert.equal((await read(path)).status, 404, path);
 }
 assert.equal((await read("assets/app.js", { method: "POST" })).status, 405);
-console.log(`PASS container ${sha}: health, exact commit, all asset digests, cache and private-path isolation`);
+console.log(`PASS container ${sha}: security headers, health, exact commit, all asset digests, cache and private-path isolation`);

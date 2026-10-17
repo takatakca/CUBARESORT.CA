@@ -2,11 +2,17 @@
 
 Updated 2026-10-17. Repository `takatakca/CUBARESORT.CA`; publication branch `main`.
 
-## Honest no-contact fallback copy — 2026-10-17
+## Browser delivery security policy — 2026-10-17
+
+- Add a strict self-hosted-script/style CSP to both the production response and static Pages markup; the only allowed remote images remain the existing Unsplash sources. Inline script/style execution is not allowed.
+- Production additionally denies framing and disables camera, geolocation, microphone and payment browser features. The container verifier now asserts these response headers against the running image.
+- Starting verified production baseline is `46ddfe587802efbb8574345a650dc173b6d25415` (Coolify/container/custom-domain run 39068210647; Pages fallback 39068210584). This patch requires its own full container and all-host release proof before being called live.
+
+## Honest no-contact fallback copy — verified 2026-10-17
 
 - Correct the initial/no-JavaScript French directory copy so it no longer claims completeness or an offer relationship. Keep the partial, source-limited directory description visible before modules load.
 - FR/EN/ES request benefit and clipboard-success messages now describe an unsent draft to copy and keep, without advertising the hidden email action while no official monitored recipient is configured.
-- Starting verified production baseline is `0c184652431b0fb798c42b63280eee74bf9bc0d0` (Coolify/container/custom-domain run 38975920255; Pages fallback 38975920298). This newer patch requires its own container and all-host exact-SHA/nine-digest verification before being called live.
+- Main `46ddfe587802efbb8574345a650dc173b6d25415` passed Coolify/container/custom-domain run 39068210647 and Pages run 39068210584, including exact SHA and all nine digests on every public host.
 
 ## Mobile navigation focus continuity — verified 2026-10-16
 
