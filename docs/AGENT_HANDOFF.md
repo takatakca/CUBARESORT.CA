@@ -1,10 +1,18 @@
-## 2026-10-17 — Enforce browser security policy (release pending)
+## 2026-10-17 — Make the skip-link destination focusable (release pending)
+
+- Verified starting production release: main `31cb2c6ab3b5ad911039b3327da889c23fa28378`; [Coolify container/live run 39074598019](https://github.com/takatakca/CUBARESORT.CA/actions/runs/39074598019) and [Pages fallback run 39074597959](https://github.com/takatakca/CUBARESORT.CA/actions/runs/39074597959) passed. The exact full SHA and all nine digests passed at the generated Contabo host, apex, www and Pages; the container also asserted the production security headers.
+- Verified accessibility gap: the visible skip link targeted the semantic `<main>`, but that element was not focusable. Browsers that only scroll a non-focusable fragment could leave the keyboard sequence in the header.
+- Fix: give `#main` `tabindex="-1"` so native fragment navigation can move programmatic focus into the main content without adding it to normal Tab order. A regression test protects both ends of the skip-link relationship.
+- Scope is limited to the focus target, test and continuity notes. No interface copy, DNS, mail, supplier data, booking/payment, personal-data collection or draft PR changed.
+- Required release proof: validation/build, real production container, public DNS/mail separation, exact latest-main `release.json` and all nine digests on generated Contabo/apex/www, plus Pages fallback.
+
+## 2026-10-17 — Enforce browser security policy (verified)
 
 - Verified starting production release: main `46ddfe587802efbb8574345a650dc173b6d25415`; [Coolify container/live run 39068210647](https://github.com/takatakca/CUBARESORT.CA/actions/runs/39068210647) and [Pages fallback run 39068210584](https://github.com/takatakca/CUBARESORT.CA/actions/runs/39068210584) passed. The exact full SHA and all nine first-party digests passed at the generated Contabo host, apex, www and Pages; public DNS/web-versus-mail separation also passed.
 - Verified security gap: production sent `X-Content-Type-Options` and a referrer policy, but did not restrict framing, browser features or the sources from which executable content could load.
 - Fix: add a strict Content Security Policy, `X-Frame-Options: DENY`, and a least-privilege Permissions Policy to the production Nginx response. A matching CSP meta policy protects the static Pages fallback. The sole inline style was moved to the stylesheet, so neither policy requires `unsafe-inline`.
 - Regression coverage checks the configuration and the real production-container response headers. No application behavior, third-party service, DNS, mail, supplier content, booking/payment flow, personal-data collection or draft PR is changed.
-- Required release proof: validation/build, actual production container including runtime header assertions, public DNS/mail separation, exact latest-main `release.json` and all nine digests on generated Contabo/apex/www, plus Pages fallback.
+- Release verified as main `31cb2c6ab3b5ad911039b3327da889c23fa28378`: Coolify/container/custom-domain run 39074598019 and Pages run 39074597959 passed, including 39 tests, runtime security-header assertions, DNS/mail separation, and exact SHA plus all nine digests on the generated host, apex, www and Pages.
 
 ## 2026-10-17 — Keep no-contact and no-JavaScript claims honest (verified)
 

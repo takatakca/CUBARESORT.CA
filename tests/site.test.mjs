@@ -49,9 +49,14 @@ test("this version must not accidentally activate a payment or booking integrati
 });
 test("root HTML has landmarks, accessible dialogs and no external application framework",async()=>{
  const html=await readFile(resolve(root,"index.html"),"utf8");
- for(const tag of ['<main id="main">','<nav class="desktop-nav"','<dialog id="inquiry-dialog"','<html lang="fr">','id="destination-filter"','id="experience-grid"'])assert.ok(html.includes(tag),tag);
+ for(const tag of ['<main id="main" tabindex="-1">','<nav class="desktop-nav"','<dialog id="inquiry-dialog"','<html lang="fr">','id="destination-filter"','id="experience-grid"'])assert.ok(html.includes(tag),tag);
  assert.ok(!html.includes("stripe.com"));
  assert.ok(!html.includes("book now"));
+});
+test("skip link moves keyboard focus into main content",async()=>{
+ const html=await readFile(resolve(root,"index.html"),"utf8");
+ assert.match(html,/<a class="skip-link" href="#main"[^>]*>/);
+ assert.match(html,/<main id="main" tabindex="-1">/);
 });
 test("static and container delivery enforce a strict browser security policy",async()=>{
  const [html,css,nginx]=await Promise.all([

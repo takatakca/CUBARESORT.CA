@@ -2,11 +2,17 @@
 
 Updated 2026-10-17. Repository `takatakca/CUBARESORT.CA`; publication branch `main`.
 
-## Browser delivery security policy — 2026-10-17
+## Keyboard skip-link focus destination — 2026-10-17
+
+- Make `#main` programmatically focusable so the existing visible skip link transfers keyboard focus into content rather than only scrolling in browsers with non-focusable-fragment behavior.
+- The target remains outside normal sequential Tab order. Regression coverage protects the link and target relationship.
+- Starting verified production baseline is `31cb2c6ab3b5ad911039b3327da889c23fa28378` (Coolify/container/custom-domain run 39074598019; Pages fallback 39074597959). This patch requires its own full container and all-host release proof before being called live.
+
+## Browser delivery security policy — verified 2026-10-17
 
 - Add a strict self-hosted-script/style CSP to both the production response and static Pages markup; the only allowed remote images remain the existing Unsplash sources. Inline script/style execution is not allowed.
 - Production additionally denies framing and disables camera, geolocation, microphone and payment browser features. The container verifier now asserts these response headers against the running image.
-- Starting verified production baseline is `46ddfe587802efbb8574345a650dc173b6d25415` (Coolify/container/custom-domain run 39068210647; Pages fallback 39068210584). This patch requires its own full container and all-host release proof before being called live.
+- Main `31cb2c6ab3b5ad911039b3327da889c23fa28378` passed Coolify/container/custom-domain run 39074598019 and Pages run 39074597959, including runtime header assertions, exact SHA and all nine digests on every public host.
 
 ## Honest no-contact fallback copy — verified 2026-10-17
 
