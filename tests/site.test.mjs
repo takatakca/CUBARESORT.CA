@@ -223,6 +223,14 @@ test("keyboard focus is restored after replacing region chips and favourite card
  assert.ok(app.includes('button.dataset.favorite===id)?.focus({preventScroll:true})'));
 });
 
+test("clearing an empty result keeps keyboard focus on a visible control",async()=>{
+ const app=await readFile(resolve(root,"assets/app.js"),"utf8");
+ assert.ok(app.includes('$("#empty-reset").addEventListener("click",resetFromEmptyState)'));
+ assert.ok(app.includes('$("#text-search").focus({preventScroll:true})'));
+ assert.ok(app.includes('$("#hotel-empty-reset").addEventListener("click",resetHotelsFromEmptyState)'));
+ assert.ok(app.includes('$("#hotel-search").focus({preventScroll:true})'));
+});
+
 test("modal dialogs have accessible names and keep keyboard focus inside",async()=>{
  const [html,app]=await Promise.all([
   readFile(resolve(root,"index.html"),"utf8"),

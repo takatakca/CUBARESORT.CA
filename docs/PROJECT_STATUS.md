@@ -1,12 +1,18 @@
 # Project status — CUBARESORT.CA
 
-Updated 2026-10-17. Repository `takatakca/CUBARESORT.CA`; publication branch `main`.
+Updated 2026-10-19. Repository `takatakca/CUBARESORT.CA`; publication branch `main`.
 
-## Keyboard skip-link focus destination — 2026-10-17
+## Empty-results reset focus — 2026-10-19
+
+- Clearing an empty stays or hotel result previously hid the focused reset button with its empty-state container, leaving keyboard focus on hidden content.
+- Each empty-state reset now returns focus to its corresponding visible search field. The regular reset controls are unchanged, and regression coverage protects both paths.
+- Starting verified production baseline is `fc8777545a60b231c2334dc5557163f435ab1d2b` (Coolify/container/custom-domain run 39083227917; Pages fallback 39083227914). This patch requires its own full release proof before being called live.
+
+## Keyboard skip-link focus destination — verified 2026-10-19
 
 - Make `#main` programmatically focusable so the existing visible skip link transfers keyboard focus into content rather than only scrolling in browsers with non-focusable-fragment behavior.
 - The target remains outside normal sequential Tab order. Regression coverage protects the link and target relationship.
-- Starting verified production baseline is `31cb2c6ab3b5ad911039b3327da889c23fa28378` (Coolify/container/custom-domain run 39074598019; Pages fallback 39074597959). This patch requires its own full container and all-host release proof before being called live.
+- Main `fc8777545a60b231c2334dc5557163f435ab1d2b` passed Pages run 39083227914 and the successful retry of Coolify/container/custom-domain run 39083227917, including exact SHA and all nine digests on every production host.
 
 ## Browser delivery security policy — verified 2026-10-17
 

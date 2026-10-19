@@ -208,6 +208,16 @@ function reset(){
  state.destination="all";state.style="all";state.q="";state.sort="featured";
  updateSelects();renderExperiences();syncUrl();
 }
+function resetFromEmptyState(){
+ reset();
+ // The reset button's container is now hidden; move focus to a visible control.
+ $("#text-search").focus({preventScroll:true});
+}
+function resetHotelsFromEmptyState(){
+ resetHotels();
+ // Keep keyboard focus out of the newly hidden hotel empty state.
+ $("#hotel-search").focus({preventScroll:true});
+}
 
 function scrollToExperiences(){
  // Explicit smooth scrolling bypasses the CSS reduced-motion override.
@@ -315,7 +325,7 @@ $("#text-search").addEventListener("input",e=>{
 });
 $("#sort-select").addEventListener("change",e=>{state.sort=e.target.value;renderExperiences();});
 $("#reset-filters").addEventListener("click",reset);
-$("#empty-reset").addEventListener("click",reset);
+$("#empty-reset").addEventListener("click",resetFromEmptyState);
 $("#destination-grid").addEventListener("click",e=>{
  const card=e.target.closest("[data-destination]");
  if(!card)return;
@@ -348,7 +358,7 @@ $("#hotel-search").addEventListener("input",e=>{
  state.hotelQuery=e.target.value.slice(0,100);renderHotels();syncUrl();
 });
 $("#hotel-reset").addEventListener("click",resetHotels);
-$("#hotel-empty-reset").addEventListener("click",resetHotels);
+$("#hotel-empty-reset").addEventListener("click",resetHotelsFromEmptyState);
 $("#region-chips").addEventListener("click",e=>{
  const chip=e.target.closest("[data-region]");
  if(!chip)return;

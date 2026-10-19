@@ -1,3 +1,11 @@
+## 2026-10-19 — Preserve focus after clearing empty results (release pending)
+
+- Verified starting production release: main `fc8777545a60b231c2334dc5557163f435ab1d2b`. Pages run [39083227914](https://github.com/takatakca/CUBARESORT.CA/actions/runs/39083227914) passed. Coolify run [39083227917](https://github.com/takatakca/CUBARESORT.CA/actions/runs/39083227917) passed after a clean replacement removed an orphan predecessor container; its retry completed both the production-container and external live jobs. Independent checks passed the exact full SHA and all nine digests on the generated Contabo host, apex and www, with the existing web/MX separation preserved.
+- Verified keyboard defect: activating either empty-results reset button repopulated results and hid the empty-state container while focus remained on its now-hidden button.
+- Fix: the stays empty reset now moves focus to the visible stays search input, and the hotel empty reset moves focus to the visible hotel search input. The always-visible reset buttons retain their existing behavior.
+- Regression coverage protects both focus transfers. Scope is limited to keyboard focus, tests and continuity notes; no interface copy, DNS, mail, supplier data, booking/payment, personal-data collection or draft PR changed.
+- Required release proof: validation/build, real production container, public DNS/mail separation, exact latest-main `release.json` and all nine digests on generated Contabo/apex/www, plus Pages fallback.
+
 ## 2026-10-17 — Make the skip-link destination focusable (release pending)
 
 - Verified starting production release: main `31cb2c6ab3b5ad911039b3327da889c23fa28378`; [Coolify container/live run 39074598019](https://github.com/takatakca/CUBARESORT.CA/actions/runs/39074598019) and [Pages fallback run 39074597959](https://github.com/takatakca/CUBARESORT.CA/actions/runs/39074597959) passed. The exact full SHA and all nine digests passed at the generated Contabo host, apex, www and Pages; the container also asserted the production security headers.

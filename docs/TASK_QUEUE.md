@@ -1,13 +1,14 @@
 # Task queue — CUBARESORT.CA
 
-Updated 2026-10-17. Always compare with the latest `main` before starting an item.
+Updated 2026-10-19. Always compare with the latest `main` before starting an item.
 
 | Priority | Task | State / actual dependency | Definition of done |
 |---|---|---|---|
 | Done | Verify and protect published Pages release identity | **Completed** in `3e9e10376f22532f0d24242a5598055e29bdf324` (run 38773832573 passed live SHA + nine file digests) | Keep manifest and negative tests passing for future releases |
 | Done | Verify automatic GitHub to Contabo releases | Queue delay recovered without configuration changes; current main `894e5eae` passed container/live run 38827678357 with exact SHA and nine digests | Keep exact-current-main container and external HTTPS verification passing |
 | Done | Automatic GitHub-to-public-domain Contabo deployment — issue #1 | d646033 automatically deployed by native Webhook 5yufbgsdz9bccmoe9h15vnzc; container/live 38921978874 and Pages 38921978877 passed with production-ready true and apex/www exact SHA + all nine digests | Preserve checks; always verify newest main after subsequent releases |
-| P1 | Skip-link focus destination | `#main` made programmatically focusable without joining normal Tab order; regression added, awaiting fresh release | Validate/build, container, generated/apex/www/Pages exact SHA and all nine digests |
+| Done | Skip-link focus destination | `#main` is programmatically focusable without joining normal Tab order; main `fc877754` passed Pages 39083227914 and the successful retry of Coolify/container/live run 39083227917 | Preserve link/target regression and exact-release checks |
+| P1 | Empty-results reset focus | Empty stays and hotel reset buttons now return focus to the corresponding visible search field instead of remaining inside a hidden empty state; release pending | Validate/build, container, generated/apex/www/Pages exact SHA and all nine digests |
 | Done | Strict browser delivery policy | CSP on production and Pages plus production framing/feature restrictions; main `31cb2c6a` passed container/live run 39074598019 and Pages 39074597959 | Preserve runtime header assertions and exact-release checks |
 | Done | Honest no-contact fallback copy | Initial French directory claims and FR/EN/ES request-copy text aligned with the actual partial directory and copy-only draft; main `46ddfe58` passed run 39068210647 and Pages 39068210584 | Preserve honest copy and copy-only behavior |
 | Done | Mobile navigation focus continuity | Hidden-link focus loss corrected for same-page activation and mobile-to-desktop transitions; main `0c184652` passed container, DNS/mail, all-host exact-SHA/nine-digest and Pages verification | Preserve focus behavior in browser/assistive-technology acceptance |
