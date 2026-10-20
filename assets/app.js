@@ -371,9 +371,15 @@ $("#hotel-grid").addEventListener("click",e=>{
  const hotel=hotels.find(h=>h.id===ask.dataset.hotelInquire);
  if(hotel)openInquiry(hotel.region,hotel.id);
 });
-for(const id of ["header-inquiry","mobile-inquiry","band-inquiry","footer-inquiry"]){
+for(const id of ["header-inquiry","band-inquiry","footer-inquiry"]){
  $("#"+id).addEventListener("click",()=>{closeMobile();openInquiry(state.destination);});
 }
+$("#mobile-inquiry").addEventListener("click",()=>{
+ closeMobile();
+ // The launcher is now hidden. Give the dialog a visible return-focus target.
+ $("#menu-toggle").focus({preventScroll:true});
+ openInquiry(state.destination);
+});
 $("#menu-toggle").addEventListener("click",()=>{
  updateMobileMenuState($("#mobile-menu").hidden);
 });

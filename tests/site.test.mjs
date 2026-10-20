@@ -208,6 +208,14 @@ test("mobile menu closes without stranding keyboard focus",async()=>{
  }
 });
 
+test("mobile inquiry returns focus to a visible control after the dialog closes",async()=>{
+ const app=await readFile(resolve(root,"assets/app.js"),"utf8");
+ assert.ok(app.includes('$("#mobile-inquiry").addEventListener("click",()=>{'));
+ assert.ok(app.includes('$("#menu-toggle").focus({preventScroll:true});'));
+ assert.ok(app.includes('openInquiry(state.destination);'));
+ assert.ok(!app.includes('["header-inquiry","mobile-inquiry","band-inquiry","footer-inquiry"]'));
+});
+
 test("required English agent continuity files exist",async()=>{
  const paths=["AGENTS.md","docs/PROJECT_STATUS.md","docs/TASK_QUEUE.md","docs/AGENT_HANDOFF.md","docs/DEPLOYMENT.md","docs/DECISIONS.md"];
  for(const path of paths){

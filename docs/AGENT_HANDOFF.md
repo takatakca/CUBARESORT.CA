@@ -1,3 +1,11 @@
+## 2026-10-20 — Preserve visible focus after mobile inquiry closes (release pending)
+
+- Verified starting production release: main `be0895e127692eea7baea8bcba7c44b39505372e`; Coolify/container/live run [39324278262](https://github.com/takatakca/CUBARESORT.CA/actions/runs/39324278262) and Pages fallback run [39324278131](https://github.com/takatakca/CUBARESORT.CA/actions/runs/39324278131) passed.
+- Verified keyboard defect: the mobile inquiry launcher closed its navigation before opening the modal, leaving the dialog's return-focus origin inside hidden navigation. Closing the modal could therefore restore focus to an invisible control.
+- Fix: after hiding the mobile navigation, focus the still-visible menu toggle before opening the inquiry dialog. Native dialog focus restoration then has a visible, logical destination. The desktop, band, footer and card launchers retain their existing return-focus behavior.
+- Regression coverage protects the dedicated mobile path. Scope is limited to keyboard focus, tests and this continuity note; no interface copy, DNS, mail, supplier data, booking/payment, personal-data collection or draft PR changed.
+- Required release proof: validation/build, real production container, public DNS/mail separation, exact latest-main `release.json` and all nine digests on generated Contabo/apex/www, plus Pages fallback.
+
 ## 2026-10-19 — Preserve focus after clearing empty results (release pending)
 
 - Verified starting production release: main `fc8777545a60b231c2334dc5557163f435ab1d2b`. Pages run [39083227914](https://github.com/takatakca/CUBARESORT.CA/actions/runs/39083227914) passed. Coolify run [39083227917](https://github.com/takatakca/CUBARESORT.CA/actions/runs/39083227917) passed after a clean replacement removed an orphan predecessor container; its retry completed both the production-container and external live jobs. Independent checks passed the exact full SHA and all nine digests on the generated Contabo host, apex and www, with the existing web/MX separation preserved.
