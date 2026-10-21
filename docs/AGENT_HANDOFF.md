@@ -1,3 +1,11 @@
+## 2026-10-20 — Name the hotel region-filter group (release pending)
+
+- Verified starting production release: main `37bba18eeba5734c6d02610ada467121ca67697d`; Coolify/container/live run [39512111437](https://github.com/takatakca/CUBARESORT.CA/actions/runs/39512111437) passed on attempt 2 after the delayed native deployment completed, and Pages fallback run [39512111462](https://github.com/takatakca/CUBARESORT.CA/actions/runs/39512111462) passed. Exact SHA and all nine asset digests were independently confirmed on generated Contabo, apex, www and Pages.
+- Verified screen-reader gap: the hotel region chips had useful individual labels and `aria-pressed` states, but their container exposed no group role or accessible name, so button-list navigation lacked filter context.
+- Fix: identify the region chips as a named group and translate that accessible name in FR/EN/ES. Regression coverage protects the group relationship and complete localized dictionary.
+- Scope is limited to accessible markup, localized assistive text, tests and this continuity note; no visible copy, DNS, mail, supplier data, booking/payment, personal-data collection or draft PR changed.
+- Required release proof: validation/build, real production container, public DNS/mail separation, exact latest-main `release.json` and all nine digests on generated Contabo/apex/www, plus Pages fallback.
+
 ## 2026-10-20 — Preserve visible focus after mobile inquiry closes (release pending)
 
 - Verified starting production release: main `be0895e127692eea7baea8bcba7c44b39505372e`; Coolify/container/live run [39324278262](https://github.com/takatakca/CUBARESORT.CA/actions/runs/39324278262) and Pages fallback run [39324278131](https://github.com/takatakca/CUBARESORT.CA/actions/runs/39324278131) passed.

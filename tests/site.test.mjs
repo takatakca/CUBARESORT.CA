@@ -258,7 +258,7 @@ test("explicit accessible names follow the selected language",async()=>{
   readFile(resolve(root,"index.html"),"utf8"),
   readFile(resolve(root,"assets/app.js"),"utf8")
  ]);
- const keys=["brandLabel","primaryNavLabel","mobileNavLabel","searchSectionLabel","heroImageLabel","editorialImageLabel","sortLabel","hotelsRegionLabel"];
+ const keys=["brandLabel","primaryNavLabel","mobileNavLabel","searchSectionLabel","heroImageLabel","editorialImageLabel","sortLabel","hotelsRegionLabel","hotelRegionFiltersLabel"];
  for(const key of keys){
   assert.ok(html.includes(`data-i18n-aria-label="${key}"`),`missing translated aria-label binding: ${key}`);
   for(const lang of ["fr","en","es"])assert.match(translation(lang,key),/\S/,`${lang}.${key}`);
@@ -267,6 +267,14 @@ test("explicit accessible names follow the selected language",async()=>{
  assert.ok(app.includes('setAttribute("aria-label",tr(node.dataset.i18nAriaLabel))'));
  assert.notEqual(copy.fr.sortLabel,copy.en.sortLabel);
  assert.notEqual(copy.fr.hotelsRegionLabel,copy.es.hotelsRegionLabel);
+});
+
+test("hotel region toggles expose a translated group name",async()=>{
+ const html=await readFile(resolve(root,"index.html"),"utf8");
+ assert.match(html,/<div class="region-chips" id="region-chips" role="group"[^>]*data-i18n-aria-label="hotelRegionFiltersLabel"/);
+ for(const lang of ["fr","en","es"]){
+  assert.match(copy[lang].hotelRegionFiltersLabel,/\S/);
+ }
 });
 
 test("both destination-card and search-filter navigation respect reduced motion",async()=>{
