@@ -1,12 +1,18 @@
 # Project status — CUBARESORT.CA
 
-Updated 2026-10-19. Repository `takatakca/CUBARESORT.CA`; publication branch `main`.
+Updated 2026-10-26. Repository `takatakca/CUBARESORT.CA`; publication branch `main`.
 
-## Empty-results reset focus — 2026-10-19
+## Current verified production release — 2026-10-21
+
+- Main `c8c328aa2b48f1e72a219af7f34df930966aaf8a` passed 43 tests/build, Coolify/container/live run [39526121459](https://github.com/takatakca/CUBARESORT.CA/actions/runs/39526121459) and Pages run [39526121488](https://github.com/takatakca/CUBARESORT.CA/actions/runs/39526121488).
+- Generated Contabo, apex, www and Pages served that exact full SHA with all nine first-party SHA-256 digests; public web/MX separation passed.
+- This proof includes the hotel-region filter group name, mobile-inquiry return-focus correction and all earlier main accessibility fixes. Real-device/screen-reader and photo-license acceptance remain open. Issue #2 still blocks commercial supplier, booking, payment and lead flows. Functional mailbox delivery remains untested.
+
+## Empty-results reset focus — verified 2026-10-19
 
 - Clearing an empty stays or hotel result previously hid the focused reset button with its empty-state container, leaving keyboard focus on hidden content.
 - Each empty-state reset now returns focus to its corresponding visible search field. The regular reset controls are unchanged, and regression coverage protects both paths.
-- Starting verified production baseline is `fc8777545a60b231c2334dc5557163f435ab1d2b` (Coolify/container/custom-domain run 39083227917; Pages fallback 39083227914). This patch requires its own full release proof before being called live.
+- Main `be0895e127692eea7baea8bcba7c44b39505372e` passed Coolify/container/custom-domain run 39324278262 and Pages run 39324278131, including exact SHA and all nine digests on every public host.
 
 ## Keyboard skip-link focus destination — verified 2026-10-19
 
