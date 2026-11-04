@@ -1,17 +1,16 @@
-## 2026-11-04 — Prevent mixed browser-cache releases
-
 ## 2026-11-04 — Reconcile current-main production blocker
 
 Signed Codex. Current main is SHA 7e6a63cee07d20932c33db3fb5b2d33fae4108a2. Pull request #11 merged as 1dfef4e6c05eba1f1c38286f094cb29d96856e55; the subsequent main cache-versioning change is included in the current SHA.
 
-- Node 22 static validation/build and Pages workflow [41808241223](https://github.com/takatakca/CUBARESORT.CA/actions/runs/41808241223) passed. Pages published the exact full SHA and expanded release manifest.
-- Coolify workflow [41808241176](https://github.com/takatakca/CUBARESORT.CA/actions/runs/41808241176): production-container build, health, release-integrity and private-path isolation passed; external Contabo HTTPS verification failed because the generated hostname continued serving a different release SHA.
+- Node 22 static validation/build and Pages workflow 41808241223 passed. Pages published the exact full SHA and expanded release manifest.
+- Coolify workflow 41808241176: production-container build, health, release-integrity and private-path isolation passed; external Contabo HTTPS verification failed because the generated hostname continued serving a different release SHA.
 - The generated host, apex and www are therefore **not verified current** for 7e6a63cee07d20932c33db3fb5b2d33fae4108a2. The failed live job was not retried because no new deployment event or authorized Coolify access was available. Connected Coolify browser access previously showed sign-in; no credentials were entered.
 - Keep the existing static architecture, resource, DNS and independent MochaHost mail routes unchanged. Do not push another main release or retry the same live check until the unchanged commit has actually deployed. Then verify the exact full SHA and every current manifest digest on generated host, apex, www and Pages.
 - No mail delivery test, external message, supplier search/booking, payment, lead intake, AI call, live dispatch or TAKATAK V1 tenant scope was activated.
 
 Next action: obtain an authorized deployment path for the existing Coolify resource/GitHub App webhook, deploy this unchanged main SHA, and rerun only the failed live verification after observing the new deployment.
 
+## 2026-11-04 — Prevent mixed browser-cache releases
 
 Signed Codex. Browser acceptance after main 9c62345 showed that GitHub Pages could retain older unversioned CSS/modules even after the release verifier fetched current bytes with its cache-busting query. Fixed static build to append the exact release SHA to first-party stylesheet/module URLs in every generated/home page and relative ES-module import. The existing manifest hashes the transformed bytes. Local 55 tests, build and explicit checks of homepage, guide, resort and nested module version references passed. Current-main CI/Pages and browser reload proof are required. Native Coolify still needs current release/access verification; no credentials or infrastructure changed.
 
