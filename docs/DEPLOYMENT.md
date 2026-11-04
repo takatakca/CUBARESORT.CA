@@ -1,18 +1,15 @@
 # Deployment operations — CUBARESORT.CA
 
-# Deployment operations — CUBARESORT.CA
-
 Updated 2026-11-04. Production hosting remains the separate Coolify application on Contabo; the latest main release is **not yet verified live**.
 
 ## Current-main deployment checkpoint — 2026-11-04
 
 - Main: 7e6a63cee07d20932c33db3fb5b2d33fae4108a2.
-- Pages/Node 22 validation run [41808241223](https://github.com/takatakca/CUBARESORT.CA/actions/runs/41808241223) succeeded.
-- Coolify/container run [41808241176](https://github.com/takatakca/CUBARESORT.CA/actions/runs/41808241176): actual production image, health, release-integrity and private-path checks passed; generated-host external HTTPS exact-SHA verification failed because the endpoint served another release.
+- Pages/Node 22 validation run 41808241223 succeeded.
+- Coolify/container run 41808241176: actual production image, health, release-integrity and private-path checks passed; generated-host external HTTPS exact-SHA verification failed because the endpoint served another release.
 - Do not claim current-main deployment on the generated host, apex or www. The Pages fallback is current; the custom-domain production release is not verified.
 - No retry, new deployment, DNS/mail edit or credential action was performed. Connected Coolify access showed a sign-in screen; use only an owner-authorized access path.
 - Once the unchanged SHA is deployed, verify the full SHA and every entry in the expanded release.json manifest on generated host, apex and www, as well as DNS/MX separation. Then retry only the failed live job.
-
 
 Updated 2026-10-16. Production hosting is the separate Coolify application on Contabo.
 
