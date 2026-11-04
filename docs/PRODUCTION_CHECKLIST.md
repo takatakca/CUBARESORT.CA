@@ -2,6 +2,14 @@
 
 Updated: 2026-11-04. Current scope: **static inspiration portal, not a live booking service**.
 
+## Repository release-control observation — 2026-11-04
+
+- [ ] Owner/admin review of GitHub `main` branch protection. Read-only branch metadata currently reports `protected: false`, `protection.enabled: false`, and required-status-check enforcement `off`.
+- The dedicated branch-protection endpoint returned HTTP 403 to this integration; detailed rules are not visible here. No branch settings were changed.
+- Recommended owner/admin hardening: require pull requests and passing PR validation/build plus production-container checks; resolve review conversations; block force-pushes and branch deletion; document a controlled emergency admin bypass.
+- Keep the post-merge Coolify exact-live check as a release gate rather than a pre-merge required check unless the workflow is redesigned. It runs after main pushes and currently fails because the existing Coolify endpoint serves a different release.
+- Confirm the ruleset does not interfere with the existing GitHub App deployment webhook before enabling enforcement.
+
 ## Latest-main acceptance checkpoint — 2026-11-04
 
 - [x] Current main SHA recorded: 7e6a63cee07d20932c33db3fb5b2d33fae4108a2.
