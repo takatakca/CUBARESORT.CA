@@ -1,3 +1,7 @@
+# Active premium marketplace queue — 2026-11-04
+
+Signed Codex; issue #10 owns feat/premium-cuba-guide-20261104. Local 54 tests/build pass. Next: CI/container, release and full-manifest/browser acceptance; source-specific V1 registration, real supplier sandbox and secure transactional integration. Restaurant/driver onboarding, live menus/seats, dispatch and payment remain unconfigured. Do not activate another application's master API scope. No other active agent assigned here. Detailed readiness: docs/MARKETPLACE_READINESS_20261104.md. Earlier queue below is historical context.
+
 # Task queue — CUBARESORT.CA
 
 Updated 2026-10-26. Always compare with the latest `main` before starting an item.

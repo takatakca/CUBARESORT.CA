@@ -1,3 +1,4 @@
+import {renderPremiumInterface,initializePremium} from './premium.js';
 import { destinations, experiences, styles, imageUrl } from "./catalog.js";
 import { hotelRegions, hotels, searchHotels, regionLabel } from "./hotels.js";
 import { copy, namedTranslation, translation } from "./i18n.js";
@@ -165,7 +166,7 @@ function renderHotels(){
   li.className="hotel-card"+(h.confirmed?"":" hotel-card-pending");
   const badge=h.confirmed?tr("hotelsConfirmed"):tr("hotelsPending");
   li.innerHTML='<div class="hotel-main"><h3>'+escapedAttr(h.name)+'</h3>'
-   +'<p class="hotel-meta"><span class="hotel-region">'+escapedAttr(regionLabel(h.region,state.lang))+'</span>'
+   +'<a class="premium-link directory-profile" href="?hotel='+escapedAttr(h.id)+'" data-profile-id="'+escapedAttr(h.id)+'">'+(state.lang==='en'?'Explore profile':state.lang==='es'?'Ver ficha':'Explorer la fiche')+' ↗</a><p class="hotel-meta"><span class="hotel-region">'+escapedAttr(regionLabel(h.region,state.lang))+'</span>'
    +'<span class="hotel-airport">'+escapedAttr(tr("hotelsAirport"))+' '+escapedAttr(h.airport)+'</span></p></div>'
    +'<div class="hotel-foot"><span class="hotel-badge'+(h.confirmed?"":" hotel-badge-pending")+'">'+escapedAttr(badge)+'</span>'
    +'<button type="button" data-hotel-inquire="'+escapedAttr(h.id)+'" aria-label="'+escapedAttr(namedTr("hotelsAskFor",h.name))+'">'+escapedAttr(tr("hotelsAsk"))+'</button></div>';
@@ -190,7 +191,7 @@ function renderFaq(){
  });
 }
 function render(){
- setStaticTranslations();updateSelects();renderDestinations();renderExperiences();
+ setStaticTranslations();updateSelects();renderDestinations();renderExperiences();renderPremiumInterface(state.lang);
  updateHotelSelect();renderRegionChips();renderHotels();renderFaq();renderSelectedHotelContext();
 }
 function syncUrl(){
@@ -429,3 +430,5 @@ $("#footer-terms").addEventListener("click",()=>openLegal("terms"));
 $("#legal-close").addEventListener("click",()=>$("#legal-dialog").close());
 $("#year").textContent=String(new Date().getFullYear());
 render();
+initializePremium();
+document.addEventListener('premium-inquiry',event=>{const hotel=hotels.find(h=>h.id===event.detail.id);if(hotel)openInquiry(hotel.region,hotel.id);});

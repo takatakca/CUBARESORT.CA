@@ -1,3 +1,5 @@
+import {GUIDE_PATHS,renderGuidePage} from './guide-pages.mjs';
+import {PROFILE_PATHS,renderProfilePage} from './premium-pages.mjs';
 import { createServer } from "node:http";
 import { readFile, realpath, stat } from "node:fs/promises";
 import { extname, relative, resolve, sep } from "node:path";
@@ -12,6 +14,7 @@ const types={".html":"text/html; charset=utf-8",".js":"text/javascript; charset=
 // Serve only the same static files that the production build makes public.
 export function publicAssetPath(pathname){
  if(pathname==="/" || pathname==="/index.html")return "index.html";
+ if(Object.values(GUIDE_PATHS).includes(pathname.slice(1))||PROFILE_PATHS.includes(pathname.slice(1)))return pathname.slice(1);
  if(pathname==="/robots.txt")return "robots.txt";
  if(pathname==="/sitemap.xml")return "sitemap.xml";
  if(/^\/assets\/(?:[a-zA-Z0-9_-]+\/)*[a-zA-Z0-9_-]+\.(?:js|css|svg|png|jpe?g|webp|woff2?)$/.test(pathname))return pathname.slice(1);
@@ -25,6 +28,11 @@ export function createPreviewServer(){
    const pathname=decodeURIComponent(new URL(req.url,"http://localhost").pathname);
    const rel=publicAssetPath(pathname);
    if(!rel){res.writeHead(403);res.end("Forbidden");return;}
+   if(Object.values(GUIDE_PATHS).includes(rel)||PROFILE_PATHS.includes(rel)){
+    const locale=Object.keys(GUIDE_PATHS).find(l=>GUIDE_PATHS[l]===rel);
+    const page=locale?renderGuidePage(locale):renderProfilePage(rel);
+    res.writeHead(200,{"Content-Type":"text/html; charset=utf-8","X-Content-Type-Options":"nosniff"});res.end(req.method==='HEAD'?undefined:page);return;
+   }
    const file=resolve(root,rel);
    const actual=await realpath(file);
    const actualRel=relative(rootReal,actual).split(sep).join("/");

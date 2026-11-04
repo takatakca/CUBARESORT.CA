@@ -1,3 +1,7 @@
+# Current implementation update — 2026-11-04
+
+Signed Codex. Premium Cuba build is on feat/premium-cuba-guide-20261104 from a80c383; local 54-test suite and build pass. 4 featured profiles / 12 static locale pages, 3 guides, 21-entry marketplace pilot and local travel notebook are implemented. Release/browser acceptance pending. Server reservation modules are a tested prototype only; no live booking, payment, AI, evidence intake or V1 cubaresort scope is connected. See MARKETPLACE_READINESS_20261104.md and issue #10. Historical release evidence below remains historical.
+
 # Project status — CUBARESORT.CA
 
 Updated 2026-10-26. Repository `takatakca/CUBARESORT.CA`; publication branch `main`.
