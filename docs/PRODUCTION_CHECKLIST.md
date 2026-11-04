@@ -1,5 +1,25 @@
 # CUBARESORT.CA — Production checklist
 
+# CUBARESORT.CA — Production checklist
+
+Updated: 2026-11-04. Current scope: **static inspiration portal, not a live booking service**.
+
+## Latest-main acceptance checkpoint — 2026-11-04
+
+- [x] Current main SHA recorded: 7e6a63cee07d20932c33db3fb5b2d33fae4108a2.
+- [x] Node 22 static validation/build and Pages deployment passed in [41808241223](https://github.com/takatakca/CUBARESORT.CA/actions/runs/41808241223).
+- [x] Production Docker image, health, release-integrity and private-path isolation passed in the container job of [41808241176](https://github.com/takatakca/CUBARESORT.CA/actions/runs/41808241176).
+- [ ] Generated Contabo hostname exact-main HTTPS release — **failed**; it served a different SHA.
+- [ ] Apex and www exact-main HTTPS plus every expanded manifest digest — **not verified current**.
+- [ ] Authorized Coolify/GitHub App deployment intervention and observed deployment of the unchanged SHA.
+- [ ] Retry the failed live-verification job only after the exact deployment is observed.
+- [ ] Human real-device/screen-reader and remaining image/source-license acceptance.
+- [ ] Functional mailbox send/receive test (no email sent; DNS success alone is insufficient).
+- [ ] Supplier, legal operator, payment and CUBARESORT-specific V1 scope approvals before any commercial activation.
+
+Do not push another main release while the current deployment is unresolved. Keep the independent MochaHost mail routes and DNS unchanged.
+
+
 Updated: 2026-10-16. Current scope: **static inspiration portal, not a live booking service**.
 
 ## Current hosting acceptance — 2026-10-16
