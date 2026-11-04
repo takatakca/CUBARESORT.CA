@@ -12,9 +12,9 @@ Next: restore an authorized deployment path for the existing Coolify resource, d
 
 # Project status — CUBARESORT.CA
 
-Updated 2026-10-26. Repository `takatakca/CUBARESORT.CA`; publication branch `main`.
+Historical status snapshot — 2026-10-26. Superseded by the current-main checkpoint at the top of this file. Repository `takatakca/CUBARESORT.CA`; publication branch `main`.
 
-## Current verified production release — 2026-10-21
+## Last verified production release before the 2026-11-04 current-main checkpoint — 2026-10-21 (historical)
 
 - Main `c8c328aa2b48f1e72a219af7f34df930966aaf8a` passed 43 tests/build, Coolify/container/live run [39526121459](https://github.com/takatakca/CUBARESORT.CA/actions/runs/39526121459) and Pages run [39526121488](https://github.com/takatakca/CUBARESORT.CA/actions/runs/39526121488).
 - Generated Contabo, apex, www and Pages served that exact full SHA with all nine first-party SHA-256 digests; public web/MX separation passed.
