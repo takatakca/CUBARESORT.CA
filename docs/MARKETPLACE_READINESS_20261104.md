@@ -1,5 +1,22 @@
 # Cuba marketplace readiness and provider integration
 
+## Current release and branch checkpoint — 2026-11-04
+
+The premium implementation described below is no longer an unmerged feature branch:
+
+- PR [#11](https://github.com/takatakca/CUBARESORT.CA/pull/11) merged at `1dfef4e6c05eba1f1c38286f094cb29d96856e55`. Its source branch `feat/premium-cuba-guide-20261104` ended at `9f27be47c738a95c827f27c4ba351d6eda6a99f2`; comparison with current `main` shows the branch is three commits behind and has zero unique commits. Do not reopen or duplicate that feature branch.
+- Current `main`: `7e6a63cee07d20932c33db3fb5b2d33fae4108a2`. It includes the premium content, static marketplace pilot, travel notebook and private reservation/fulfilment prototypes.
+- Node 22 validation/build and Pages run [41808241223](https://github.com/takatakca/CUBARESORT.CA/actions/runs/41808241223) passed. Pages published the exact main SHA and expanded manifest.
+- Coolify run [41808241176](https://github.com/takatakca/CUBARESORT.CA/actions/runs/41808241176) passed the production-container, health, release-integrity and private-path checks, but its external live-verification job failed because the generated Contabo hostname served a different release SHA. Current-main production is therefore **not verified** on the generated hostname, apex or www.
+- Documentation-only PR [#12](https://github.com/takatakca/CUBARESORT.CA/pull/12) remains draft. It must not be merged while the existing Coolify release is unresolved, because a merge would create another main deployment.
+- The branch CI result [41806549307](https://github.com/takatakca/CUBARESORT.CA/actions/runs/41806549307) is branch validation only, not proof of production publication.
+
+No live supplier inventory, room rates, restaurant menus, transport seats, reservations, payment, lead intake, AI calls or dispatch are active. The server modules remain unexposed prototypes. Issue #2 still requires an approved legal operator, supplier agreements and sandbox, payment/cancellation rules, and a dedicated CUBARESORT tenant/source registration in TAKATAK V1.
+
+Human acceptance remains open: a real mobile device/viewport and screen-reader pass, reconfirmation of source details, and the legacy image-license audit. The Meliá source fetch previously failed and those summaries must be reconfirmed before stronger property claims. The current Canadian travel advisory warning remains visible; do not imply guaranteed routes or live travel availability.
+
+---
+
 Signed: Codex · 2026-11-04.
 
 ## What is implemented
