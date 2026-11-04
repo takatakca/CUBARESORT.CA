@@ -1,5 +1,18 @@
 # Current implementation update — 2026-11-04
 
+# Current implementation update — 2026-11-04
+
+Signed Codex. Current publication branch main is SHA 7e6a63cee07d20932c33db3fb5b2d33fae4108a2. PR #11 was merged as 1dfef4e6c05eba1f1c38286f094cb29d96856e55; the later main commit versions all generated first-party stylesheet/module URLs with the full release SHA to prevent mixed browser-cache releases.
+
+- Current-main Node 22 validation/build and Pages run [41808241223](https://github.com/takatakca/CUBARESORT.CA/actions/runs/41808241223) passed; Pages serves the exact full SHA and expanded manifest.
+- Coolify run [41808241176](https://github.com/takatakca/CUBARESORT.CA/actions/runs/41808241176) passed the production-container job but failed external live verification: the generated Contabo hostname did not serve the expected SHA. Apex/www production currency is therefore **not verified** for current main.
+- Premium content on main includes four resort profiles / 12 locale pages, three guides, a 21-entry sourced marketplace pilot and a browser-local travel notebook. The server-only reservation/fulfilment code is a prototype, not a production API.
+- No supplier inventory, live prices, booking, payment, customer lead intake, AI operation, driver dispatch or CUBARESORT-specific TAKATAK V1 identity scope is active. Issue #2 remains open. Mail delivery remains untested.
+- No DNS, mail, Coolify configuration or credentials were changed.
+
+Next: restore an authorized deployment path for the existing Coolify resource, deploy the unchanged main SHA, and verify the generated hostname, apex and www against the full SHA and every release-manifest digest. Preserve Pages as fallback. Human mobile/screen-reader, image-rights and source reconfirmation remain outstanding.
+
+
 Signed Codex. Premium Cuba build is on feat/premium-cuba-guide-20261104 from a80c383; local 54-test suite and build pass. 4 featured profiles / 12 static locale pages, 3 guides, 21-entry marketplace pilot and local travel notebook are implemented. Release/browser acceptance pending. Server reservation modules are a tested prototype only; no live booking, payment, AI, evidence intake or V1 cubaresort scope is connected. See MARKETPLACE_READINESS_20261104.md and issue #10. Historical release evidence below remains historical.
 
 # Project status — CUBARESORT.CA
