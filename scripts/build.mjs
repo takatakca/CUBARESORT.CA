@@ -1,6 +1,9 @@
 import { cp, copyFile, mkdir, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
+import {GUIDE_PATHS,renderGuidePage} from "./guide-pages.mjs";
+import {PROFILE_PATHS,renderProfilePage} from "./premium-pages.mjs";
+import {dirname} from "node:path";
 import { VERIFIED_RELEASE_FILES } from "./release-assets.mjs";
 import { join, resolve } from "node:path";
 
@@ -18,6 +21,10 @@ await rm(output,{recursive:true,force:true});
 await mkdir(output,{recursive:true});
 for(const name of entryFiles)await copyFile(join(root,name),join(output,name));
 await cp(join(root,"assets"),join(output,"assets"),{recursive:true});
+for(const [lang,path] of Object.entries(GUIDE_PATHS)){await mkdir(dirname(join(output,path)),{recursive:true});await writeFile(join(output,path),renderGuidePage(lang));}
+for(const path of PROFILE_PATHS){await mkdir(dirname(join(output,path)),{recursive:true});await writeFile(join(output,path),renderProfilePage(path));}
+const paths=[...Object.values(GUIDE_PATHS),...PROFILE_PATHS];
+await writeFile(join(output,'sitemap.xml'),'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://cubaresort.ca/</loc></url>'+paths.map(path=>'<url><loc>https://cubaresort.ca/'+path+'</loc></url>').join('')+'</urlset>');
 // Record a SHA-256 checksum for every first-party document and runtime asset.
 // This detects a stale/mixed Pages release even when release.json has the right Git SHA.
 const assets = Object.fromEntries(await Promise.all(VERIFIED_RELEASE_FILES.map(async path => [

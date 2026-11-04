@@ -36,7 +36,7 @@ for (const path of VERIFIED_RELEASE_FILES) {
   assert.equal(createHash("sha256").update(Buffer.from(await response.arrayBuffer())).digest("hex"), release.assets[path], path);
 }
 assert.equal(await (await read("healthz")).text(), "ok\n");
-for (const path of [".env", ".git/config", "README.md", "package.json", "docs/AGENT_HANDOFF.md", "assets/missing.js"]) {
+for (const path of [".env", ".git/config", "README.md", "package.json", "docs/AGENT_HANDOFF.md", "server/reservations.mjs", "server/file-store.mjs", "assets/missing.js"]) {
   assert.equal((await read(path)).status, 404, path);
 }
 assert.equal((await read("assets/app.js", { method: "POST" })).status, 405);

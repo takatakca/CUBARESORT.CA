@@ -1,3 +1,15 @@
+## 2026-11-04 — Premium Cuba guide and marketplace build
+
+Signed: Codex. Active coordination: issue #10, branch feat/premium-cuba-guide-20261104, starting main a80c383e8e02481c3331fabc344b84b36c0cc1fe. Owner explicitly authorized broader travel, food, mobility, connectivity, supplier/API and V1 work.
+
+- Built premium trilingual collection, 12 static resort pages, 3 guide pages, all-directory profile dialogs, 21-entry pilot marketplace, private SIREV screenshot/calculator demonstration, local multi-service notebook and bottom grocery list. Preserve original accessibility fixes and current main design.
+- Source-linked content uses original summaries; no invented reviews, ratings, fares or availability. Two newly licensed Cuba photos are credited. Official advisory is visible. Stale WestJet resort source redirects to suspension notice; that old profile was excluded.
+- Added private server-only reservation prototype with durable single-process storage, actor/tenant isolation, provider quote/receipt checks, idempotency, compensation and reconciliation tests. No live auth/provider/payment/AI API is activated; static hosting remains static.
+- Inspected real TAKATAK V1 ON2GO/Food Hub, QMAPS and distinct CUBAFOOD contracts. No cubaresort scope or production backend is verified; do not reuse sibling credentials. See docs/integrations/TAKATAK_V1_20261104.md and docs/MARKETPLACE_READINESS_20261104.md for exact readiness and integration steps.
+- Local Node 24 validation: 54 tests passed and static build passed. Existing CI uses Node 22 and must still pass. Extended manifest includes all new runtime assets and generated pages. Local connected/cloud browsers cannot reach the scratch loopback preview (connection refused); live browser acceptance still required after deployment.
+- Existing PRs #3/#5/#7/#8/#9 remain untouched. Selected guide source files from #8 were adapted on current main rather than merging its stale code. Signed in-progress note uploaded in existing CUBARESORT Drive folder. No secrets, mail, DNS, external messages or third-party contracts changed.
+- Next: publish branch/PR, inspect current CI/container, then release and verify exact main SHA plus complete expanded file manifest. Verify live browser locale/search/profile/notebook/price workflows. Record actual release proof and mirror final note in Drive.
+
 ## 2026-10-26 — Reconcile verified accessibility releases (documentation-only release pending)
 
 - Re-read current main, all required continuity records, open issue #2, draft PRs #3/#5/#7/#8 and the latest Actions before editing. Main `c8c328aa2b48f1e72a219af7f34df930966aaf8a` remains the verified application release.
