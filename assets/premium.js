@@ -30,6 +30,7 @@ export function renderPremiumInterface(nextLang){
  // A language change clears file input state; release the in-memory file too.
  evidence=null;
  updateNotebook();marketFilter();
+ for(const node of document.querySelectorAll('[data-premium-label]'))node.textContent=t()[node.dataset.premiumLabel];
  for(const link of document.querySelectorAll('[data-premium-nav]')){link.textContent=t().nav;link.href='./guides/'+lang+'/cuba.html';}
 }
 function dialog(){return $('#premium-dialog');}
