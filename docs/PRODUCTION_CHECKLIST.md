@@ -52,7 +52,7 @@ Historical deployment entries below describe earlier checkpoints and do not over
 - [x] Queued Coolify deployment recovered without configuration changes; current main `894e5eae` passed run 38827678357, independent exact-SHA/nine-digest verification and `/healthz=ok`.
 - [ ] Real keyboard traversal, mobile assistive technology and screen-reader acceptance in FR/EN/ES.
 
-## Contabo deployment — 2026-10-15
+## Historical Contabo deployment — 2026-10-15 (superseded by the 2026-10-16 domain cutover and the current-main checkpoint above)
 
 - [x] Separate CUBARESORT Coolify resource on Contabo 31.220.96.134, internal port 8080.
 - [x] Existing authorized GitHub App, main-push deployment webhook enabled.
@@ -68,6 +68,10 @@ Historical deployment entries below describe earlier checkpoints and do not over
 - [x] Live verifier checks fetched bytes against manifest to reject stale/mixed deployments with HTTP 200.
 - [x] Regression tests cover wrong SHA, corrupt/missing manifest, stale 200 OK JavaScript and missing CSS.
 - [ ] Confirm the new main workflow and exact byte-verified Pages SHA; record the run in handoff.
+
+## Historical pre-cutover checklist — 2026-10-15 (superseded by the 2026-10-16 cutover)
+
+The unchecked domain/zone items below describe the pre-cutover state and are not current blockers. Current production acceptance is tracked in the 2026-11-04 checkpoint at the top of this file; do not use these historical checkboxes to infer today's state.
 
 ## Verification still required
 
