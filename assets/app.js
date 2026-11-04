@@ -43,7 +43,7 @@ function persist(){
 function destName(id){return destinations.find(d=>d.id===id)?.name || (REGION_IDS.has(id)?regionLabel(id,state.lang):"");}
 function normalize(str){return String(str).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLocaleLowerCase();}
 function escapedAttr(str){return String(str).replaceAll("&","&amp;").replaceAll('"',"&quot;").replaceAll("<","&lt;").replaceAll(">","&gt;");}
-const richKeys = new Set(["heroTitle","destTitle","staysTitle","editorialTitle","approachTitle","ctaBandTitle","faqTitle"]);
+const richKeys = new Set(["heroTitle","destTitle","staysTitle","hotelsTitle","editorialTitle","approachTitle","ctaBandTitle","faqTitle"]);
 
 function setStaticTranslations(){
  document.documentElement.lang = state.lang;

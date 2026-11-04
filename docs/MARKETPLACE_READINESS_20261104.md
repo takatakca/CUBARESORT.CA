@@ -39,3 +39,9 @@ Canada travel advisory read 2026-11-04 warns against non-essential travel, short
 
 ## Image provenance
 Two newly researched Cuba images: Nina Ondkova, Varadero, Unsplash QMaExg6PBQ8, photo-1609960276201-22af8a583adf; Daniel Pelaez Duque, Havana, Unsplash BpLvgJe3ulI, photo-1752702338341-2b085cd246e3. Both source pages state free use under the Unsplash License; public credits link to source. New resort-card images are explicitly destination photos, not hotel photographs. Existing illustrative catalogue photography remains labeled; full legacy imagery audit is pending.
+
+## Follow-up acceptance
+
+55 local tests pass after adding internal food/ride fulfilment prototype: merchant acceptance, approved-driver assignment, pickup/delivery evidence, tenant/role/driver ownership and optimistic version conflict checks. The store adapter must enforce evidence ownership and atomically append audit/outbox on compare-and-set; no live dispatch is wired.
+
+PR #11 merged as 1dfef4e6c05eba1f1c38286f094cb29d96856e55. GitHub Pages fallback passed release workflow 41806632426. Production-container job in 41806632151 passed; native domain release is pending and still serves the old application. Coolify displays a sign-in wall in the connected browser; no login attempt or credential entry performed. Browser acceptance on Pages verified locale switching FR/EN/ES, restaurant filter (5 results), notebook preserving selections across languages, resort dialog, and 2000 CAD → 100 CAD maximum / 1900 CAD theoretical minimum simulation. Browser console had no errors. Follow-up fixes address the previously visible conditional screenshot-clear action and existing directory heading markup.

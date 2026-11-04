@@ -4,3 +4,5 @@
 @media(max-width:800px){.travel-advisory .container{display:block}.travel-advisory a{margin-top:10px}.premium-grid,.service-grid,.notebook-layout,.promise-layout,.market-layout,.cuba-story{grid-template-columns:1fr}.promise-layout,.notebook-layout,.market-layout{gap:30px}.cuba-story-photo{min-height:340px}.cuba-story-copy{padding:50px 30px}.marketplace-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:540px){.premium-grid,.marketplace-grid{grid-template-columns:1fr}.premium-card-body,.service-card,.promise-form,.notebook-paper{padding:23px}.cuba-story-photo{min-height:280px}.premium-modal{padding:23px}}
 @media(prefers-reduced-motion:reduce){.premium-card:hover img{transform:none}}
+/* Author display rules must never reveal conditionally hidden actions. */
+.premium-link[hidden]{display:none!important}

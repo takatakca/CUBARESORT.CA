@@ -1,3 +1,11 @@
+## 2026-11-04 — Browser acceptance and internal fulfilment follow-up
+
+Signed Codex. PR #11 merged as 1dfef4e6c05eba1f1c38286f094cb29d96856e55. Pages workflow 41806632426 passed and published the new build; current domain still old, native Coolify release pending. Container job passed in 41806632151. Connected browser Coolify access shows sign-in; no credentials entered. No domain/DNS/mail settings changed.
+
+Pages browser checks passed locale switching, restaurant filtering (5 listings), notebook selections preserved across locales, sourced resort dialog, and the 2000 CAD 5% illustration. Console errors absent. Follow-up fixes: honor hidden screenshot-clear control despite display CSS and render existing translated hotel heading emphasis correctly. Added tested private internal fulfilment state machine (merchant acceptance, approved driver, owned evidence and optimistic concurrency); still no live dispatch. Total local tests: 55, all passing. SIREV owner-opened agent session observed read-only; official B2C/SIRRVA integration route documented with no session URL or credential persisted. No SIREV booking/search submission/payment performed. Activation requires agency B2C entitlement and provider integration package, not browser session reuse.
+
+Next: publish this follow-up, verify resulting CI/container/Pages/full manifest; complete cubaresort.ca release after Coolify access or automatic deployment recovers. Real transactional booking, food dispatch, AI and V1 registration remain unconnected. Signed final Drive note must identify the actual final SHA and remaining access dependencies.
+
 ## 2026-11-04 — Premium Cuba guide and marketplace build
 
 Signed: Codex. Active coordination: issue #10, branch feat/premium-cuba-guide-20261104, starting main a80c383e8e02481c3331fabc344b84b36c0cc1fe. Owner explicitly authorized broader travel, food, mobility, connectivity, supplier/API and V1 work.
