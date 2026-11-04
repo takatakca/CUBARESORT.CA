@@ -1,3 +1,7 @@
+## 2026-11-04 — Prevent mixed browser-cache releases
+
+Signed Codex. Browser acceptance after main 9c62345 showed that GitHub Pages could retain older unversioned CSS/modules even after the release verifier fetched current bytes with its cache-busting query. Fixed static build to append the exact release SHA to first-party stylesheet/module URLs in every generated/home page and relative ES-module import. The existing manifest hashes the transformed bytes. Local 55 tests, build and explicit checks of homepage, guide, resort and nested module version references passed. Current-main CI/Pages and browser reload proof are required. Native Coolify still needs current release/access verification; no credentials or infrastructure changed.
+
 ## 2026-11-04 — Browser acceptance and internal fulfilment follow-up
 
 Signed Codex. PR #11 merged as 1dfef4e6c05eba1f1c38286f094cb29d96856e55. Pages workflow 41806632426 passed and published the new build; current domain still old, native Coolify release pending. Container job passed in 41806632151. Connected browser Coolify access shows sign-in; no credentials entered. No domain/DNS/mail settings changed.

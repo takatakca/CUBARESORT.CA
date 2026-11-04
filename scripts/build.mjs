@@ -1,4 +1,4 @@
-import { cp, copyFile, mkdir, readFile, rm, stat, writeFile } from "node:fs/promises";
+import { cp, copyFile, mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import {GUIDE_PATHS,renderGuidePage} from "./guide-pages.mjs";
@@ -23,7 +23,19 @@ for(const name of entryFiles)await copyFile(join(root,name),join(output,name));
 await cp(join(root,"assets"),join(output,"assets"),{recursive:true});
 for(const [lang,path] of Object.entries(GUIDE_PATHS)){await mkdir(dirname(join(output,path)),{recursive:true});await writeFile(join(output,path),renderGuidePage(lang));}
 for(const path of PROFILE_PATHS){await mkdir(dirname(join(output,path)),{recursive:true});await writeFile(join(output,path),renderProfilePage(path));}
+// Every dependency uses this release identity: avoid a new page running cached old modules.
 const paths=[...Object.values(GUIDE_PATHS),...PROFILE_PATHS];
+for(const filename of await readdir(join(output,'assets'))){
+ if(!filename.endsWith('.js'))continue;
+ const path=join(output,'assets',filename);
+ const code=await readFile(path,'utf8');
+ const versioned=code.replace(/(from\s+|import\s+)(["'])(\.{1,2}\/[^"']+\.js)\2/g,(_,prefix,quote,url)=>prefix+quote+url+'?v='+sha+quote);
+ await writeFile(path,versioned);
+}
+for(const path of ['index.html',...paths]){
+ const file=join(output,path),html=await readFile(file,'utf8');
+ await writeFile(file,html.replace(/((?:src|href)=["'])([^"']+\.(?:js|css))(["'])/g,(_,prefix,url,quote)=>prefix+url+'?v='+sha+quote));
+}
 await writeFile(join(output,'sitemap.xml'),'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://cubaresort.ca/</loc></url>'+paths.map(path=>'<url><loc>https://cubaresort.ca/'+path+'</loc></url>').join('')+'</urlset>');
 // Record a SHA-256 checksum for every first-party document and runtime asset.
 // This detects a stale/mixed Pages release even when release.json has the right Git SHA.
