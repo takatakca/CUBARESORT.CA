@@ -1,8 +1,6 @@
-# Active premium marketplace queue — 2026-11-04
-
 # Active release and work queue — 2026-11-04
 
-Signed Codex. The premium-guide branch was merged in PR #11; it is no longer an active branch. Current main is SHA 7e6a63cee07d20932c33db3fb5b2d33fae4108a2. Main CI/Pages run [41808241223](https://github.com/takatakca/CUBARESORT.CA/actions/runs/41808241223) passed; Coolify run [41808241176](https://github.com/takatakca/CUBARESORT.CA/actions/runs/41808241176) passed the container but failed exact-public-SHA verification because the generated host served a different release. Do not push another main release until the existing Coolify deployment is corrected and the unchanged SHA plus full manifest are verified.
+Signed Codex. The premium-guide branch was merged in PR #11; it is no longer an active branch. Current main is SHA 7e6a63cee07d20932c33db3fb5b2d33fae4108a2. Main CI/Pages run 41808241223 passed; Coolify run 41808241176 passed the container but failed exact-public-SHA verification because the generated host served a different release. Do not push another main release until the existing Coolify deployment is corrected and the unchanged SHA plus full manifest are verified.
 
 ## Immediate safe queue
 
@@ -13,9 +11,6 @@ Signed Codex. The premium-guide branch was merged in PR #11; it is no longer an 
 5. **P2 — Mail acceptance (separate).** Actual send/receive is untested. Do not send an external message or change MX without explicit approval.
 
 The 55-test local suite/build and the current-main Node 22 CI/container tests are recorded in the dated handoff. Historical completed accessibility tasks below remain completed; do not reopen them.
-
-
-Signed Codex; issue #10 owns feat/premium-cuba-guide-20261104. Local 54 tests/build pass. Next: CI/container, release and full-manifest/browser acceptance; source-specific V1 registration, real supplier sandbox and secure transactional integration. Restaurant/driver onboarding, live menus/seats, dispatch and payment remain unconfigured. Do not activate another application's master API scope. No other active agent assigned here. Detailed readiness: docs/MARKETPLACE_READINESS_20261104.md. Earlier queue below is historical context.
 
 # Task queue — CUBARESORT.CA
 
