@@ -4,14 +4,32 @@ import {renderPremium,renderFood,renderMarketplace,esc,profileBody} from './prem
 import {marketplace,marketplaceCopy} from './marketplace-data.js';
 import {hotels,regionLabel} from './hotels.js';
 let lang='fr',filter='all',query='',food='',amount='',evidence=null;
-const chosen=new Set(),items=new Set();
+const chosen=new Set(),items=new Set(),stays=new Set();
 const $=s=>document.querySelector(s);
 const t=()=>({...premiumCopy[lang],...marketplaceCopy[lang]});
 export function notebookText(){
- const labels=t();return ['CUBARESORT.CA — '+labels.plannerTitle,'',...Array.from(chosen).map(k=>'□ '+labels[k+'Label']),...Array.from(items).map(id=>{const x=marketplace.find(x=>x.id===id);return x?'□ '+x.name+' — '+x.place:'';}),food?'\n'+labels.foodLabel+':\n'+food:'','',labels.plannerText].filter(x=>x!==undefined).join('\n');
+ const labels=t();
+ const lodging=Array.from(stays, id=>{
+  const resort=premiumResorts.find(entry=>entry.id===id);
+  if(resort)return '□ '+resort.name+' — '+resort.region;
+  const hotel=hotels.find(entry=>entry.id===id);
+  return '□ '+hotel.name+' — '+regionLabel(hotel.region,lang);
+ });
+ const services=Array.from(chosen, key=>'□ '+labels[key+'Label']);
+ const listings=Array.from(items, id=>{
+  const listing=marketplace.find(entry=>entry.id===id);
+  return '□ '+listing.name+' — '+listing.place;
+ });
+ return ['CUBARESORT.CA — '+labels.plannerTitle,'',...lodging,...services,...listings,
+  food?'\n'+labels.foodLabel+':\n'+food:'','',labels.plannerText].join('\n');
 }
 function updateNotebook(){
  $('#notebook-preview').textContent=notebookText();
+ for(const button of document.querySelectorAll('[data-add-stay]')){
+  const selected=stays.has(button.dataset.addStay);
+  button.textContent=selected?t().added:t().add;
+  button.setAttribute('aria-pressed',String(selected));
+ }
  for(const b of document.querySelectorAll('[data-add-service]')){const yes=items.has(b.dataset.addService);b.textContent=yes?t().added:t().add;b.setAttribute('aria-pressed',String(yes));}
 }
 function marketFilter(){
@@ -39,6 +57,12 @@ export function openProfile(id){
  const body=$('#premium-dialog-body');
  body.innerHTML=r?profileBody(r,lang).replace('<h1>','<h2 id="premium-dialog-title">').replace('</h1>','</h2>'):`<p class="eyebrow">${esc(regionLabel(h.region,lang))} / ${esc(h.airport)}</p><h2 id="premium-dialog-title">${esc(h.name)}</h2><p>${t().pending}</p><a class="premium-link" href="#hotels" data-profile-close>${t().close}</a>`;
  if(h){const ask=document.createElement('button');ask.type='button';ask.className='button button-dark';ask.textContent=t().draft;ask.dataset.profileInquiry=h.id;body.append(ask);}
+ const save=document.createElement('button');
+ save.type='button';
+ save.className='button button-dark';
+ save.dataset.addStay=id;
+ body.append(save);
+ updateNotebook();
  $('#premium-dialog-close').textContent=t().close;
  if(!dialog().open)dialog().showModal();
  const url=new URL(location.href);url.searchParams.set('hotel',id);history.replaceState(null,'',url.pathname+url.search+url.hash);
@@ -49,9 +73,17 @@ export function initializePremium(){
   if(e.target.closest('#premium-dialog-close,[data-profile-close]')){e.preventDefault();dialog().close();return;}
   const ask=e.target.closest('[data-profile-inquiry]');if(ask){dialog().close();document.dispatchEvent(new CustomEvent('premium-inquiry',{detail:{id:ask.dataset.profileInquiry}}));return;}
   const f=e.target.closest('[data-market-filter]');if(f){filter=f.dataset.marketFilter;marketFilter();return;}
+  const stay=e.target.closest('[data-add-stay]');
+  if(stay){
+   const id=stay.dataset.addStay;
+   if(stays.has(id))stays.delete(id);
+   else stays.add(id);
+   updateNotebook();
+   return;
+  }
   const add=e.target.closest('[data-add-service]');if(add){const id=add.dataset.addService;if(items.has(id))items.delete(id);else items.add(id);updateNotebook();return;}
   if(e.target.closest('#clear-evidence')){evidence=null;$('#comparison-file').value='';$('#evidence-status').textContent='';$('#clear-evidence').hidden=true;}
-  if(e.target.closest('#notebook-reset')){chosen.clear();items.clear();food='';$('#market-list').value='';for(const x of document.querySelectorAll('#notebook-form input'))x.checked=false;updateNotebook();}
+  if(e.target.closest('#notebook-reset')){chosen.clear();items.clear();stays.clear();food='';$('#market-list').value='';for(const x of document.querySelectorAll('#notebook-form input'))x.checked=false;updateNotebook();}
  });
  document.addEventListener('input',e=>{if(e.target.id==='market-search'){query=e.target.value;marketFilter();}if(e.target.id==='comparison-amount')amount=e.target.value;if(e.target.id==='market-list')food=e.target.value;});
  document.addEventListener('change',e=>{
@@ -61,7 +93,7 @@ export function initializePremium(){
  document.addEventListener('submit',async e=>{
   if(e.target.id==='price-match-form'){e.preventDefault();const range=savingsRange($('#comparison-amount').value);const fmt=n=>new Intl.NumberFormat(lang,{minimumFractionDigits:2,maximumFractionDigits:2}).format(n);$('#comparison-output').textContent=range?t().estimate.replace('{saving}',fmt(range.maximum)).replace('{total}',fmt(range.minimum)):t().invalid;}
   if(e.target.id==='market-form'){e.preventDefault();food=$('#market-list').value.trim();if(food){chosen.add('food');const checkbox=$('#notebook-form input[value="food"]');checkbox.checked=true;updateNotebook();$('#market-status').textContent=t().foodAdded;}}
-  if(e.target.id==='notebook-form'){e.preventDefault();if(!chosen.size&&!items.size&&!food){$('#notebook-status').textContent=t().noSelection;return;}try{await navigator.clipboard.writeText(notebookText());$('#notebook-status').textContent=t().copied;}catch{$('#notebook-status').textContent=t().copyFail;$('#notebook-preview').focus();}}
+  if(e.target.id==='notebook-form'){e.preventDefault();if(!chosen.size&&!items.size&&!stays.size&&!food){$('#notebook-status').textContent=t().noSelection;return;}try{await navigator.clipboard.writeText(notebookText());$('#notebook-status').textContent=t().copied;}catch{$('#notebook-status').textContent=t().copyFail;$('#notebook-preview').focus();}}
  });
  dialog().addEventListener('close',()=>{const url=new URL(location.href);url.searchParams.delete('hotel');history.replaceState(null,'',url.pathname+url.search+url.hash);});
  dialog().addEventListener('keydown',e=>{if(e.key!=='Tab')return;const list=Array.from(dialog().querySelectorAll('button,a[href]')).filter(el=>el.getClientRects().length);if(e.shiftKey&&document.activeElement===list[0]){e.preventDefault();list.at(-1).focus();}else if(!e.shiftKey&&document.activeElement===list.at(-1)){e.preventDefault();list[0].focus();}});
