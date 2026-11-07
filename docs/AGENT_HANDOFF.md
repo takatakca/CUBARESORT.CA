@@ -1,3 +1,40 @@
+## Verified recovery and current release process — 2026-11-07
+
+Signed: Codex — ChatGPT Work.
+
+- Baseline `060b7882f25a3525e7f57a8ca750031e2be1c831` was deployed unchanged through existing application `ci7ltew4v50e4fwq63tfvtg6` on the separate VPS2 Coolify controller. Native deployment `duwtogihfcb3l5yupbzqmgth` finished at 07:45:17 UTC.
+- Generated HTTPS host, apex and www passed the exact full SHA and **every** first-party SHA-256 manifest entry. Mail-safe DNS passed; container/live run [42313629328](https://github.com/takatakca/CUBARESORT.CA/actions/runs/42313629328) succeeded on attempt 2 and Pages run [42313629132](https://github.com/takatakca/CUBARESORT.CA/actions/runs/42313629132) succeeded. Browser resort details and lodging notebook add/remove passed and the temporary selection was removed.
+- This was an operator-triggered recovery. Future GitHub webhook delivery between the two existing Coolify controllers remains unverified. Do not infer restored automation from this manual release or from older successful webhook records.
+- The Nov4 unresolved-release gate on PR #12 is satisfied. The owner explicitly authorized sequential reviewed merges, pushes and existing deployments. Documentation PR #9 and #12 are being reconciled one at a time without changing application files. The next main SHA still needs its own exact CI, native deployment and complete public manifest checks; its final receipt belongs in [issue #10](https://github.com/takatakca/CUBARESORT.CA/issues/10).
+- No DNS/mail route, booking, payment, provider credential, live dispatch or tenant permission is changed. Functional mail delivery, real mobile/screen-reader acceptance, image rights and supplier/backend dependencies in issue #2 remain separate.
+
+Older checkpoints below are historical snapshots, including statements that a release was blocked at that date. They do not override this recovery record or certify a later main SHA.
+
+---
+
+## 2026-11-04 — Main branch release-control hardening finding
+
+Signed Codex. Read-only GitHub branch metadata for `main` reports `protected: false`, `protection.enabled: false`, and required-status-check enforcement `off`. This means GitHub branch protection is not active in the observed repository state. The dedicated branch-protection endpoint returned HTTP 403 to this integration, so detailed rules could not be inspected. No branch settings were changed.
+
+- This is a repository governance/release-control gap, not an application defect and not evidence of a compromised account.
+- Owner/admin action: consider enabling a `main` ruleset that requires pull requests, successful PR validation/build and production-container checks, resolved review conversations, and blocks force-pushes and branch deletion. Preserve a documented emergency admin path.
+- Do not make the post-merge Coolify live-deployment job a required pre-merge check unless its workflow is redesigned: it runs after a main push and currently fails because the existing Coolify endpoint serves a different release.
+- Validate the ruleset against the existing GitHub App deployment webhook before enforcement; do not change the webhook, DNS, mail, or Coolify resource as part of this documentation update.
+
+Current main remains `7e6a63cee07d20932c33db3fb5b2d33fae4108a2`; its Pages publication and production-container validation passed, but its external Coolify exact-SHA release remains unverified. This entry is documentation only and does not authorize a main push.
+
+## 2026-11-04 — Reconcile current-main production blocker
+
+Signed Codex. Current main is SHA 7e6a63cee07d20932c33db3fb5b2d33fae4108a2. Pull request #11 merged as 1dfef4e6c05eba1f1c38286f094cb29d96856e55; the subsequent main cache-versioning change is included in the current SHA.
+
+- Node 22 static validation/build and Pages workflow 41808241223 passed. Pages published the exact full SHA and expanded release manifest.
+- Coolify workflow 41808241176: production-container build, health, release-integrity and private-path isolation passed; external Contabo HTTPS verification failed because the generated hostname continued serving a different release SHA.
+- The generated host, apex and www are therefore **not verified current** for 7e6a63cee07d20932c33db3fb5b2d33fae4108a2. The failed live job was not retried because no new deployment event or authorized Coolify access was available. Connected Coolify browser access previously showed sign-in; no credentials were entered.
+- Keep the existing static architecture, resource, DNS and independent MochaHost mail routes unchanged. Do not push another main release or retry the same live check until the unchanged commit has actually deployed. Then verify the exact full SHA and every current manifest digest on generated host, apex, www and Pages.
+- No mail delivery test, external message, supplier search/booking, payment, lead intake, AI call, live dispatch or TAKATAK V1 tenant scope was activated.
+
+Next action: obtain an authorized deployment path for the existing Coolify resource/GitHub App webhook, deploy this unchanged main SHA, and rerun only the failed live verification after observing the new deployment.
+
 ## 2026-11-04 — Prevent mixed browser-cache releases
 
 Signed Codex. Browser acceptance after main 9c62345 showed that GitHub Pages could retain older unversioned CSS/modules even after the release verifier fetched current bytes with its cache-busting query. Fixed static build to append the exact release SHA to first-party stylesheet/module URLs in every generated/home page and relative ES-module import. The existing manifest hashes the transformed bytes. Local 55 tests, build and explicit checks of homepage, guide, resort and nested module version references passed. Current-main CI/Pages and browser reload proof are required. Native Coolify still needs current release/access verification; no credentials or infrastructure changed.

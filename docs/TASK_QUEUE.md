@@ -1,6 +1,33 @@
-# Active premium marketplace queue — 2026-11-04
+# Active release and work queue — 2026-11-07
 
-Signed Codex; issue #10 owns feat/premium-cuba-guide-20261104. Local 54 tests/build pass. Next: CI/container, release and full-manifest/browser acceptance; source-specific V1 registration, real supplier sandbox and secure transactional integration. Restaurant/driver onboarding, live menus/seats, dispatch and payment remain unconfigured. Do not activate another application's master API scope. No other active agent assigned here. Detailed readiness: docs/MARKETPLACE_READINESS_20261104.md. Earlier queue below is historical context.
+Signed: Codex — ChatGPT Work. Baseline main `060b7882f25a3525e7f57a8ca750031e2be1c831` passed native VPS2 deployment and all-host full-manifest verification. The earlier Nov4 release gate is satisfied. [Evidence and subsequent exact-main receipts](https://github.com/takatakca/CUBARESORT.CA/issues/10).
+
+| Priority | Next action | Acceptance |
+|---|---|---|
+| Current | Reconcile documentation PR #9 and #12 sequentially; preserve dated history | Node22 validate/build and exact CI; next main deployed through existing application, full manifest on all public hosts |
+| P1 | Reconcile the original GitHub App webhook with both Coolify controllers | A real future main-push event deploys the exact SHA on the live VPS2 application without manual queueing; no duplicate application or DNS/mail change |
+| P1 | Reconcile remaining branches | #3/#5 require current static feature/security/release parity before any architecture replacement; #7/#8 draft research needs reconciliation with the premium work already delivered in #11/#13 |
+| P1 | Browser/accessibility and source acceptance | Real mobile/screen-reader acceptance, source reconfirmation and image-license audit |
+| P2 | Commercial integration dependencies in issue #2 | Approved operator/suppliers, secure backend and tenant scopes, real reservation/payment lifecycle and end-to-end verification before activation |
+| Separate | Mail delivery acceptance | Authorized send/receive test; DNS alone is insufficient |
+
+All queue snapshots below are historical, including the Nov4 instruction to stop new main releases while its deployment was unresolved.
+
+---
+
+# Historical release and work queue — 2026-11-04
+
+Signed Codex. The premium-guide branch was merged in PR #11; it is no longer an active branch. Current main is SHA 7e6a63cee07d20932c33db3fb5b2d33fae4108a2. Main CI/Pages run 41808241223 passed; Coolify run 41808241176 passed the container but failed exact-public-SHA verification because the generated host served a different release. Do not push another main release until the existing Coolify deployment is corrected and the unchanged SHA plus full manifest are verified.
+
+## Immediate safe queue
+
+1. **P0 — Recover exact-main Coolify deployment.** Requires authorized access to the existing Coolify resource or a confirmed working GitHub App webhook event. No DNS, mail, secret, account or server mutation without explicit approval. Deploy the unchanged current SHA, then verify generated host, apex and www plus all manifest digests. Retry only the failed live job after the deployment is observed.
+2. **P1 — Human browser/accessibility acceptance.** Verify FR/EN/ES, keyboard/dialog focus, responsive layouts and screen-reader names on real mobile and desktop devices. Do not infer mobile viewport acceptance from a browser that could not resize.
+3. **P1 — Editorial provenance.** Reconfirm cited hotel/source details and complete the legacy image-license audit. Keep uncertain property facts explicitly unknown.
+4. **P2 — Commercial activation (blocked by issue #2).** Requires legal operator identity, approved supplier agreements/sandbox, documented cancellation/refund and payment rules, and dedicated CUBARESORT V1 tenant/source registration. Until then, no live rates, availability, booking, payment, lead collection or driver dispatch.
+5. **P2 — Mail acceptance (separate).** Actual send/receive is untested. Do not send an external message or change MX without explicit approval.
+
+The 55-test local suite/build and the current-main Node 22 CI/container tests are recorded in the dated handoff. Historical completed accessibility tasks below remain completed; do not reopen them.
 
 # Task queue — CUBARESORT.CA
 

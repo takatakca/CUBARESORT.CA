@@ -1,4 +1,25 @@
+# Current deployment checkpoint — 2026-11-07
+
+Signed: Codex — ChatGPT Work. The Nov4 stale-release incident is resolved for baseline `060b7882f25a3525e7f57a8ca750031e2be1c831`: native VPS2 deployment `duwtogihfcb3l5yupbzqmgth` finished 07:45:17 UTC; full-manifest HTTPS and mail-safe DNS verification passed. Container/live run 42313629328 (attempt 2) and Pages run 42313629132 passed.
+
+Use the existing application `ci7ltew4v50e4fwq63tfvtg6` on the **separate VPS2 Coolify controller**. The recovery was operator-triggered. Reconcile the original GitHub App webhook destination with the two controllers before claiming future automatic deployment; do not recreate the application. Preserve Dockerfile.coolify, port8080, DNS and independent mail. Every later main SHA, including documentation merges, needs its own CI/native deployment/full-manifest receipt in [issue #10](https://github.com/takatakca/CUBARESORT.CA/issues/10).
+
+The Nov4 gate on PR #12 is satisfied. Older operational snapshots below are historical; their automated-release claims apply only to their dated evidence. Mail delivery remains untested.
+
+---
+
 # Deployment operations — CUBARESORT.CA
+
+Updated 2026-11-04. Production hosting remains the separate Coolify application on Contabo; the latest main release is **not yet verified live**.
+
+## Current-main deployment checkpoint — 2026-11-04
+
+- Main: 7e6a63cee07d20932c33db3fb5b2d33fae4108a2.
+- Pages/Node 22 validation run 41808241223 succeeded.
+- Coolify/container run 41808241176: actual production image, health, release-integrity and private-path checks passed; generated-host external HTTPS exact-SHA verification failed because the endpoint served another release.
+- Do not claim current-main deployment on the generated host, apex or www. The Pages fallback is current; the custom-domain production release is not verified.
+- No retry, new deployment, DNS/mail edit or credential action was performed. Connected Coolify access showed a sign-in screen; use only an owner-authorized access path.
+- Once the unchanged SHA is deployed, verify the full SHA and every entry in the expanded release.json manifest on generated host, apex and www, as well as DNS/MX separation. Then retry only the failed live job.
 
 Updated 2026-10-16. Production hosting is the separate Coolify application on Contabo.
 
@@ -29,7 +50,7 @@ The hosting incident is resolved. Later evidence-only main commits require their
 
 Coolify resource: https://coolify.takatak.ca/project/ayhntlw7pcxy46nqiubhrnp5/environment/bkqnnzcbjc8q2lcxndyenjpl/application/ci7ltew4v50e4fwq63tfvtg6
 
-Main pushes automatically create a native Coolify webhook deployment. No new deployment token or permissions are needed. `Dockerfile.coolify` runs the Node 22 checks, tests and build and validates the final unprivileged Nginx image before replacement. `.github/workflows/coolify.yml` independently exercises the actual container, private-path isolation and runtime integrity, then verifies the exact current-main HTTPS release and nine first-party file digests. With production readiness enabled it also requires mail-safe public DNS and exact apex/www releases. The whole group retries during rolling replacement; a newer main prevents a stale-release claim.
+Main pushes automatically create a native Coolify webhook deployment. No new deployment token or permissions are needed. `Dockerfile.coolify` runs the Node 22 checks, tests and build and validates the final unprivileged Nginx image before replacement. `.github/workflows/coolify.yml` independently exercises the actual container, private-path isolation and runtime integrity, then verifies the exact current-main HTTPS release and every first-party SHA-256 entry in the current `release.json` manifest. The manifest has expanded beyond the original nine-file set; never hard-code the historical count. With production readiness enabled it also requires mail-safe public DNS and exact apex/www releases. The whole group retries during rolling replacement; a newer main prevents a stale-release claim.
 
 The portal has no server database or uploaded content; Git is the content source. No persistent volume is required. Browser-local favourites remain local. Keep the separate application, existing healthcheck and shared-server build limit intact.
 

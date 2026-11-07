@@ -1,4 +1,44 @@
+# Current release acceptance — 2026-11-07
+
+Signed: Codex — ChatGPT Work. Evidence: [handoff](AGENT_HANDOFF.md) and [issue #10](https://github.com/takatakca/CUBARESORT.CA/issues/10).
+
+- [x] Baseline `060b7882f25a3525e7f57a8ca750031e2be1c831` deployed on the existing separate VPS2 application; native deployment finished 07:45:17 UTC.
+- [x] Full SHA and every current manifest digest passed on generated host, apex and www; Pages/container checks and mail-safe DNS passed.
+- [x] Resort dialog and lodging notebook add/remove checked in the browser; temporary selection removed.
+- [ ] Fresh exact CI/deployment/full-manifest receipt for the next documentation merge (record in issue #10).
+- [ ] Reconcile and prove future GitHub webhook delivery; recovery was operator-triggered.
+- [ ] Functional mail delivery, real-device/screen-reader acceptance, image rights and commercial/provider dependencies.
+
+All checklist snapshots below are historical. No commercial feature was activated by the recovery.
+
+---
+
 # CUBARESORT.CA — Production checklist
+
+Updated: 2026-11-04. Current scope: **static inspiration portal, not a live booking service**.
+
+## Repository release-control observation — 2026-11-04
+
+- [ ] Owner/admin review of GitHub `main` branch protection. Read-only branch metadata currently reports `protected: false`, `protection.enabled: false`, and required-status-check enforcement `off`.
+- The dedicated branch-protection endpoint returned HTTP 403 to this integration; detailed rules are not visible here. No branch settings were changed.
+- Recommended owner/admin hardening: require pull requests and passing PR validation/build plus production-container checks; resolve review conversations; block force-pushes and branch deletion; document a controlled emergency admin bypass.
+- Keep the post-merge Coolify exact-live check as a release gate rather than a pre-merge required check unless the workflow is redesigned. It runs after main pushes and currently fails because the existing Coolify endpoint serves a different release.
+- Confirm the ruleset does not interfere with the existing GitHub App deployment webhook before enabling enforcement.
+
+## Latest-main acceptance checkpoint — 2026-11-04
+
+- [x] Current main SHA recorded: 7e6a63cee07d20932c33db3fb5b2d33fae4108a2.
+- [x] Node 22 static validation/build and Pages deployment passed in run 41808241223.
+- [x] Production Docker image, health, release-integrity and private-path isolation passed in the container job of run 41808241176.
+- [ ] Generated Contabo hostname exact-main HTTPS release — **failed**; it served a different SHA.
+- [ ] Apex and www exact-main HTTPS plus every expanded manifest digest — **not verified current**.
+- [ ] Authorized Coolify/GitHub App deployment intervention and observed deployment of the unchanged SHA.
+- [ ] Retry the failed live-verification job only after the exact deployment is observed.
+- [ ] Human real-device/screen-reader and remaining image/source-license acceptance.
+- [ ] Functional mailbox send/receive test (no email sent; DNS success alone is insufficient).
+- [ ] Supplier, legal operator, payment and CUBARESORT-specific V1 scope approvals before any commercial activation.
+
+Do not push another main release while the current deployment is unresolved. Keep the independent MochaHost mail routes and DNS unchanged.
 
 Updated: 2026-10-16. Current scope: **static inspiration portal, not a live booking service**.
 
@@ -35,7 +75,7 @@ Historical deployment entries below describe earlier checkpoints and do not over
 - [x] Queued Coolify deployment recovered without configuration changes; current main `894e5eae` passed run 38827678357, independent exact-SHA/nine-digest verification and `/healthz=ok`.
 - [ ] Real keyboard traversal, mobile assistive technology and screen-reader acceptance in FR/EN/ES.
 
-## Contabo deployment — 2026-10-15
+## Historical Contabo deployment — 2026-10-15 (superseded by the 2026-10-16 domain cutover and the current-main checkpoint above)
 
 - [x] Separate CUBARESORT Coolify resource on Contabo 31.220.96.134, internal port 8080.
 - [x] Existing authorized GitHub App, main-push deployment webhook enabled.
@@ -51,6 +91,10 @@ Historical deployment entries below describe earlier checkpoints and do not over
 - [x] Live verifier checks fetched bytes against manifest to reject stale/mixed deployments with HTTP 200.
 - [x] Regression tests cover wrong SHA, corrupt/missing manifest, stale 200 OK JavaScript and missing CSS.
 - [ ] Confirm the new main workflow and exact byte-verified Pages SHA; record the run in handoff.
+
+## Historical pre-cutover checklist — 2026-10-15 (superseded by the 2026-10-16 cutover)
+
+The unchecked domain/zone items below describe the pre-cutover state and are not current blockers. Current production acceptance is tracked in the 2026-11-04 checkpoint at the top of this file; do not use these historical checkboxes to infer today's state.
 
 ## Verification still required
 
