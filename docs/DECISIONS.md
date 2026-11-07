@@ -1,3 +1,13 @@
+## Release decision — 2026-11-07
+
+Signed: Codex — ChatGPT Work. Preserve the current static premium FR/EN/ES application and all source history. Integrate documentation PR #9/#12 after reconciling their dated claims with the verified Nov7 recovery; the owner authorized sequential reviewed merges and existing deployments. Keep full current-manifest verification (not a fixed historical nine-file count), independent mail and the existing VPS2 application. Future automatic webhook delivery needs its own evidence.
+
+Do not merge the old Next.js conversion (#3/#5) as a deployment repair; current premium, notebook, security, cache-versioning and release-integrity parity must be demonstrated first. Draft #7/#8 source research must be reconciled selectively with the already-delivered premium implementation, without restoring their older application/build files. [Current evidence and remaining work](AGENT_HANDOFF.md).
+
+Older decisions below remain historical context; commercial/provider dependencies are unchanged.
+
+---
+
 # Architecture and release decisions — CUBARESORT.CA
 
 Updated 2026-10-16.
