@@ -1,3 +1,5 @@
+import {GUIDE_PATHS} from './guide-pages.mjs';
+import {PROFILE_PATHS} from './premium-pages.mjs';
 // Files whose published bytes must match the tested build exactly.
 // Keep this list limited to static first-party files that exist in dist/.
 export const VERIFIED_RELEASE_FILES = Object.freeze([
@@ -5,14 +7,13 @@ export const VERIFIED_RELEASE_FILES = Object.freeze([
   "assets/app.js",
   "assets/catalog.js",
   "assets/hotels.js",
+  "assets/resort-profiles.js",
   "assets/config.js",
   "assets/i18n.js",
   "assets/request.js",
   "assets/styles.css",
   "assets/favicon.svg",
-  "assets/guide.css",
-  "assets/guide.js",
-  "guides/fr/cuba.html",
-  "guides/en/cuba.html",
-  "guides/es/cuba.html"
+  "assets/premium.js", "assets/premium-data.js", "assets/premium-copy.js", "assets/premium-render.js", "assets/premium.css", "assets/marketplace-data.js",
+  "assets/guide.js", "assets/guide.css",
+  ...Object.values(GUIDE_PATHS), ...PROFILE_PATHS
 ]);

@@ -1,8 +1,11 @@
+import {renderPremiumInterface,initializePremium} from './premium.js';
 import { destinations, experiences, styles, imageUrl } from "./catalog.js";
 import { hotelRegions, hotels, searchHotels, regionLabel } from "./hotels.js";
+import { resortProfileFor, profileCopy } from "./resort-profiles.js";
 import { copy, namedTranslation, translation } from "./i18n.js";
+
 import { SITE_CONFIG } from "./config.js";
-import { formatTravelRequest } from "./request.js";
+import { formatTravelRequest, selectedHotelContext } from "./request.js";
 
 // Static discovery application. No reservations, payments, API calls or collection of PII.
 const $ = (selector) => document.querySelector(selector);
@@ -32,6 +35,7 @@ const state = {
   hotelRegion: REGION_IDS.has(params.get("region")) ? params.get("region") : "all",
   hotelQuery: (params.get("hq") || "").slice(0,100),
   selectedHotelId:null,
+  profileHotelId:hotels.some(h=>h.id===params.get("hotel")) ? params.get("hotel") : null,
   favorites:new Set(Array.isArray(stored.favorites) ? stored.favorites.filter(id => EXPERIENCE_IDS.has(id)) : [])
 };
 function tr(key){return translation(state.lang,key);}
@@ -42,7 +46,7 @@ function persist(){
 function destName(id){return destinations.find(d=>d.id===id)?.name || (REGION_IDS.has(id)?regionLabel(id,state.lang):"");}
 function normalize(str){return String(str).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLocaleLowerCase();}
 function escapedAttr(str){return String(str).replaceAll("&","&amp;").replaceAll('"',"&quot;").replaceAll("<","&lt;").replaceAll(">","&gt;");}
-const richKeys = new Set(["guideTitle","heroTitle","destTitle","staysTitle","editorialTitle","approachTitle","ctaBandTitle","faqTitle"]);
+const richKeys = new Set(["heroTitle","destTitle","staysTitle","hotelsTitle","editorialTitle","approachTitle","ctaBandTitle","faqTitle"]);
 
 function setStaticTranslations(){
  document.documentElement.lang = state.lang;
@@ -54,9 +58,7 @@ function setStaticTranslations(){
  });
  $$("[data-i18n-placeholder]").forEach(node=>{node.placeholder=tr(node.dataset.i18nPlaceholder);});
  $$("[data-i18n-aria-label]").forEach(node=>node.setAttribute("aria-label",tr(node.dataset.i18nAriaLabel)));
- $("[data-lang]").forEach(button=>button.setAttribute("aria-pressed",String(button.dataset.lang===state.lang)));
- // Guide pages have static crawlable locale URLs, including on GitHub Pages fallback.
- $("[data-guide-language]").forEach(link=>link.href="./guides/"+state.lang+"/cuba.html");
+ $$("[data-lang]").forEach(button=>button.setAttribute("aria-pressed",String(button.dataset.lang===state.lang)));
  updateMobileMenuState(!$("#mobile-menu").hidden);
  $("#inquiry-close").setAttribute("aria-label",state.lang==="en"?"Close":state.lang==="es"?"Cerrar":"Fermer");
  $("#legal-close").setAttribute("aria-label",state.lang==="en"?"Close":state.lang==="es"?"Cerrar":"Fermer");
@@ -167,12 +169,109 @@ function renderHotels(){
   li.className="hotel-card"+(h.confirmed?"":" hotel-card-pending");
   const badge=h.confirmed?tr("hotelsConfirmed"):tr("hotelsPending");
   li.innerHTML='<div class="hotel-main"><h3>'+escapedAttr(h.name)+'</h3>'
-   +'<p class="hotel-meta"><span class="hotel-region">'+escapedAttr(regionLabel(h.region,state.lang))+'</span>'
+   +'<a class="premium-link directory-profile" href="?hotel='+escapedAttr(h.id)+'" data-profile-id="'+escapedAttr(h.id)+'">'+(state.lang==='en'?'Explore profile':state.lang==='es'?'Ver ficha':'Explorer la fiche')+' ↗</a><p class="hotel-meta"><span class="hotel-region">'+escapedAttr(regionLabel(h.region,state.lang))+'</span>'
    +'<span class="hotel-airport">'+escapedAttr(tr("hotelsAirport"))+' '+escapedAttr(h.airport)+'</span></p></div>'
    +'<div class="hotel-foot"><span class="hotel-badge'+(h.confirmed?"":" hotel-badge-pending")+'">'+escapedAttr(badge)+'</span>'
+   +'<a class="hotel-profile-link" href="?hotel='+encodeURIComponent(h.id)+(state.lang==="fr"?"":"&lang="+state.lang)+'">'+escapedAttr(profileCopy[state.lang].details)+'</a>'
    +'<button type="button" data-hotel-inquire="'+escapedAttr(h.id)+'" aria-label="'+escapedAttr(namedTr("hotelsAskFor",h.name))+'">'+escapedAttr(tr("hotelsAsk"))+'</button></div>';
+
   grid.append(li);
  }
+}
+
+
+function profileNode(tag,text,className){
+ const element=document.createElement(tag);
+ if(className)element.className=className;
+ if(text!==undefined)element.textContent=text;
+ return element;
+}
+function renderHotelProfile(){
+ const section=$("#hotel-profile"),container=$("#resort-profile-content");
+ const hotel=hotels.find(h=>h.id===state.profileHotelId);
+ section.hidden=!hotel;
+ document.body.classList.toggle("profile-mode",Boolean(hotel));
+ if(!hotel)return;
+ const labels=profileCopy[state.lang],profile=resortProfileFor(hotel.id);
+ container.replaceChildren();
+ const back=profileNode("a",labels.directory,"resort-back");
+ back.href="./#hotels";
+ const nav=profileNode("nav",undefined,"resort-breadcrumbs");
+ nav.setAttribute("aria-label",labels.directory);
+ nav.append(back);
+ container.append(nav);
+ const header=profileNode("header",undefined,"resort-heading");
+ const heading=profileNode("h1",hotel.name);
+ heading.id="resort-profile-title";
+ header.append(
+  profileNode("p",labels.eyebrow,"eyebrow"),
+  heading,
+  profileNode("p",regionLabel(hotel.region,state.lang)+" · "+labels.airport+": "+hotel.airport,"resort-location"),
+  profileNode("p",labels.scope,"resort-disclaimer")
+ );
+ const alert=profileNode("p",labels.availability,"resort-alert");
+ header.append(alert);
+ container.append(header);
+ const columns=profileNode("div",undefined,"resort-columns");
+ const facts=profileNode("section",undefined,"resort-facts");
+ facts.append(profileNode("h2",labels.snapshot));
+ if(profile){
+  const list=profileNode("ul",undefined,"resort-fact-list");
+  profile.facts.forEach(f=>{
+   const li=profileNode("li");
+   li.append(profileNode("p",f.text[state.lang]));
+   const source=profile.sources[f.source];
+   const link=profileNode("a",labels.evidence+": "+source.title,"resort-evidence-link");
+   link.href=source.url;
+   link.target="_blank";
+   link.rel="noopener noreferrer";
+   li.append(link);
+   list.append(li);
+  });
+  facts.append(list);
+ }else{
+  facts.append(profileNode("p",labels.pending,"resort-empty"));
+ }
+ const inquiry=profileNode("button",labels.request,"button button-dark resort-draft");
+ inquiry.type="button";
+ inquiry.addEventListener("click",()=>openInquiry(hotel.region,hotel.id));
+ facts.append(inquiry);
+ const aside=profileNode("aside",undefined,"resort-aside");
+ const beach=profileNode("section",undefined,"resort-info-card");
+ beach.append(profileNode("h2",labels.beach),profileNode("p",labels.beachUnknown));
+ aside.append(beach);
+ const season=profileNode("section",undefined,"resort-info-card");
+ season.append(profileNode("h2",labels.season),profileNode("p",profile?.seasonalOperation?.[state.lang]||labels.seasonUnknown));
+ aside.append(season);
+ const inclusions=profileNode("section",undefined,"resort-info-card");
+ inclusions.append(profileNode("h2",labels.inclusions),profileNode("p",profile?labels.sourceNote:labels.inclusionsUnknown));
+ aside.append(inclusions);
+ columns.append(facts,aside);
+ container.append(columns);
+ const review=profileNode("section",undefined,"resort-reviews");
+ review.append(profileNode("h2",labels.reviews),profileNode("p",labels.reviewsUnknown));
+ container.append(review);
+ const sources=profileNode("section",undefined,"resort-sources");
+ sources.append(profileNode("h2",labels.sources));
+ if(profile){
+  const ul=profileNode("ul");
+  for(const source of profile.sources){
+   const li=profileNode("li");
+   const link=profileNode("a",source.title);
+   link.href=source.url;
+   link.rel="noopener noreferrer";
+   link.target="_blank";
+   li.append(link);
+   ul.append(li);
+  }
+  sources.append(ul,profileNode("p",labels.reviewed+": "+profile.checked+" · "+labels.sourceNote,"resort-source-note"));
+ }else sources.append(profileNode("p",labels.unverified));
+ container.append(sources,profileNode("p",labels.provenance,"resort-source-note"));
+ document.title=hotel.name+" | CUBARESORT.CA";
+ const description=document.querySelector('meta[name="description"]');
+ if(description)description.content=hotel.name+" · "+regionLabel(hotel.region,state.lang)+". "+labels.scope;
+ const canonical=document.querySelector('link[rel="canonical"]');
+ if(canonical)canonical.href="https://cubaresort.ca/?hotel="+encodeURIComponent(hotel.id);
 }
 
 function resetHotels(){
@@ -192,8 +291,9 @@ function renderFaq(){
  });
 }
 function render(){
- setStaticTranslations();updateSelects();renderDestinations();renderExperiences();
- updateHotelSelect();renderRegionChips();renderHotels();renderFaq();
+ setStaticTranslations();updateSelects();renderDestinations();renderExperiences();renderPremiumInterface(state.lang);
+ updateHotelSelect();renderRegionChips();renderHotels();renderFaq();renderSelectedHotelContext();renderHotelProfile();
+
 }
 function syncUrl(){
  const url=new URL(window.location.href);
@@ -210,17 +310,34 @@ function reset(){
  state.destination="all";state.style="all";state.q="";state.sort="featured";
  updateSelects();renderExperiences();syncUrl();
 }
+function resetFromEmptyState(){
+ reset();
+ // The reset button's container is now hidden; move focus to a visible control.
+ $("#text-search").focus({preventScroll:true});
+}
+function resetHotelsFromEmptyState(){
+ resetHotels();
+ // Keep keyboard focus out of the newly hidden hotel empty state.
+ $("#hotel-search").focus({preventScroll:true});
+}
 
 function scrollToExperiences(){
  // Explicit smooth scrolling bypasses the CSS reduced-motion override.
  const reduced=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
  $("#experiences").scrollIntoView({behavior:reduced?"auto":"smooth",block:"start"});
 }
+function renderSelectedHotelContext(){
+ const context=$("#inquiry-hotel-context");
+ const text=selectedHotelContext(state.lang,state.selectedHotelId);
+ context.textContent=text;
+ context.hidden=!text;
+}
 function openInquiry(dest="all",hotelId=null){
  const dialog=$("#inquiry-dialog");
  $("#inquiry-destination").value=REGION_IDS.has(dest) ? dest : "all";
  // Hotel interest is ephemeral, never persisted or transmitted automatically.
  state.selectedHotelId=hotels.some(h=>h.id===hotelId && h.region===dest) ? hotelId : null;
+ renderSelectedHotelContext();
  $("#inquiry-status").textContent="";
  const now=new Date(),month=now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0");
  const departure=$("#inquiry-date");
@@ -274,6 +391,24 @@ function updateMobileMenuState(open){
 function closeMobile(){
  updateMobileMenuState(false);
 }
+function focusMobileNavigationTarget(link){
+ const target=document.querySelector(link.hash);
+ const focusTarget=target?.querySelector("h1,h2,h3")||target;
+ if(!focusTarget)return;
+ focusTarget.setAttribute("tabindex","-1");
+ focusTarget.focus({preventScroll:true});
+}
+function closeMobileAtDesktopWidth(){
+ const menu=$("#mobile-menu"),active=document.activeElement;
+ const focusWasInMenu=menu.contains(active);
+ const activeHref=active?.closest?.('a[href^="#"]')?.getAttribute("href");
+ closeMobile();
+ if(!focusWasInMenu)return;
+ const desktopPeer=activeHref
+  ? $$(".desktop-nav a").find(link=>link.getAttribute("href")===activeHref)
+  : null;
+ (desktopPeer||$(".brand")).focus({preventScroll:true});
+}
 
 $$("[data-lang]").forEach(button=>button.addEventListener("click",()=>{
  state.lang=button.dataset.lang;
@@ -292,7 +427,7 @@ $("#text-search").addEventListener("input",e=>{
 });
 $("#sort-select").addEventListener("change",e=>{state.sort=e.target.value;renderExperiences();});
 $("#reset-filters").addEventListener("click",reset);
-$("#empty-reset").addEventListener("click",reset);
+$("#empty-reset").addEventListener("click",resetFromEmptyState);
 $("#destination-grid").addEventListener("click",e=>{
  const card=e.target.closest("[data-destination]");
  if(!card)return;
@@ -325,7 +460,7 @@ $("#hotel-search").addEventListener("input",e=>{
  state.hotelQuery=e.target.value.slice(0,100);renderHotels();syncUrl();
 });
 $("#hotel-reset").addEventListener("click",resetHotels);
-$("#hotel-empty-reset").addEventListener("click",resetHotels);
+$("#hotel-empty-reset").addEventListener("click",resetHotelsFromEmptyState);
 $("#region-chips").addEventListener("click",e=>{
  const chip=e.target.closest("[data-region]");
  if(!chip)return;
@@ -338,9 +473,15 @@ $("#hotel-grid").addEventListener("click",e=>{
  const hotel=hotels.find(h=>h.id===ask.dataset.hotelInquire);
  if(hotel)openInquiry(hotel.region,hotel.id);
 });
-for(const id of ["header-inquiry","mobile-inquiry","band-inquiry","footer-inquiry"]){
+for(const id of ["header-inquiry","band-inquiry","footer-inquiry"]){
  $("#"+id).addEventListener("click",()=>{closeMobile();openInquiry(state.destination);});
 }
+$("#mobile-inquiry").addEventListener("click",()=>{
+ closeMobile();
+ // The launcher is now hidden. Give the dialog a visible return-focus target.
+ $("#menu-toggle").focus({preventScroll:true});
+ openInquiry(state.destination);
+});
 $("#menu-toggle").addEventListener("click",()=>{
  updateMobileMenuState($("#mobile-menu").hidden);
 });
@@ -351,12 +492,16 @@ document.addEventListener("keydown",e=>{
  }
 });
 window.matchMedia("(min-width: 801px)").addEventListener("change",e=>{
- if(e.matches)closeMobile();
+ if(e.matches)closeMobileAtDesktopWidth();
 });
-$$("#mobile-menu a").forEach(a=>a.addEventListener("click",closeMobile));
+$$("#mobile-menu a").forEach(link=>link.addEventListener("click",()=>{
+ closeMobile();
+ // Wait until the native fragment navigation has run, then leave focus at its heading.
+ requestAnimationFrame(()=>focusMobileNavigationTarget(link));
+}));
 $$("dialog.modal").forEach(dialog=>dialog.addEventListener("keydown",event=>keepFocusInsideDialog(dialog,event)));
 $("#inquiry-close").addEventListener("click",()=>$("#inquiry-dialog").close());
-$("#inquiry-destination").addEventListener("change",()=>{state.selectedHotelId=null;});
+$("#inquiry-destination").addEventListener("change",()=>{state.selectedHotelId=null;renderSelectedHotelContext();});
 $("#inquiry-form").addEventListener("submit",e=>e.preventDefault());
 $("#copy-inquiry").addEventListener("click",async()=>{
  const request=formatRequest();
@@ -369,7 +514,9 @@ $("#copy-inquiry").addEventListener("click",async()=>{
   showStatus(tr("copyError")+"\n"+request);
  }
 });
-$("#email-inquiry").addEventListener("click",()=>{
+const emailInquiryButton=$("#email-inquiry");
+emailInquiryButton.hidden=!SITE_CONFIG.contactEmail;
+emailInquiryButton.addEventListener("click",()=>{
  const request=formatRequest();
  if(!request){showStatus(tr("invalidForm"));return;}
  if(!SITE_CONFIG.contactEmail){showStatus(tr("emailUnconfigured"));return;}
@@ -382,5 +529,12 @@ $("#email-inquiry").addEventListener("click",()=>{
 $("#footer-privacy").addEventListener("click",()=>openLegal("privacy"));
 $("#footer-terms").addEventListener("click",()=>openLegal("terms"));
 $("#legal-close").addEventListener("click",()=>$("#legal-dialog").close());
+document.querySelectorAll('.site-header a[href^="#"], .site-footer a[href^="#"]').forEach(link=>link.addEventListener("click",e=>{
+ if(!state.profileHotelId)return;
+ e.preventDefault();
+ window.location.href="./"+link.getAttribute("href");
+}));
 $("#year").textContent=String(new Date().getFullYear());
 render();
+initializePremium();
+document.addEventListener('premium-inquiry',event=>{const hotel=hotels.find(h=>h.id===event.detail.id);if(hotel)openInquiry(hotel.region,hotel.id);});

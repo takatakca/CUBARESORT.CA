@@ -1,3 +1,13 @@
+## Release decision — 2026-11-07
+
+Signed: Codex — ChatGPT Work. Preserve the current static premium FR/EN/ES application and all source history. Integrate documentation PR #9/#12 after reconciling their dated claims with the verified Nov7 recovery; the owner authorized sequential reviewed merges and existing deployments. Keep full current-manifest verification (not a fixed historical nine-file count), independent mail and the existing VPS2 application. Future automatic webhook delivery needs its own evidence.
+
+Do not merge the old Next.js conversion (#3/#5) as a deployment repair; current premium, notebook, security, cache-versioning and release-integrity parity must be demonstrated first. Draft #7/#8 source research must be reconciled selectively with the already-delivered premium implementation, without restoring their older application/build files. [Current evidence and remaining work](AGENT_HANDOFF.md).
+
+Older decisions below remain historical context; commercial/provider dependencies are unchanged.
+
+---
+
 # Architecture and release decisions — CUBARESORT.CA
 
 Updated 2026-10-16.
@@ -16,9 +26,8 @@ Updated 2026-10-16.
 
 Re-evaluate a decision only with new, verifiable evidence; update this record and the handoff in the same changeset.
 
-## 2026-10-16 — Curated multilingual travel guide and controlled partner roadmap
+## 2026-10-16 — Evidence-first resort microsite expansion
 
-- Preserve current Contabo static site and existing main. Add separate crawlable guides for FR/EN/ES with helpful original summaries, official visa/advisory/UNESCO links, unique metadata and human-confirmed sources; reject automatically generated thin or duplicative SEO pages. Google position #1 is not guaranteed.
-- Professional travel-agency aesthetics do not establish legal travel-agent status. No real booking, lead capture, public 5% price-matching promise or live partner registration while commercial authority in issue #2 remains unresolved.
-- TAKATAK V1 stays master for identity/tenant/permissions. CUBARESORT will require a distinct server-side, tenant-scoped partner content service and reviewer moderation; no shadow identities, API tokens or prices in static files. AI may draft but may never bypass human review.
-- Add the three guide pages, stylesheet and interaction module to the checksum manifest (14 total) and use full built release validation before public launch. Keep FR/EN/ES and existing Pages fallback intact.
+- Continue the existing static portal and its 169-property IDs, including 34 archival/unconfirmed entries. In phase one, use `?hotel=<id>` links for distinct localized informational profile views, not an unapproved Next.js migration or commercial booking implementation.
+- Keep third-party facts and dates in `assets/resort-profiles.js` with explicit source links; never imply that distributor-reported hotel features establish a current supplier agreement. Unknown beach frontage is represented as null. No third-party images, verbatim user reviews, ratings or pricing without appropriate rights and current authorization.
+- Include the new profiles module in the SHA-256 manifest. Preserve validation of the nine established first-party assets. Any new main merge still needs actual container, DNS/mail separation and exact SHA plus all manifest digests at all production hostnames and Pages. Functional mailbox acceptance has not been established.
