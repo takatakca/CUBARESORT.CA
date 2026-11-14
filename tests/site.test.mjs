@@ -5,11 +5,9 @@ import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 import { destinations, experiences, styles, catalogIsValid, imageUrl } from "../assets/catalog.js";
 import { hotelRegions, hotels, hotelsInRegion, searchHotels, regionLabel, hotelDirectoryIsValid } from "../assets/hotels.js";
-import { copy, hasAllKeys, translation } from "../assets/i18n.js";
+import { copy, hasAllKeys, namedTranslation, translation } from "../assets/i18n.js";
 import { SITE_CONFIG } from "../assets/config.js";
-import { profileCopy, resortProfiles, resortProfileFor, profileDataIsValid } from "../assets/resort-profiles.js";
-import { VERIFIED_RELEASE_FILES } from "../scripts/release-assets.mjs";
-import { formatTravelRequest } from "../assets/request.js";
+import { formatTravelRequest, selectedHotelContext } from "../assets/request.js";
 import { createPreviewServer } from "../scripts/dev-server.mjs";
 const root=resolve(dirname(fileURLToPath(import.meta.url)),"..");
 test("destination IDs, translated data and experience relations are sound",()=>{
@@ -27,6 +25,20 @@ test("all three languages define the complete UI dictionary",()=>{
   assert.match(copy[lang].inventoryNotice,/./);
  }
 });
+test("repeated card actions have item-specific accessible names in every language",async()=>{
+ const item="Sample Resort";
+ for(const lang of ["fr","en","es"]){
+  for(const key of ["favoriteFor","unfavoriteFor","inquiryFor","hotelsAskFor"]){
+   const label=namedTranslation(lang,key,item);
+   assert.ok(label.includes(item),`${lang}.${key} must identify its card`);
+   assert.ok(!label.includes("{name}"),`${lang}.${key} placeholder must be resolved`);
+  }
+ }
+ const app=await readFile(resolve(root,"assets/app.js"),"utf8");
+ assert.ok(app.includes('namedTr(favourite?"unfavoriteFor":"favoriteFor",e.name[state.lang])'));
+ assert.ok(app.includes('namedTr("inquiryFor",e.name[state.lang])'));
+ assert.ok(app.includes('namedTr("hotelsAskFor",h.name)'));
+});
 test("image URLs are HTTPS and only reference a known photo CDN",()=>{
  for(const d of destinations)assert.match(imageUrl(d.image),/^https:\/\/images\.unsplash\.com\/photo-/);
  for(const e of experiences)assert.match(imageUrl(e.image),/^https:\/\/images\.unsplash\.com\/photo-/);
@@ -35,47 +47,33 @@ test("this version must not accidentally activate a payment or booking integrati
  assert.equal(SITE_CONFIG.bookingProvider,null);
  assert.equal(SITE_CONFIG.analyticsEnabled,false);
 });
-test("resort detail pages are deep-linkable for all 169 hotels with evidence-only pilot data",async()=>{
- assert.equal(profileDataIsValid(),true);
- assert.equal(hotels.length,169);
- assert.equal(Object.keys(resortProfiles).length,2);
- for(const h of hotels){
-  const params=new URLSearchParams({hotel:h.id});
-  assert.equal(hotels.find(item=>item.id===params.get("hotel"))?.id,h.id);
-  const p=resortProfileFor(h.id);
-  if(p)assert.equal(typeof p.checked,"string");
-  else assert.equal(p,null,"no unsupported amenities can be fabricated for "+h.id);
- }
- assert.equal(resortProfileFor("not-a-real-property"),null);
- for(const id of ["iberostar-selection-varadero-varadero","melia-las-americas-varadero"]){
-  const p=resortProfileFor(id);
-  assert.equal(p.beachfrontMeters,null,"property-specific beach width not measured");
-  assert.ok(p.sources.every(s=>s.url.startsWith("https://")));
-  assert.ok(p.facts.every(f=>p.sources[f.source]));
- }
- for(const lang of ["fr","en","es"]){
-  for(const key of Object.keys(profileCopy.fr))assert.match(profileCopy[lang][key],/\S/,lang+" "+key);
- }
- const [html,app,css]=await Promise.all([
-  readFile(resolve(root,"index.html"),"utf8"),
-  readFile(resolve(root,"assets/app.js"),"utf8"),
-  readFile(resolve(root,"assets/styles.css"),"utf8")
- ]);
- assert.ok(html.includes('id="hotel-profile"'));
- assert.ok(app.includes('params.get("hotel")'));
- assert.ok(app.includes('renderHotelProfile()'));
- assert.ok(app.includes('profileCopy[state.lang].details'));
- assert.ok(app.includes('link.rel="noopener noreferrer"'));
- assert.ok(css.includes("body.profile-mode main > :not(#hotel-profile)"));
- assert.ok(VERIFIED_RELEASE_FILES.includes("assets/resort-profiles.js"),"profile research data must be checksummed in deployed release");
- assert.equal(new Set(VERIFIED_RELEASE_FILES).size,VERIFIED_RELEASE_FILES.length);
-});
-
 test("root HTML has landmarks, accessible dialogs and no external application framework",async()=>{
  const html=await readFile(resolve(root,"index.html"),"utf8");
- for(const tag of ['<main id="main">','<nav class="desktop-nav"','<dialog id="inquiry-dialog"','<html lang="fr">','id="destination-filter"','id="experience-grid"'])assert.ok(html.includes(tag),tag);
+ for(const tag of ['<main id="main" tabindex="-1">','<nav class="desktop-nav"','<dialog id="inquiry-dialog"','<html lang="fr">','id="destination-filter"','id="experience-grid"'])assert.ok(html.includes(tag),tag);
  assert.ok(!html.includes("stripe.com"));
  assert.ok(!html.includes("book now"));
+});
+test("skip link moves keyboard focus into main content",async()=>{
+ const html=await readFile(resolve(root,"index.html"),"utf8");
+ assert.match(html,/<a class="skip-link" href="#main"[^>]*>/);
+ assert.match(html,/<main id="main" tabindex="-1">/);
+});
+test("static and container delivery enforce a strict browser security policy",async()=>{
+ const [html,css,nginx]=await Promise.all([
+  readFile(resolve(root,"index.html"),"utf8"),
+  readFile(resolve(root,"assets/styles.css"),"utf8"),
+  readFile(resolve(root,"deploy/coolify/nginx.conf"),"utf8")
+ ]);
+ assert.match(html,/http-equiv="Content-Security-Policy"/);
+ for(const directive of ["default-src 'self'","script-src 'self'","style-src 'self'","object-src 'none'","base-uri 'self'","form-action 'self'"]){
+  assert.ok(html.includes(directive),directive);
+ }
+ assert.ok(!html.includes("style="),"inline style attributes would require unsafe-inline");
+ assert.match(css,/\.noscript-message\{padding:2rem;text-align:center\}/);
+ assert.match(nginx,/add_header X-Frame-Options DENY always;/);
+ assert.match(nginx,/add_header Permissions-Policy "camera=\(\), geolocation=\(\), microphone=\(\), payment=\(\)" always;/);
+ assert.ok(nginx.includes("frame-ancestors 'none'"));
+ assert.ok(!nginx.includes("'unsafe-inline'"));
 });
 test("property directory is internally consistent and every region is translated",()=>{
  assert.equal(hotelDirectoryIsValid(),true);
@@ -173,7 +171,7 @@ test("preview HTTP server exposes only the production static allowlist",async(t)
  });
  t.after(()=>new Promise(resolve=>server.close(resolve)));
  const base="http://127.0.0.1:"+server.address().port;
- for(const path of ["/","/index.html","/assets/app.js","/assets/request.js","/assets/resort-profiles.js","/assets/styles.css","/robots.txt"]){
+ for(const path of ["/","/index.html","/assets/app.js","/assets/request.js","/assets/styles.css","/robots.txt"]){
   const response=await fetch(base+path);
   assert.equal(response.status,200,path);
  }
@@ -188,7 +186,7 @@ test("preview HTTP server exposes only the production static allowlist",async(t)
  assert.equal(post.status,405);
 });
 
-test("mobile menu can be dismissed by Escape and closes at desktop width",async()=>{
+test("mobile menu closes without stranding keyboard focus",async()=>{
  const [app,i18n]=await Promise.all([
   readFile(resolve(root,"assets/app.js"),"utf8"),
   readFile(resolve(root,"assets/i18n.js"),"utf8")
@@ -196,12 +194,26 @@ test("mobile menu can be dismissed by Escape and closes at desktop width",async(
  assert.ok(app.includes('e.key==="Escape" && !$("#mobile-menu").hidden'));
  assert.ok(app.includes('$("#menu-toggle").focus()'));
  assert.ok(app.includes('matchMedia("(min-width: 801px)")'));
+ assert.ok(app.includes('if(e.matches)closeMobileAtDesktopWidth()'));
+ assert.ok(app.includes('menu.contains(active)'));
+ assert.ok(app.includes('(desktopPeer||$(".brand")).focus({preventScroll:true})'));
+ assert.ok(app.includes('requestAnimationFrame(()=>focusMobileNavigationTarget(link))'));
+ assert.ok(app.includes('target?.querySelector("h1,h2,h3")||target'));
+ assert.ok(app.includes('focusTarget.focus({preventScroll:true})'));
  assert.ok(app.includes('tr(open?"menuCloseLabel":"menuOpenLabel")'));
  assert.ok(app.includes('updateMobileMenuState(!$("#mobile-menu").hidden)'));
  assert.ok(app.includes('updateMobileMenuState($("#mobile-menu").hidden)'));
  for(const label of ["Ouvrir le menu","Fermer le menu","Open menu","Close menu","Abrir menú","Cerrar menú"]){
   assert.ok(i18n.includes(label),"missing translated mobile-menu action: "+label);
  }
+});
+
+test("mobile inquiry returns focus to a visible control after the dialog closes",async()=>{
+ const app=await readFile(resolve(root,"assets/app.js"),"utf8");
+ assert.ok(app.includes('$("#mobile-inquiry").addEventListener("click",()=>{'));
+ assert.ok(app.includes('$("#menu-toggle").focus({preventScroll:true});'));
+ assert.ok(app.includes('openInquiry(state.destination);'));
+ assert.ok(!app.includes('["header-inquiry","mobile-inquiry","band-inquiry","footer-inquiry"]'));
 });
 
 test("required English agent continuity files exist",async()=>{
@@ -217,6 +229,14 @@ test("keyboard focus is restored after replacing region chips and favourite card
  assert.ok(app.includes('wrap.contains(document.activeElement) ? document.activeElement.dataset.region : null'));
  assert.ok(app.includes('chip.dataset.region===focusedRegion)?.focus({preventScroll:true})'));
  assert.ok(app.includes('button.dataset.favorite===id)?.focus({preventScroll:true})'));
+});
+
+test("clearing an empty result keeps keyboard focus on a visible control",async()=>{
+ const app=await readFile(resolve(root,"assets/app.js"),"utf8");
+ assert.ok(app.includes('$("#empty-reset").addEventListener("click",resetFromEmptyState)'));
+ assert.ok(app.includes('$("#text-search").focus({preventScroll:true})'));
+ assert.ok(app.includes('$("#hotel-empty-reset").addEventListener("click",resetHotelsFromEmptyState)'));
+ assert.ok(app.includes('$("#hotel-search").focus({preventScroll:true})'));
 });
 
 test("modal dialogs have accessible names and keep keyboard focus inside",async()=>{
@@ -238,7 +258,7 @@ test("explicit accessible names follow the selected language",async()=>{
   readFile(resolve(root,"index.html"),"utf8"),
   readFile(resolve(root,"assets/app.js"),"utf8")
  ]);
- const keys=["brandLabel","primaryNavLabel","mobileNavLabel","searchSectionLabel","heroImageLabel","editorialImageLabel","sortLabel","hotelsRegionLabel"];
+ const keys=["brandLabel","primaryNavLabel","mobileNavLabel","searchSectionLabel","heroImageLabel","editorialImageLabel","sortLabel","hotelsRegionLabel","hotelRegionFiltersLabel"];
  for(const key of keys){
   assert.ok(html.includes(`data-i18n-aria-label="${key}"`),`missing translated aria-label binding: ${key}`);
   for(const lang of ["fr","en","es"])assert.match(translation(lang,key),/\S/,`${lang}.${key}`);
@@ -247,6 +267,14 @@ test("explicit accessible names follow the selected language",async()=>{
  assert.ok(app.includes('setAttribute("aria-label",tr(node.dataset.i18nAriaLabel))'));
  assert.notEqual(copy.fr.sortLabel,copy.en.sortLabel);
  assert.notEqual(copy.fr.hotelsRegionLabel,copy.es.hotelsRegionLabel);
+});
+
+test("hotel region toggles expose a translated group name",async()=>{
+ const html=await readFile(resolve(root,"index.html"),"utf8");
+ assert.match(html,/<div class="region-chips" id="region-chips" role="group"[^>]*data-i18n-aria-label="hotelRegionFiltersLabel"/);
+ for(const lang of ["fr","en","es"]){
+  assert.match(copy[lang].hotelRegionFiltersLabel,/\S/);
+ }
 });
 
 test("both destination-card and search-filter navigation respect reduced motion",async()=>{
@@ -262,4 +290,55 @@ test("keyboard focus on stay search remains visible after removing the input out
  const css=await readFile(resolve(root,"assets/styles.css"),"utf8");
  assert.ok(css.includes(".text-search input{border:0;outline:0;"),"input removes its own outline");
  assert.ok(css.includes(".text-search:focus-within{outline:3px solid #a44f3f;outline-offset:3px}"),"search container must show a visible high-contrast ring when the input has focus");
+});
+
+test("selected hotel summary identifies the chosen directory property in all languages",async()=>{
+ const hotel=hotels[0];
+ for(const lang of ["fr","en","es"]){
+  const label=selectedHotelContext(lang,hotel.id);
+  assert.equal(label,translation(lang,"formHotel")+": "+hotel.name);
+ }
+ assert.equal(selectedHotelContext("fr","missing-hotel"),"");
+ assert.equal(selectedHotelContext("unlisted",hotel.id),"");
+ assert.equal(selectedHotelContext("fr",null),"");
+ const [html,app,css]=await Promise.all([
+  readFile(resolve(root,"index.html"),"utf8"),
+  readFile(resolve(root,"assets/app.js"),"utf8"),
+  readFile(resolve(root,"assets/styles.css"),"utf8")
+ ]);
+ assert.ok(html.includes('id="inquiry-hotel-context"'));
+ assert.ok(html.includes('role="status" aria-live="polite" hidden'));
+ assert.ok(app.includes("function renderSelectedHotelContext()"));
+ assert.ok(app.includes("context.hidden=!text"));
+ assert.ok(app.includes("renderHotels();renderFaq();renderSelectedHotelContext()"));
+ assert.ok(app.includes('state.selectedHotelId=null;renderSelectedHotelContext()'));
+ assert.ok(css.includes(".selected-hotel-context[hidden]{display:none}"));
+});
+
+test("unconfigured email action is absent from the interactive UI, but copy remains usable",async()=>{
+ const [html,app,css]=await Promise.all([
+  readFile(resolve(root,"index.html"),"utf8"),
+  readFile(resolve(root,"assets/app.js"),"utf8"),
+  readFile(resolve(root,"assets/styles.css"),"utf8")
+ ]);
+ assert.equal(SITE_CONFIG.contactEmail,"","no email recipient is authorized");
+ assert.match(html,/<button[^>]*id="email-inquiry"[^>]*hidden>/);
+ assert.match(html,/<button[^>]*id="copy-inquiry"/);
+ assert.ok(app.includes("emailInquiryButton.hidden=!SITE_CONFIG.contactEmail"),"only a configured recipient may reveal email action");
+ assert.ok(app.includes('emailInquiryButton.addEventListener("click",()=>{'),"verified recipient can use existing mailto flow");
+ assert.ok(css.includes("#email-inquiry[hidden]{display:none!important}"),"flex layout must not override hidden");
+});
+
+test("unconfigured contact copy stays honest before and after JavaScript loads",async()=>{
+ const html=await readFile(resolve(root,"index.html"),"utf8");
+ assert.equal(SITE_CONFIG.contactEmail,"","this guard applies while no official recipient exists");
+ assert.ok(html.includes(copy.fr.hotelsTitle),"initial rich directory title must match the maintained French copy");
+ assert.ok(html.includes(copy.fr.hotelsIntro),"initial directory description must not claim an offer relationship");
+ assert.ok(html.includes(copy.fr.benefit3Body),"initial request benefit must match the copy-only behavior");
+ assert.ok(!html.includes("au complet"));
+ assert.ok(!html.includes("nous pouvons vous faire une proposition"));
+ for(const lang of ["fr","en","es"]){
+  assert.doesNotMatch(copy[lang].benefit3Body,/messagerie|courriel|email|correo/i,`${lang} must not advertise the hidden email action`);
+  assert.doesNotMatch(copy[lang].copySuccess,/envoy|send|envi/i,`${lang} copy success must not claim a send occurred`);
+ }
 });

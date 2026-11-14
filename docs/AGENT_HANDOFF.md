@@ -1,11 +1,158 @@
-## 2026-10-16 — Resort microsite implementation, review branch (NOT published)
+## Verified recovery and current release process — 2026-11-07
 
-- Current main inspected before changes: `87bfd6304017b63d5e8366da7cecedff97c9ccf0`. This work lives exclusively on `feat/resort-microsite-research-20261016`, continuing the previous editorial research commit `3e2b646d0bd0c009c320bb7f6a2d6592677f09b1`. No force pushes and no modifications to main, DNS, mail or Coolify settings.
-- Implemented query-based, directly shareable resort profile views (`?hotel=<directory-id>`) accessible from **all 169 directory cards**. Every page displays hotel name, directory region and reference airport, includes a back link and an unsent inquiry draft only. No claims of live rooms, rates, beach length, pricing, supplier availability or booking.
-- Curated source-attributed FR/EN/ES starter profiles for Iberostar Selection Varadero (WestJet distributor) and Meliá Las Américas (official Meliá website and July 2025 official technical fact sheet). The Meliá fact sheet reports year-round operation as of that document; the other property's season and both properties' beachfront measurements remain unknown. External original review/photo source links only; no copied media or reviews.
-- Files changed: `assets/resort-profiles.js` (validated profiles and localized interface), `assets/app.js` (profile rendering and directory links), `index.html` (accessible page section), `assets/styles.css` (responsive styling), `package.json` (syntax checks), `scripts/release-assets.mjs` (add research asset to the nine existing mandatory integrity checks), `tests/site.test.mjs` (regression coverage), and this dated handoff. Existing baseline nine release digests remain required; new profile data increases the manifest to **ten** first-party assets.
-- Deployment status: **branch only**. No production release, container/live verifier, browser audit or Pages deployment is claimed for these changes until PR checks complete and a separately authorized safe merge is verified. Latest previously confirmed production main was `87bfd6304017b63d5e8366da7cecedff97c9ccf0` (per prior release report, not re-certified here).
-- Next exact action: check branch validation/build and production-container PR jobs, inspect any failures, then do keyboard/mobile and FR/EN/ES profile review. Improve per-hotel canonical crawlable paths in a separate follow-up; query-linked pages are phase-one microsite views, not pre-rendered SEO pages. Source and media-license the remaining 167 before asserting hotel-specific facilities. Keep issue #2 blocked for supplier/operator/legal authorization; mailbox acceptance remains untested.
+Signed: Codex — ChatGPT Work.
+
+- Baseline `060b7882f25a3525e7f57a8ca750031e2be1c831` was deployed unchanged through existing application `ci7ltew4v50e4fwq63tfvtg6` on the separate VPS2 Coolify controller. Native deployment `duwtogihfcb3l5yupbzqmgth` finished at 07:45:17 UTC.
+- Generated HTTPS host, apex and www passed the exact full SHA and **every** first-party SHA-256 manifest entry. Mail-safe DNS passed; container/live run [42313629328](https://github.com/takatakca/CUBARESORT.CA/actions/runs/42313629328) succeeded on attempt 2 and Pages run [42313629132](https://github.com/takatakca/CUBARESORT.CA/actions/runs/42313629132) succeeded. Browser resort details and lodging notebook add/remove passed and the temporary selection was removed.
+- This was an operator-triggered recovery. Future GitHub webhook delivery between the two existing Coolify controllers remains unverified. Do not infer restored automation from this manual release or from older successful webhook records.
+- The Nov4 unresolved-release gate on PR #12 is satisfied. The owner explicitly authorized sequential reviewed merges, pushes and existing deployments. Documentation PR #9 and #12 are being reconciled one at a time without changing application files. The next main SHA still needs its own exact CI, native deployment and complete public manifest checks; its final receipt belongs in [issue #10](https://github.com/takatakca/CUBARESORT.CA/issues/10).
+- No DNS/mail route, booking, payment, provider credential, live dispatch or tenant permission is changed. Functional mail delivery, real mobile/screen-reader acceptance, image rights and supplier/backend dependencies in issue #2 remain separate.
+
+Older checkpoints below are historical snapshots, including statements that a release was blocked at that date. They do not override this recovery record or certify a later main SHA.
+
+---
+
+## 2026-11-04 — Main branch release-control hardening finding
+
+Signed Codex. Read-only GitHub branch metadata for `main` reports `protected: false`, `protection.enabled: false`, and required-status-check enforcement `off`. This means GitHub branch protection is not active in the observed repository state. The dedicated branch-protection endpoint returned HTTP 403 to this integration, so detailed rules could not be inspected. No branch settings were changed.
+
+- This is a repository governance/release-control gap, not an application defect and not evidence of a compromised account.
+- Owner/admin action: consider enabling a `main` ruleset that requires pull requests, successful PR validation/build and production-container checks, resolved review conversations, and blocks force-pushes and branch deletion. Preserve a documented emergency admin path.
+- Do not make the post-merge Coolify live-deployment job a required pre-merge check unless its workflow is redesigned: it runs after a main push and currently fails because the existing Coolify endpoint serves a different release.
+- Validate the ruleset against the existing GitHub App deployment webhook before enforcement; do not change the webhook, DNS, mail, or Coolify resource as part of this documentation update.
+
+Current main remains `7e6a63cee07d20932c33db3fb5b2d33fae4108a2`; its Pages publication and production-container validation passed, but its external Coolify exact-SHA release remains unverified. This entry is documentation only and does not authorize a main push.
+
+## 2026-11-04 — Reconcile current-main production blocker
+
+Signed Codex. Current main is SHA 7e6a63cee07d20932c33db3fb5b2d33fae4108a2. Pull request #11 merged as 1dfef4e6c05eba1f1c38286f094cb29d96856e55; the subsequent main cache-versioning change is included in the current SHA.
+
+- Node 22 static validation/build and Pages workflow 41808241223 passed. Pages published the exact full SHA and expanded release manifest.
+- Coolify workflow 41808241176: production-container build, health, release-integrity and private-path isolation passed; external Contabo HTTPS verification failed because the generated hostname continued serving a different release SHA.
+- The generated host, apex and www are therefore **not verified current** for 7e6a63cee07d20932c33db3fb5b2d33fae4108a2. The failed live job was not retried because no new deployment event or authorized Coolify access was available. Connected Coolify browser access previously showed sign-in; no credentials were entered.
+- Keep the existing static architecture, resource, DNS and independent MochaHost mail routes unchanged. Do not push another main release or retry the same live check until the unchanged commit has actually deployed. Then verify the exact full SHA and every current manifest digest on generated host, apex, www and Pages.
+- No mail delivery test, external message, supplier search/booking, payment, lead intake, AI call, live dispatch or TAKATAK V1 tenant scope was activated.
+
+Next action: obtain an authorized deployment path for the existing Coolify resource/GitHub App webhook, deploy this unchanged main SHA, and rerun only the failed live verification after observing the new deployment.
+
+## 2026-11-04 — Prevent mixed browser-cache releases
+
+Signed Codex. Browser acceptance after main 9c62345 showed that GitHub Pages could retain older unversioned CSS/modules even after the release verifier fetched current bytes with its cache-busting query. Fixed static build to append the exact release SHA to first-party stylesheet/module URLs in every generated/home page and relative ES-module import. The existing manifest hashes the transformed bytes. Local 55 tests, build and explicit checks of homepage, guide, resort and nested module version references passed. Current-main CI/Pages and browser reload proof are required. Native Coolify still needs current release/access verification; no credentials or infrastructure changed.
+
+## 2026-11-04 — Browser acceptance and internal fulfilment follow-up
+
+Signed Codex. PR #11 merged as 1dfef4e6c05eba1f1c38286f094cb29d96856e55. Pages workflow 41806632426 passed and published the new build; current domain still old, native Coolify release pending. Container job passed in 41806632151. Connected browser Coolify access shows sign-in; no credentials entered. No domain/DNS/mail settings changed.
+
+Pages browser checks passed locale switching, restaurant filtering (5 listings), notebook selections preserved across locales, sourced resort dialog, and the 2000 CAD 5% illustration. Console errors absent. Follow-up fixes: honor hidden screenshot-clear control despite display CSS and render existing translated hotel heading emphasis correctly. Added tested private internal fulfilment state machine (merchant acceptance, approved driver, owned evidence and optimistic concurrency); still no live dispatch. Total local tests: 55, all passing. SIREV owner-opened agent session observed read-only; official B2C/SIRRVA integration route documented with no session URL or credential persisted. No SIREV booking/search submission/payment performed. Activation requires agency B2C entitlement and provider integration package, not browser session reuse.
+
+Next: publish this follow-up, verify resulting CI/container/Pages/full manifest; complete cubaresort.ca release after Coolify access or automatic deployment recovers. Real transactional booking, food dispatch, AI and V1 registration remain unconnected. Signed final Drive note must identify the actual final SHA and remaining access dependencies.
+
+## 2026-11-04 — Premium Cuba guide and marketplace build
+
+Signed: Codex. Active coordination: issue #10, branch feat/premium-cuba-guide-20261104, starting main a80c383e8e02481c3331fabc344b84b36c0cc1fe. Owner explicitly authorized broader travel, food, mobility, connectivity, supplier/API and V1 work.
+
+- Built premium trilingual collection, 12 static resort pages, 3 guide pages, all-directory profile dialogs, 21-entry pilot marketplace, private SIREV screenshot/calculator demonstration, local multi-service notebook and bottom grocery list. Preserve original accessibility fixes and current main design.
+- Source-linked content uses original summaries; no invented reviews, ratings, fares or availability. Two newly licensed Cuba photos are credited. Official advisory is visible. Stale WestJet resort source redirects to suspension notice; that old profile was excluded.
+- Added private server-only reservation prototype with durable single-process storage, actor/tenant isolation, provider quote/receipt checks, idempotency, compensation and reconciliation tests. No live auth/provider/payment/AI API is activated; static hosting remains static.
+- Inspected real TAKATAK V1 ON2GO/Food Hub, QMAPS and distinct CUBAFOOD contracts. No cubaresort scope or production backend is verified; do not reuse sibling credentials. See docs/integrations/TAKATAK_V1_20261104.md and docs/MARKETPLACE_READINESS_20261104.md for exact readiness and integration steps.
+- Local Node 24 validation: 54 tests passed and static build passed. Existing CI uses Node 22 and must still pass. Extended manifest includes all new runtime assets and generated pages. Local connected/cloud browsers cannot reach the scratch loopback preview (connection refused); live browser acceptance still required after deployment.
+- Existing PRs #3/#5/#7/#8/#9 remain untouched. Selected guide source files from #8 were adapted on current main rather than merging its stale code. Signed in-progress note uploaded in existing CUBARESORT Drive folder. No secrets, mail, DNS, external messages or third-party contracts changed.
+- Next: publish branch/PR, inspect current CI/container, then release and verify exact main SHA plus complete expanded file manifest. Verify live browser locale/search/profile/notebook/price workflows. Record actual release proof and mirror final note in Drive.
+
+## 2026-10-26 — Reconcile verified accessibility releases (documentation-only release pending)
+
+- Re-read current main, all required continuity records, open issue #2, draft PRs #3/#5/#7/#8 and the latest Actions before editing. Main `c8c328aa2b48f1e72a219af7f34df930966aaf8a` remains the verified application release.
+- Corrected stale continuity states for accessibility work that was subsequently proven live. Current main passed 43 tests and build; Coolify/container/live run [39526121459](https://github.com/takatakca/CUBARESORT.CA/actions/runs/39526121459) and Pages run [39526121488](https://github.com/takatakca/CUBARESORT.CA/actions/runs/39526121488) passed, including public DNS/mail separation, exact full SHA and all nine first-party digests on generated Contabo, apex, www and Pages.
+- This changes documentation only. It does not change browser assets, DNS, mail, supplier data, booking/payment behavior, personal-data collection or draft PRs. The resulting documentation commit still requires normal validation/build and exact-release verification before it is reported as current production.
+- Issue #2 and real-device/screen-reader/photo-license acceptance remain the actionable dependencies. Functional mailbox sending/receiving remains untested; no external message was sent.
+
+## 2026-10-20 — Name the hotel region-filter group (verified)
+
+- Verified starting production release: main `37bba18eeba5734c6d02610ada467121ca67697d`; Coolify/container/live run [39512111437](https://github.com/takatakca/CUBARESORT.CA/actions/runs/39512111437) passed on attempt 2 after the delayed native deployment completed, and Pages fallback run [39512111462](https://github.com/takatakca/CUBARESORT.CA/actions/runs/39512111462) passed. Exact SHA and all nine asset digests were independently confirmed on generated Contabo, apex, www and Pages.
+- Verified screen-reader gap: the hotel region chips had useful individual labels and `aria-pressed` states, but their container exposed no group role or accessible name, so button-list navigation lacked filter context.
+- Fix: identify the region chips as a named group and translate that accessible name in FR/EN/ES. Regression coverage protects the group relationship and complete localized dictionary.
+- Scope is limited to accessible markup, localized assistive text, tests and this continuity note; no visible copy, DNS, mail, supplier data, booking/payment, personal-data collection or draft PR changed.
+- Release verified as main `c8c328aa2b48f1e72a219af7f34df930966aaf8a`: 43 tests/build, Coolify/container/live run 39526121459 and Pages run 39526121488 passed, including public DNS/mail separation, exact full SHA and all nine digests on generated Contabo, apex, www and Pages.
+
+## 2026-10-20 — Preserve visible focus after mobile inquiry closes (verified)
+
+- Verified starting production release: main `be0895e127692eea7baea8bcba7c44b39505372e`; Coolify/container/live run [39324278262](https://github.com/takatakca/CUBARESORT.CA/actions/runs/39324278262) and Pages fallback run [39324278131](https://github.com/takatakca/CUBARESORT.CA/actions/runs/39324278131) passed.
+- Verified keyboard defect: the mobile inquiry launcher closed its navigation before opening the modal, leaving the dialog's return-focus origin inside hidden navigation. Closing the modal could therefore restore focus to an invisible control.
+- Fix: after hiding the mobile navigation, focus the still-visible menu toggle before opening the inquiry dialog. Native dialog focus restoration then has a visible, logical destination. The desktop, band, footer and card launchers retain their existing return-focus behavior.
+- Regression coverage protects the dedicated mobile path. Scope is limited to keyboard focus, tests and this continuity note; no interface copy, DNS, mail, supplier data, booking/payment, personal-data collection or draft PR changed.
+- Release verified as main `37bba18eeba5734c6d02610ada467121ca67697d`: 42 tests/build, Coolify/container/live run 39512111437 attempt 2 and Pages run 39512111462 passed, including public DNS/mail separation, exact full SHA and all nine digests on generated Contabo, apex, www and Pages.
+
+## 2026-10-19 — Preserve focus after clearing empty results (verified)
+
+- Verified starting production release: main `fc8777545a60b231c2334dc5557163f435ab1d2b`. Pages run [39083227914](https://github.com/takatakca/CUBARESORT.CA/actions/runs/39083227914) passed. Coolify run [39083227917](https://github.com/takatakca/CUBARESORT.CA/actions/runs/39083227917) passed after a clean replacement removed an orphan predecessor container; its retry completed both the production-container and external live jobs. Independent checks passed the exact full SHA and all nine digests on the generated Contabo host, apex and www, with the existing web/MX separation preserved.
+- Verified keyboard defect: activating either empty-results reset button repopulated results and hid the empty-state container while focus remained on its now-hidden button.
+- Fix: the stays empty reset now moves focus to the visible stays search input, and the hotel empty reset moves focus to the visible hotel search input. The always-visible reset buttons retain their existing behavior.
+- Regression coverage protects both focus transfers. Scope is limited to keyboard focus, tests and continuity notes; no interface copy, DNS, mail, supplier data, booking/payment, personal-data collection or draft PR changed.
+- Release verified as main `be0895e127692eea7baea8bcba7c44b39505372e`: Coolify/container/live run 39324278262 and Pages run 39324278131 passed, including public DNS/mail separation, exact full SHA and all nine digests on generated Contabo, apex, www and Pages.
+
+## 2026-10-17 — Make the skip-link destination focusable (release pending)
+
+- Verified starting production release: main `31cb2c6ab3b5ad911039b3327da889c23fa28378`; [Coolify container/live run 39074598019](https://github.com/takatakca/CUBARESORT.CA/actions/runs/39074598019) and [Pages fallback run 39074597959](https://github.com/takatakca/CUBARESORT.CA/actions/runs/39074597959) passed. The exact full SHA and all nine digests passed at the generated Contabo host, apex, www and Pages; the container also asserted the production security headers.
+- Verified accessibility gap: the visible skip link targeted the semantic `<main>`, but that element was not focusable. Browsers that only scroll a non-focusable fragment could leave the keyboard sequence in the header.
+- Fix: give `#main` `tabindex="-1"` so native fragment navigation can move programmatic focus into the main content without adding it to normal Tab order. A regression test protects both ends of the skip-link relationship.
+- Scope is limited to the focus target, test and continuity notes. No interface copy, DNS, mail, supplier data, booking/payment, personal-data collection or draft PR changed.
+- Required release proof: validation/build, real production container, public DNS/mail separation, exact latest-main `release.json` and all nine digests on generated Contabo/apex/www, plus Pages fallback.
+
+## 2026-10-17 — Enforce browser security policy (verified)
+
+- Verified starting production release: main `46ddfe587802efbb8574345a650dc173b6d25415`; [Coolify container/live run 39068210647](https://github.com/takatakca/CUBARESORT.CA/actions/runs/39068210647) and [Pages fallback run 39068210584](https://github.com/takatakca/CUBARESORT.CA/actions/runs/39068210584) passed. The exact full SHA and all nine first-party digests passed at the generated Contabo host, apex, www and Pages; public DNS/web-versus-mail separation also passed.
+- Verified security gap: production sent `X-Content-Type-Options` and a referrer policy, but did not restrict framing, browser features or the sources from which executable content could load.
+- Fix: add a strict Content Security Policy, `X-Frame-Options: DENY`, and a least-privilege Permissions Policy to the production Nginx response. A matching CSP meta policy protects the static Pages fallback. The sole inline style was moved to the stylesheet, so neither policy requires `unsafe-inline`.
+- Regression coverage checks the configuration and the real production-container response headers. No application behavior, third-party service, DNS, mail, supplier content, booking/payment flow, personal-data collection or draft PR is changed.
+- Release verified as main `31cb2c6ab3b5ad911039b3327da889c23fa28378`: Coolify/container/custom-domain run 39074598019 and Pages run 39074597959 passed, including 39 tests, runtime security-header assertions, DNS/mail separation, and exact SHA plus all nine digests on the generated host, apex, www and Pages.
+
+## 2026-10-17 — Keep no-contact and no-JavaScript claims honest (verified)
+
+- Verified starting production release: main `0c184652431b0fb798c42b63280eee74bf9bc0d0`; [Coolify container/live run 38975920255](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38975920255) and [Pages fallback run 38975920298](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38975920298) passed. The container passed 37 tests plus health, exact-SHA, nine-digest and private-path checks; CI passed public DNS/web-versus-mail separation and all three production HTTPS hosts. Independent verification also passed the generated host, apex, www and Pages.
+- Verified honest-functionality defect: the initial/no-JavaScript French markup still called the directory complete and claimed CUBARESORT could make offers, contradicting the maintained partial-directory copy and blocked supplier state. FR/EN/ES benefit and copy-success text also advertised email sending while the official contact address is unconfigured and the email action is hidden.
+- Fix: synchronize the initial French directory markup with maintained translations and describe the request consistently as an unsent draft visitors can copy and keep in their chosen tool. The separate future email action and FAQ remain ready for an authorized monitored recipient.
+- Regression coverage rejects the obsolete offer/completeness claims and email-send wording while `SITE_CONFIG.contactEmail` is empty. No supplier, pricing, inventory, booking, payment, personal-data, mail/DNS/hosting or draft PR change is included.
+- Release verified as main `46ddfe587802efbb8574345a650dc173b6d25415`: Coolify/container/custom-domain run 39068210647 and Pages run 39068210584 passed, including 38 tests, runtime/private-path checks, DNS/mail separation, and exact SHA plus all nine digests on the generated host, apex, www and Pages. Functional mailbox delivery remains untested and no message was sent.
+
+## 2026-10-16 — Preserve focus when mobile navigation closes (verified)
+
+- Verified starting production release: main `9809fd22a034ead16db9714bf18be69a11d95e0b`; [Coolify container/live run 38974291261](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38974291261) and [Pages fallback run 38974291249](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38974291249) passed. The generated Contabo hostname, apex and www served the exact full SHA and all nine first-party SHA-256 digests; public web/MX separation passed.
+- Verified keyboard-accessibility defect: activating a mobile same-page navigation link immediately hid the focused link without relocating focus to the destination. Changing from mobile to desktop width while focus was inside the mobile menu could likewise leave focus on hidden content.
+- Fix: after native fragment navigation, focus the destination section heading; on transition to desktop width, focus the matching visible desktop link or the visible brand fallback. Escape behavior and localized open/close action names are unchanged.
+- Regression coverage protects both focus-continuity paths. Scope is limited to `assets/app.js`, tests and continuity notes; no DNS, mail, hosting settings, draft PRs, supplier claims, pricing, booking, payment or personal-data collection changed.
+- Release verified as main `0c184652431b0fb798c42b63280eee74bf9bc0d0`: Coolify/container/custom-domain run 38975920255 and Pages run 38975920298 passed, including 37 tests, runtime/private-path checks, DNS/mail separation, and exact SHA plus all nine digests on the generated host, apex, www and Pages.
+- Next exact action: continue safe honest-functionality and accessibility checks without merging draft branches.
+
+## 2026-10-16 — Remove unconfigured email CTA from live inquiry (verified)
+
+- Verified predecessor: main `cd6ee53cbfbb36de7aa59bbb21f967c486eae61c` with 100%-successful [Coolify container/live 38973890981](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38973890981) and [Pages fallback 38973890951](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38973890951). The Contabo-generated hostname, apex and www served this exact SHA with all nine first-party SHA-256 file digests; public DNS/mail routing separation passed.
+- Verified honest-functionality defect: an `Ouvrir mon courriel` (email) action remained visibly clickable even though the project has no authorized contact mailbox (`SITE_CONFIG.contactEmail` is empty), so the click could only report the unavailable recipient. The useful clipboard-draft action already works.
+- Fix: default the email action to `hidden` in HTML to avoid initial flash, reveal it from `assets/app.js` only when an authorized contactEmail is configured, and explicitly enforce `display:none!important` against flex button rules. Keep existing extra runtime validation and existing mailto implementation for any future verified recipient.
+- Regression in `tests/site.test.mjs` protects the hidden-unconfigured state and the visible clipboard action. No external recipient added, email sent, PII captured, marketing integration, DNS/mail/Coolify changes, prices, bookings or PR #3/#5/#7/#8 merges.
+- Files changed: `index.html`, `assets/app.js`, `assets/styles.css`, `tests/site.test.mjs`, `docs/AGENT_HANDOFF.md`, `docs/PROJECT_STATUS.md`, `docs/TASK_QUEUE.md`.
+- Release verified as main `9809fd22a034ead16db9714bf18be69a11d95e0b`: Coolify/container/custom-domain run 38974291261 and Pages run 38974291249 passed, including the exact SHA and all nine digests on the generated host, apex and www.
+- Remaining blocker issue #2: verified supplier/operator and legal/consent approvals before live reservation/lead/payment flows. Real end-to-end mail delivery is untested; do not send external messages without authorization. PR #7 and #8 are independently reviewed draft branches and not production code.
+- Next exact action: continue actionable browser, accessibility and license checks without an unreviewed draft merge.
+
+## 2026-10-16 — Visible selected-hotel context for unsent inquiries (release pending)
+
+- Starting main: `423d3fdb5b9f03020b32d4b6465af1750322ea3b`, verified by [Contabo container/live run 38968103017](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38968103017) and [Pages fallback run 38968103038](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38968103038). The new #7 and #8 hotel-microsite and guide PRs are **draft branches**, with successful PR tests but no approved production merge; preserve their independent scope.
+- Verified behavior gap: the hotel-specific unsent draft included the selected hotel in its copied text, but the inquiry modal displayed only the region, giving no visible or screen-reader confirmation of the chosen property. Visitors could not see whether their hotel selection persisted.
+- Implemented a visible, accessible, locale-aware `#inquiry-hotel-context` summary derived only from the trusted local directory. It appears only for a selected hotel, updates when language changes, and disappears when region changes or a generic inquiry is opened. The existing copied draft still contains the property name and continues to transmit/store no personal data.
+- Files changed: `index.html`, `assets/app.js`, `assets/request.js`, `assets/styles.css`, `tests/site.test.mjs`, `docs/AGENT_HANDOFF.md`, `docs/PROJECT_STATUS.md`, `docs/TASK_QUEUE.md`.
+- Tests added: FR/EN/ES pure-function display validation; unknown ID/language handling; markup and event handler regression. No supplier prices, rates, bookings, marketing data capture, DNS, mail, Coolify configuration, Next.js migrations or draft PR changes.
+- Last completed task: published accessible repeated-card labels from `423d3fdb5b9f03020b32d4b6465af1750322ea3b`. Current task: run CI tests/build, actual Docker container, live HTTPS exact-new-main SHA and all **nine** first-party SHA-256 digests at the Contabo host, apex and www; verify DNS/mail separation and Pages fallback. The pushed SHA must be read from the actual main branch.
+- Known limitations: actual mail send/receive remains untested. Commercial supplier/operator legal agreements, real inventory and payment requirements remain open in issue #2. The unrelated #3/#5 Next.js and draft #7/#8 developments have not been merged.
+- Next exact action: examine new main GitHub Actions container/live and Pages runs and their published full SHA/checksums; fix any demonstrated failure before claiming deployment. Continue real-device accessibility/browser and image rights reviews when authorized.
+
+## 2026-10-16 — Item-specific card action names (release pending)
+
+- Starting verified production baseline: main `87bfd6304017b63d5e8366da7cecedff97c9ccf0`; Coolify/container/custom-domain run [38961583924](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38961583924) passed on retry after its queued native webhook deployment completed, and Pages fallback run [38961583852](https://github.com/takatakca/CUBARESORT.CA/actions/runs/38961583852) passed. Exact SHA and all nine digests were verified at the generated Contabo hostname, apex, www and Pages.
+- Verified accessibility defect: every favourite control exposed the same accessible name, every experience request control exposed the same visible-only name, and all property request controls likewise repeated one name. Screen-reader button navigation therefore did not identify the card each action controls.
+- Added localized FR/EN/ES item-specific accessible names for favourite/unfavourite and request actions while preserving the existing visible labels. The shared interpolation helper is directly tested, including all four templates in every locale.
+- Scope is limited to `assets/i18n.js`, `assets/app.js`, tests and continuity notes. No DNS, mail, hosting configuration, supplier content, booking, payment, personal-data collection or draft PR #3/#5/#7 changes.
+- Required release proof: 35 tests/build, production container, public DNS/mail separation, exact latest-main `release.json` and all nine digests at the generated Contabo hostname, apex and www, plus Pages fallback. Functional mailbox delivery remains untested and no email was sent.
+- Next exact action: publish as a normal expected-head fast-forward only if `main` remains at the starting baseline, then inspect both resulting workflows and fix only demonstrated release failures.
 
 ## 2026-10-16 — Mobile navigation action announced correctly (release pending)
 
