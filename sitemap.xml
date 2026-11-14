@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://cubaresort.ca/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url><loc>https://cubaresort.ca/</loc></url>
+  <url>
+    <loc>https://cubaresort.ca/guides/fr/cuba.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://cubaresort.ca/guides/fr/cuba.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://cubaresort.ca/guides/en/cuba.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://cubaresort.ca/guides/es/cuba.html"/>
+  </url>
+  <url>
+    <loc>https://cubaresort.ca/guides/en/cuba.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://cubaresort.ca/guides/fr/cuba.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://cubaresort.ca/guides/en/cuba.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://cubaresort.ca/guides/es/cuba.html"/>
+  </url>
+  <url>
+    <loc>https://cubaresort.ca/guides/es/cuba.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://cubaresort.ca/guides/fr/cuba.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://cubaresort.ca/guides/en/cuba.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://cubaresort.ca/guides/es/cuba.html"/>
+  </url>
 </urlset>
