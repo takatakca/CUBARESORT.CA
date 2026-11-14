@@ -15,6 +15,7 @@ const official=Object.freeze({
 const L=(fr,en,es)=>({fr,en,es});
 export const guideTopics=Object.freeze([
  {id:"havana-walk",type:"free",photo:"photo-1752702338341-2b085cd246e3",place:"La Havane / Havana",
+
   title:L("La Vieille Havane, à pied","Old Havana, on foot","La Habana Vieja, a pie"),
   intro:L("Places et architecture du centre historique. Marcher dans l'espace public ne nécessite pas de réserver une excursion; l'accès à certains sites peut être payant.","Explore the historic streets and plazas. You can walk public spaces without booking a tour; some museums and attractions charge admission.","Pasea por calles y plazas históricas. Recorrer espacios públicos no requiere excursión; algunos museos y sitios cobran entrada."),
   tip:L("Privilégiez les heures fraîches, respectez les lieux habités et vérifiez la situation locale.","Visit in cooler hours, respect residents and check local conditions.","Ve en horas más frescas, respeta a los residentes y consulta las condiciones locales."),source:official.havana},
@@ -31,6 +32,7 @@ export const guideTopics=Object.freeze([
   intro:L("Une excursion patrimoniale autour de l'histoire sucrière cubaine. Transport, guide et entrée éventuelle doivent être confirmés auprès d'un opérateur autorisé.","A heritage excursion exploring Cuba's sugar-industry history. Transport, guide and any entry fees require confirmation with an authorized operator.","Excursión patrimonial sobre la historia azucarera de Cuba. Transporte, guía y entradas deben confirmarse con un operador autorizado."),
   tip:L("Approchez le patrimoine et son histoire humaine avec respect; la proposition n'est pas une offre vendue ici.","Approach the history and its human context with care. This is not a bookable offer on this site.","Acércate a la historia y su contexto humano con respeto. No es una oferta reservable en este sitio."),source:official.trinidad},
  {id:"varadero",type:"nature",photo:"photo-1609960276201-22af8a583adf",place:"Varadero",
+
   title:L("Varadero, au-delà de l'hôtel","Varadero beyond the resort","Varadero más allá del hotel"),
   intro:L("Une idée de journée pour découvrir les espaces publics du littoral et mieux comprendre la destination. L'accès aux plages et aux services varie selon les lieux.","An idea for exploring public coastal spaces beyond your hotel. Beach access and facilities vary by location.","Una idea para explorar espacios públicos de la costa fuera del hotel. El acceso a playas y servicios varía según el lugar."),
   tip:L("Vérifiez les transports, les conditions de baignade et les zones effectivement accessibles.","Check transport, swimming conditions and which areas are actually open to visitors.","Consulta transporte, condiciones del mar y zonas abiertas al público."),source:null},
@@ -58,6 +60,7 @@ const language={
   partnerEyebrow:"DES RENCONTRES QUI COMPTENT",partnerTitle:"Vous proposez des expériences à Cuba ?",partnerText:"Un espace professionnel permettra aux partenaires approuvés de gérer leurs fiches, propositions tarifaires et conditions. L'accès sera protégé par l'identité centrale TAKATAK et une validation humaine avant publication.",
   partnerButton:"Comment fonctionnera l'espace partenaire",partnerDialogTitle:"L'espace partenaires arrive par étapes",partnerDialogText:"L'inscription, la connexion TAKATAK, l'édition de fiches et les prix ne sont pas encore activés. Aucun formulaire personnel ou paiement n'est collecté ici. Les opérateurs devront être vérifiés et les tarifs approuvés avant publication.",
   honesty:"Pas de fausses disponibilités · Pas de prix inventés · Les conditions évoluent",updated:"Sources consultées le 4 novembre 2026",
+
   navExplore:"Expériences",navPractical:"Formalités",navPartner:"Professionnels",brandLine:"Guide spécialisé Cuba · Informations à confirmer",
   galleryAlt:"Image d'ambiance illustrative, sans garantie sur le lieu réel",tabTitle:"Filtrer les expériences"
  },
@@ -79,6 +82,7 @@ const language={
   partnerEyebrow:"REAL PEOPLE, LOCAL EXPERTISE",partnerTitle:"Do you offer experiences in Cuba?",partnerText:"The upcoming professional workspace will let approved partners manage listings, proposed prices and service conditions. Identity comes from TAKATAK, with human approval before publication.",
   partnerButton:"How the partner workspace will work",partnerDialogTitle:"Partner workspace in preparation",partnerDialogText:"Partner registration, TAKATAK sign-in, listing updates and pricing are not enabled yet. We do not collect personal information or payments here. Operators and rates need verification and approval first.",
   honesty:"No invented prices · No false availability · Terms may change",updated:"Sources checked November 4, 2026",
+
   navExplore:"Experiences",navPractical:"Entry & advice",navPartner:"Partners",brandLine:"Cuba travel discovery · Information subject to verification",
   galleryAlt:"Illustrative travel image; not presented as a photograph of a specific venue",tabTitle:"Filter experiences"
  },
@@ -100,6 +104,7 @@ const language={
   partnerEyebrow:"PERSONAS Y EXPERIENCIAS REALES",partnerTitle:"¿Ofreces experiencias en Cuba?",partnerText:"Un futuro espacio profesional permitirá a colaboradores aprobados gestionar sus fichas, precios propuestos y condiciones. Identidad de TAKATAK y revisión humana antes de publicar.",
   partnerButton:"Conocer el futuro portal de colaboradores",partnerDialogTitle:"Portal de colaboradores en preparación",partnerDialogText:"Aún no están activos el registro, la conexión TAKATAK, la edición de ofertas ni los precios. No recopilamos datos personales ni pagos aquí. Proveedores y tarifas deberán verificarse y aprobarse.",
   honesty:"Sin precios inventados · Sin falsa disponibilidad · Condiciones variables",updated:"Fuentes consultadas el 4 de noviembre de 2026",
+
   navExplore:"Experiencias",navPractical:"Visados y consejos",navPartner:"Colaboradores",brandLine:"Guía especializada de Cuba · Datos sujetos a confirmación",
   galleryAlt:"Foto de ambiente ilustrativa; no identifica un lugar específico",tabTitle:"Filtrar experiencias"
  }
@@ -123,6 +128,7 @@ export function renderGuidePage(lang){
   +'<a class="guide-skip" href="#guide-main">'+esc(t.explore)+'</a><div class="guide-topline"><div class="guide-shell"><span>CUBA / DESTINATIONS / CULTURE / NATURE</span><span>'+esc(t.brandLine)+'</span></div></div>'
   +'<header class="guide-header"><div class="guide-shell guide-header-inner"><a class="guide-logo" href="../../" aria-label="CUBARESORT.CA">CUBA<span>RESORT</span><small>.CA</small></a><nav aria-label="'+esc(t.language)+'"><a href="#discover">'+esc(t.navExplore)+'</a><a href="#prepare">'+esc(t.navPractical)+'</a><a href="#partners">'+esc(t.navPartner)+'</a></nav><div class="guide-lang" aria-label="Langue / Language / Idioma">'+languages+'</div></div></header>'
   +'<main id="guide-main" tabindex="-1"><section class="guide-hero"><div class="guide-hero-photo" role="img" aria-label="'+esc(t.galleryAlt)+'"></div><div class="guide-hero-shade"></div><div class="guide-shell guide-hero-inner"><p class="guide-overline">'+esc(t.eyebrow)+'</p><h1>'+esc(t.headline)+'</h1><p class="guide-hero-lede">'+esc(t.lede)+'</p><div class="guide-hero-actions"><a class="guide-cta" href="#discover">'+esc(t.explore)+' <span aria-hidden="true">↗</span></a><a class="guide-link-light" href="#prepare">'+esc(t.advice)+' →</a></div></div><p class="guide-image-caption">'+esc(t.heroCredit)+'</p></section>'
+
   +'<div class="guide-proof"><div class="guide-shell"><span>01 — '+esc(t.navExplore)+'</span><span>02 — '+esc(t.navPractical)+'</span><span>03 — '+esc(t.navPartner)+'</span></div></div>'
   +'<section class="guide-section guide-discover" id="discover" aria-labelledby="discover-title"><div class="guide-shell"><div class="guide-section-head"><div><p class="guide-eyebrow">'+esc(t.kicker)+'</p><h2 id="discover-title">'+esc(t.sectionTitle)+'</h2></div><p>'+esc(t.sectionLead)+'</p></div><div class="guide-filters" role="group" aria-label="'+esc(t.tabTitle)+'">'+options+'</div><p class="guide-count" id="guide-count" role="status" aria-live="polite"></p><div class="guide-cards" id="guide-cards">'+topics+'</div></div></section>'
   +'<section class="guide-section guide-prepare" id="prepare" aria-labelledby="prepare-title"><div class="guide-shell"><p class="guide-eyebrow">'+esc(t.practicalEyebrow)+'</p><h2 id="prepare-title">'+esc(t.practicalTitle)+'</h2><div class="guide-advice-grid"><article><div class="guide-advice-num">01 / DOCUMENTS</div><h3>'+esc(t.visaTitle)+'</h3><p>'+esc(t.visaText)+'</p>'+link(official.visa,t.visaLink)+'</article><article class="guide-advice-urgent"><div class="guide-advice-num">02 / TRAVEL ADVICE</div><h3>'+esc(t.cautionTitle)+'</h3><p>'+esc(t.cautionText)+'</p>'+link(official.canada,t.cautionLink)+'</article><article><div class="guide-advice-num">03 / ESSENTIALS</div><h3>'+esc(t.careTitle)+'</h3><p>'+esc(t.careText)+'</p>'+link(official.canada,t.careLink)+'</article></div></div></section>'

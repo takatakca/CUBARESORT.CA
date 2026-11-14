@@ -3,9 +3,8 @@ import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import {GUIDE_PATHS,renderGuidePage} from "./guide-pages.mjs";
 import {PROFILE_PATHS,renderProfilePage} from "./premium-pages.mjs";
-import {dirname} from "node:path";
 import { VERIFIED_RELEASE_FILES } from "./release-assets.mjs";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 
 const root=resolve(import.meta.dirname,"..");
 const output=join(root,"dist");
@@ -37,6 +36,7 @@ for(const path of ['index.html',...paths]){
  await writeFile(file,html.replace(/((?:src|href)=["'])([^"']+\.(?:js|css))(["'])/g,(_,prefix,url,quote)=>prefix+url+'?v='+sha+quote));
 }
 await writeFile(join(output,'sitemap.xml'),'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://cubaresort.ca/</loc></url>'+paths.map(path=>'<url><loc>https://cubaresort.ca/'+path+'</loc></url>').join('')+'</urlset>');
+
 // Record a SHA-256 checksum for every first-party document and runtime asset.
 // This detects a stale/mixed Pages release even when release.json has the right Git SHA.
 const assets = Object.fromEntries(await Promise.all(VERIFIED_RELEASE_FILES.map(async path => [

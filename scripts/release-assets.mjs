@@ -16,4 +16,5 @@ export const VERIFIED_RELEASE_FILES = Object.freeze([
   "assets/premium.js", "assets/premium-data.js", "assets/premium-copy.js", "assets/premium-render.js", "assets/premium.css", "assets/marketplace-data.js",
   "assets/guide.js", "assets/guide.css",
   ...Object.values(GUIDE_PATHS), ...PROFILE_PATHS
+
 ]);

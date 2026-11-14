@@ -31,3 +31,10 @@ Re-evaluate a decision only with new, verifiable evidence; update this record an
 - Continue the existing static portal and its 169-property IDs, including 34 archival/unconfirmed entries. In phase one, use `?hotel=<id>` links for distinct localized informational profile views, not an unapproved Next.js migration or commercial booking implementation.
 - Keep third-party facts and dates in `assets/resort-profiles.js` with explicit source links; never imply that distributor-reported hotel features establish a current supplier agreement. Unknown beach frontage is represented as null. No third-party images, verbatim user reviews, ratings or pricing without appropriate rights and current authorization.
 - Include the new profiles module in the SHA-256 manifest. Preserve validation of the nine established first-party assets. Any new main merge still needs actual container, DNS/mail separation and exact SHA plus all manifest digests at all production hostnames and Pages. Functional mailbox acceptance has not been established.
+## 2026-10-16 — Curated multilingual travel guide and controlled partner roadmap
+
+- Preserve current Contabo static site and existing main. Add separate crawlable guides for FR/EN/ES with helpful original summaries, official visa/advisory/UNESCO links, unique metadata and human-confirmed sources; reject automatically generated thin or duplicative SEO pages. Google position #1 is not guaranteed.
+- Professional travel-agency aesthetics do not establish legal travel-agent status. No real booking, lead capture, public 5% price-matching promise or live partner registration while commercial authority in issue #2 remains unresolved.
+- TAKATAK V1 stays master for identity/tenant/permissions. CUBARESORT will require a distinct server-side, tenant-scoped partner content service and reviewer moderation; no shadow identities, API tokens or prices in static files. AI may draft but may never bypass human review.
+- Add the three guide pages, stylesheet and interaction module to the checksum manifest (14 total) and use full built release validation before public launch. Keep FR/EN/ES and existing Pages fallback intact.
+

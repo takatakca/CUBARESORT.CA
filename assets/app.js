@@ -46,7 +46,8 @@ function persist(){
 function destName(id){return destinations.find(d=>d.id===id)?.name || (REGION_IDS.has(id)?regionLabel(id,state.lang):"");}
 function normalize(str){return String(str).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLocaleLowerCase();}
 function escapedAttr(str){return String(str).replaceAll("&","&amp;").replaceAll('"',"&quot;").replaceAll("<","&lt;").replaceAll(">","&gt;");}
-const richKeys = new Set(["heroTitle","destTitle","staysTitle","hotelsTitle","editorialTitle","approachTitle","ctaBandTitle","faqTitle"]);
+const richKeys = new Set(["guideTitle","heroTitle","destTitle","staysTitle","hotelsTitle","editorialTitle","approachTitle","ctaBandTitle","faqTitle"]);
+
 
 function setStaticTranslations(){
  document.documentElement.lang = state.lang;
@@ -58,7 +59,9 @@ function setStaticTranslations(){
  });
  $$("[data-i18n-placeholder]").forEach(node=>{node.placeholder=tr(node.dataset.i18nPlaceholder);});
  $$("[data-i18n-aria-label]").forEach(node=>node.setAttribute("aria-label",tr(node.dataset.i18nAriaLabel)));
- $$("[data-lang]").forEach(button=>button.setAttribute("aria-pressed",String(button.dataset.lang===state.lang)));
+ $("[data-lang]").forEach(button=>button.setAttribute("aria-pressed",String(button.dataset.lang===state.lang)));
+ // Guide pages have static crawlable locale URLs, including on GitHub Pages fallback.
+ $("[data-guide-language]").forEach(link=>link.href="./guides/"+state.lang+"/cuba.html");
  updateMobileMenuState(!$("#mobile-menu").hidden);
  $("#inquiry-close").setAttribute("aria-label",state.lang==="en"?"Close":state.lang==="es"?"Cerrar":"Fermer");
  $("#legal-close").setAttribute("aria-label",state.lang==="en"?"Close":state.lang==="es"?"Cerrar":"Fermer");
