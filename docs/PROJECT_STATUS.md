@@ -74,6 +74,11 @@ Historical status snapshot — 2026-10-26. Superseded by the current-main checkp
 - All templates and rendered call sites are covered for FR/EN/ES. Visible labels and draft-only behavior are unchanged.
 - Starting verified production baseline is `87bfd6304017b63d5e8366da7cecedff97c9ccf0` (Coolify/container/custom-domain run 38961583924; Pages fallback 38961583852). This newer patch requires its own full container and all-host exact-SHA/nine-digest evidence.
 
+## Resort research and microsite pilot — 2026-10-16 (review branch)
+
+- Owner authorized detailed source-attributed resort profiles. The independent branch `feat/resort-microsite-research-20261016` implements FR/EN/ES shareable `?hotel=<id>` views for the existing 169 hotel names; two resorts have initial citations. Unknown amenities, seasonal operations and beach dimensions are explicitly shown as unknown, and no third-party images/reviews are republished.
+- Existing verified production `main` is unaffected; this is an unmerged proposal pending CI and accessibility review. Static SEO-friendly paths and sourcing the remaining 167 properties are subsequent work, not yet complete. Production release proof must cover all original nine plus the new tenth resort-data checksum.
+
 ## Visible search keyboard focus — 2026-10-16
 
 - Restored a high-contrast 3px focus outline on the stay search field's container, whose input CSS previously overrode the general keyboard focus ring.
